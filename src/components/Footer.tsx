@@ -11,8 +11,8 @@ export const Footer = () => {
             <div className="flex items-center gap-2">
               <Building2 className="h-8 w-8 text-primary" />
               <div className="flex flex-col">
-                <span className="font-bold text-lg text-primary">Sakn Egypt</span>
-                <span className="text-xs text-muted-foreground">سكن مصر</span>
+                <span className="font-bold text-lg text-primary">Eskan Egypt</span>
+                <span className="text-xs text-muted-foreground">اسكان مصر</span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -24,9 +24,6 @@ export const Footer = () => {
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
