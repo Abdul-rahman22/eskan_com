@@ -60,22 +60,22 @@ export const Footer = () => {
             <h3 className="font-bold mb-4">مناطق شهيرة</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/properties?area=سيدي بشر" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link to="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   سيدي بشر
                 </Link>
               </li>
               <li>
-                <Link to="/properties?area=سموحة" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link to="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   سموحة
                 </Link>
               </li>
               <li>
-                <Link to="/properties?area=جليم" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link to="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   جليم
                 </Link>
               </li>
               <li>
-                <Link to="/properties?area=المنتزه" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link to="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   المنتزه
                 </Link>
               </li>
@@ -92,11 +92,11 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
-                <span dir="ltr">+20 123 456 7890</span>
+                <span dir="ltr">+201012419047</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <span>info@sakn-egypt.com</span>
+                <span>ba2907403@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -104,7 +104,7 @@ export const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2025 Sakn Egypt. جميع الحقوق محفوظة.
+            © 2025 Eskan Egypt. جميع الحقوق محفوظة.
           </p>
         </div>
       </div>
