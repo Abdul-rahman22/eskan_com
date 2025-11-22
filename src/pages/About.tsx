@@ -12,7 +12,7 @@ const About = () => {
         <div className="bg-primary/5 py-12">
           <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold mb-2">من نحن</h1>
-            <p className="text-muted-foreground">تعرف على Sakn Egypt</p>
+            <p className="text-muted-foreground">تعرف على Eskan Egypt</p>
           </div>
         </div>
 
@@ -20,9 +20,9 @@ const About = () => {
           <div className="max-w-4xl mx-auto space-y-12">
             {/* About Section */}
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold">Sakn Egypt</h2>
+              <h2 className="text-3xl font-bold">Eskan Egypt</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                منصة Sakn Egypt هي الوجهة الأولى للباحثين عن شقق للإيجار في محافظة الإسكندرية.
+                منصة Eskan Egypt هي الوجهة الأولى للباحثين عن شقق للإيجار في محافظة الإسكندرية.
                 نحن نوفر منصة سهلة وموثوقة تجمع بين الباحثين عن السكن وأصحاب العقارات والوسطاء العقاريين،
                 مع تقديم خدمة عملاء متميزة وتجربة استخدام سلسة.
               </p>
