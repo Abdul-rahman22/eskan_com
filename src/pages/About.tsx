@@ -85,7 +85,7 @@ const About = () => {
 
             {/* Why Choose Us */}
             <div className="bg-accent/30 rounded-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-center">لماذا تختار Sakn Egypt؟</h2>
+              <h2 className="text-2xl font-bold mb-6 text-center">لماذا تختار Eskan Egypt؟</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
