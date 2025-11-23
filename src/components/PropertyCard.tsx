@@ -106,7 +106,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </h3>
         
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 text-yellow-500" />
+            <MapPin className="h-4 w-4" style={{ color: "#fbbd23" }} />
             <span>{areaName}</span>
           </div>
         </div>
