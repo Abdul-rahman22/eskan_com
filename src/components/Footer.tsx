@@ -19,7 +19,7 @@ export const Footer = () => {
               منصتك الموثوقة للعثور على أفضل العقارات للإيجار في الإسكندرية
             </p>
             <div className="flex gap-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/Eskan.Egypt/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
