@@ -67,22 +67,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </Badge>
         )}
 
-        /* {/* زر المفضلة */}
-        <Button
-          size="icon"
-          variant="secondary"
-          className="absolute top-4 right-4"
-          onClick={(e) => {
-             e.preventDefault(); 
-             setIsFavorite(!isFavorite);
-          }}
-        >
-          <Star
-            className={`h-4 w-4 ${
-              isFavorite ? "fill-yellow-400 text-yellow-400" : ""
-            }`}
-          />
-        </Button> */
 
         {/* السعر */}
         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
