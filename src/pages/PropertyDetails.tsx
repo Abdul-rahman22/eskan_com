@@ -350,7 +350,6 @@ const PropertyDetails = () => {
                اتصل الآن
              </Button>
            </div>
-                </div>
                 </CardContent>
               </Card>
             </div>
