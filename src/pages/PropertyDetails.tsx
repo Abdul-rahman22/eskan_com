@@ -30,7 +30,7 @@ const PropertyDetails = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // جلب بيانات العقار من الـ API
+  // جلب بيانات العقار
   useEffect(() => {
     if (!id) return;
     fetchProperty(id)
@@ -65,18 +65,15 @@ const PropertyDetails = () => {
       </div>
     );
 
-  // دمج الصور والفيديوهات في مصفوفة واحدة
   const mediaItems = [
     ...(property.images || []),
     ...(property.videos || []),
   ];
 
-  // دالة الانتقال للصورة التالية
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % mediaItems.length);
   };
 
-  // دالة الانتقال للصورة السابقة
   const prevSlide = () => {
     setCurrentIndex(
       (prev) => (prev - 1 + mediaItems.length) % mediaItems.length
@@ -112,7 +109,7 @@ const PropertyDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* المحتوى الأساسي */}
             <div className="lg:col-span-2 space-y-6">
-              {/* 🖼️ Carousel احترافي بدون تقليب تلقائي */}
+              {/* Carousel */}
               <div className="relative h-[500px] rounded-lg overflow-hidden bg-black">
                 <AnimatePresence>
                   {mediaItems.map((media, index) =>
@@ -143,7 +140,7 @@ const PropertyDetails = () => {
                   )}
                 </AnimatePresence>
 
-                {/* أزرار التقليب - معدلة */}
+                {/* السابق */}
                 <button
                   onClick={prevSlide}
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
@@ -151,6 +148,8 @@ const PropertyDetails = () => {
                 >
                   ❯
                 </button>
+
+                {/* التالي */}
                 <button
                   onClick={nextSlide}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
@@ -159,7 +158,7 @@ const PropertyDetails = () => {
                   ❮
                 </button>
 
-                {/* النقاط السفلية */}
+                {/* النقاط */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                   {mediaItems.map((_, i) => (
                     <button
@@ -213,6 +212,7 @@ const PropertyDetails = () => {
                           }`}
                         />
                       </Button>
+
                       <Button
                         size="icon"
                         variant="outline"
@@ -289,43 +289,24 @@ const PropertyDetails = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="text-center pb-4 border-b border-border">
-                      <div className="text-sm text-blue-500 mb-1">
-                        اتواصل معنا
-                      </div>
-                    </div>
-
-
-                    {/* <Button
-                      className="w-full gap-2"
-                      size="lg"
-                      onClick={() =>
-                        (window.location.href = `tel:${property.contact}`)
-                      }
-                    >
-                      <Phone className="h-5 w-5" />
-                      اتصل الآن
-                    </Button> */}
-
-                    {/* <Button
-                      variant="outline"
-                      className="w-full gap-2"
-                      size="lg"
-                      onClick={() =>
-                        (window.location.href = `mailto:info@sakn-egypt.com?subject=استفسار عن ${property.name}`)
-                      }
-                    >
-                      <Mail className="h-5 w-5" />
-                      أرسل رسالة
-                    </Button> */}
-                    
+                  <div className="text-center pb-4 border-b border-border">
+                    <div className="text-sm text-blue-500 mb-1">اتواصل معنا</div>
                   </div>
 
+                  {/* رقم الهاتف + واتساب */}
                   <div className="pt-4 border-t border-border text-center text-sm text-muted-foreground">
                     <div className="flex items-center justify-center gap-2">
                       <Phone className="h-4 w-4" />
-                      <span dir="ltr">{property.contact}</span>
+
+                      <a
+                        href={`https://wa.me/${property.contact}?text=مرحبًا، أريد الاستفسار عن عقار: ${property.name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 font-bold hover:underline"
+                        dir="ltr"
+                      >
+                        {property.contact}
+                      </a>
                     </div>
                   </div>
                 </CardContent>
