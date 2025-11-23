@@ -204,18 +204,6 @@ const PropertyDetails = () => {
                       <Button
                         size="icon"
                         variant="outline"
-                        onClick={() => setIsFavorite(!isFavorite)}
-                      >
-                        <Heart
-                          className={`h-5 w-5 ${
-                            isFavorite ? "fill-red-500 text-red-500" : ""
-                          }`}
-                        />
-                      </Button>
-
-                      <Button
-                        size="icon"
-                        variant="outline"
                         onClick={() => {
                           if (navigator.share) {
                             navigator.share({
