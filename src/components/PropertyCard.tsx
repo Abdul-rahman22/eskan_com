@@ -67,7 +67,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </Badge>
         )}
 
-        {/* زر المفضلة */}
+        /* {/* زر المفضلة */}
         <Button
           size="icon"
           variant="secondary"
@@ -82,7 +82,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               isFavorite ? "fill-yellow-400 text-yellow-400" : ""
             }`}
           />
-        </Button>
+        </Button> */
 
         {/* السعر */}
         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
