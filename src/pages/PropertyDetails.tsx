@@ -16,8 +16,7 @@ import {
   Mail,
   Heart,
   Share2,
-  ChevronLef,
-   MessageCircle,
+  ChevronLeft,
 } from "lucide-react";
 import { fetchProperty } from "@/api";
 import { Property as PropertyType } from "@/data/properties";
@@ -323,33 +322,12 @@ const PropertyDetails = () => {
                     
                   </div>
 
-<div className="space-y-3">
-             <Button
-               className="w-full gap-2 bg-green-500 hover:bg-green-600 text-white"
-               size="lg"
-               onClick={() => {
-                 const phoneNumber = property.contact.replace(/\D/g, '');
-                 const countryCode = phoneNumber.startsWith('20') ? phoneNumber : `20${phoneNumber}`;
-                 const message = `مرحباً، أريد الاستفسار عن العقار: ${property.name}`;
-                 const whatsappUrl = `https://wa.me/${countryCode}?text=${encodeURIComponent(message)}`;
-                 window.open(whatsappUrl, '_blank');
-               }}
-             >
-               <MessageCircle className="h-5 w-5" />
-               تواصل عبر WhatsApp
-             </Button>
-
-             <Button
-               className="w-full gap-2"
-               size="lg"
-               onClick={() =>
-                 (window.location.href = `tel:${property.contact}`)
-               }
-             >
-               <Phone className="h-5 w-5" />
-               اتصل الآن
-             </Button>
-           </div>
+                  <div className="pt-4 border-t border-border text-center text-sm text-muted-foreground">
+                    <div className="flex items-center justify-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      <span dir="ltr">{property.contact}</span>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
