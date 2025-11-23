@@ -136,9 +136,6 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                 <SelectContent>
                   <SelectItem value="شقة">شقة</SelectItem>
                   <SelectItem value="استوديو">استوديو</SelectItem>
-                  <SelectItem value="دوبلكس">دوبلكس</SelectItem>
-                  <SelectItem value="بنتهاوس">بنتهاوس</SelectItem>
-                  <SelectItem value="فيلا">فيلا</SelectItem>
                 </SelectContent>
               </Select>
             </div>
