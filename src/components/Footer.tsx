@@ -1,4 +1,5 @@
-import { Building2, Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import {  Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import logo from "../assets/logo1.png";
 import { Link } from "react-router-dom";
 
 export const Footer = () => {
@@ -9,8 +10,7 @@ export const Footer = () => {
           {/* About */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Building2 className="h-8 w-8 text-primary" />
-              <div className="flex flex-col">
+ <img src={logo} alt="Eskan Egypt Logo" className="h-8 w-8 object-contain" />              <div className="flex flex-col">
                 <span className="font-bold text-lg text-primary">Eskan Egypt</span>
                 <span className="text-xs text-muted-foreground">اسكان مصر</span>
               </div>
