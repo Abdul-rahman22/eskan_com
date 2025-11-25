@@ -1,4 +1,5 @@
-import { Building2, Menu, Phone, Heart, User } from "lucide-react";
+import {  Menu, Phone, Heart, User } from "lucide-react";
+import logo from "../assets/logo1.png";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Link, useLocation } from "react-router-dom";
@@ -25,8 +26,8 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            <Building2 className="h-8 w-8 text-primary" />
-            <div className="flex flex-col">
+            <img src={logo} alt="Eskan Egypt Logo" className="h-8 w-8 object-contain" />
+ <div className="flex flex-col">
               <span className="font-bold text-xl text-primary">Eskan Egypt</span>
               <span className="text-xs text-muted-foreground">اسكان مصر</span>
             </div>
