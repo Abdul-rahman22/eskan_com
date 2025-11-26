@@ -40,7 +40,7 @@ const Index = () => {
         <div className="absolute inset-0 hero-gradient1" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white space-y-6">
-             h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               اعثر على شقتك المثالية
               <br />
               <span className="text-secondary">في الإسكندرية</span>
