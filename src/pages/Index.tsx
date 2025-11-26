@@ -8,6 +8,7 @@ import { Search, Building2, Shield, Clock, Award } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
 import heroHome from "@/assets/hero-home.jpg";
+import weatherIcon from "@/assets/logo1.png";
 
 const Index = () => {
   const [displayAreas, setDisplayAreas] = useState([]);
@@ -40,6 +41,12 @@ const Index = () => {
         <div className="absolute inset-0 hero-gradient1" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white space-y-6">
+             <img
+                  src={weatherIcon}
+                  alt="الطقس"
+                  className="w-20 h-20 mb-4"
+                  style={{ animation: 'moveUpDown 2s ease-in-out infinite' }}
+                />
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               اعثر على شقتك المثالية
               <br />
