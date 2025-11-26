@@ -2,14 +2,19 @@ import { Card, CardContent } from "./ui/card";
 import { MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface AreaCardProps {
-  area: string;
-  propertyCount?: number;
+interface Area {
+  id: number;
+  name: string;
+  property_count: number;
 }
 
-export const AreaCard = ({ area, propertyCount = 0 }: AreaCardProps) => {
+interface AreaCardProps {
+  area: Area;
+}
+
+export const AreaCard = ({ area }: AreaCardProps) => {
   return (
-    <Link to={`/properties?area=${encodeURIComponent(area)}`}>
+    <Link to={`/properties?area=${encodeURIComponent(area.name)}`}>
       <Card className="property-card overflow-hidden hover:shadow-lg transition-all cursor-pointer">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -18,9 +23,9 @@ export const AreaCard = ({ area, propertyCount = 0 }: AreaCardProps) => {
                 <MapPin className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">{area}</h3>
+                <h3 className="font-bold text-lg">{area.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {propertyCount} عقار متاح
+                  {area.property_count} عقار متاح
                 </p>
               </div>
             </div>
