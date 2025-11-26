@@ -26,7 +26,7 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            <img src={logo} alt="Eskan Egypt Logo" className="h-12 w-8 object-contain" />
+            <img src={logo} alt="Eskan Egypt Logo" className="h-11 w-8 object-contain" />
               <div className="flex flex-col">
               <span className="font-bold text-xl text-primary">Eskan Egypt</span>
               <span className="text-xs text-muted-foreground">اسكان مصر</span>
