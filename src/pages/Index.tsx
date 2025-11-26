@@ -90,29 +90,31 @@ const Index = () => {
           </Button>
         </div>
       </section>
-
-        <section className="py-16 bg-accent/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-2">استكشف مناطق الإسكندرية</h2>
-            </div>
-        
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {displayAreas.map((area) => (
-                <AreaCard
-                  key={area}
-                  area={area}
-                />
-              ))}
-            </div>
-        
-            <div className="text-center mt-8">
-              <Button asChild variant="outline" size="lg">
-                <Link to="/properties">عرض جميع المناطق</Link>
-              </Button>
-            </div>
+      
+      <section className="py-16 bg-accent/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-2">استكشف مناطق الإسكندرية</h2>
+            <p className="text-muted-foreground">اختر المنطقة المفضلة لديك</p>
           </div>
-        </section>
+      
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {displayAreas.map((area) => (
+              <AreaCard
+                key={area}
+                area={area}
+              />
+            ))}
+          </div>
+      
+          <div className="text-center mt-8">
+            <Button asChild variant="outline" size="lg">
+              <Link to="/properties">عرض جميع المناطق</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
 
 
 
