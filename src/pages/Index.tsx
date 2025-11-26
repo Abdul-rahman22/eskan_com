@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Building2, Shield, Clock, Award } from "lucide-react";
 import { alexandriaAreas } from "@/data/properties";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-home";
+import heroImage from@ "/assets/hero-home.jpg"
 
 
 const Index = () => {
