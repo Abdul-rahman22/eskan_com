@@ -103,7 +103,7 @@ const Index = () => {
               <AreaCard
                 key={area}
                 area={area}
-                propertyCount={Math.floor(Math.random() * 50) + 10}
+                {/* propertyCount={Math.floor(Math.random() * 50) + 10} */}
               />
             ))}
           </div>
