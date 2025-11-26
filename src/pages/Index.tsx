@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Search, Building2, Shield, Clock, Award } from "lucide-react";
 import { alexandriaAreas } from "@/data/properties";
 import { Link } from "react-router-dom";
+import heroHome from "@/assets/hero-home.jpg";
+
 
 const Index = () => {
 
@@ -18,9 +20,12 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden mt-16">
-        <div className="absolute inset-0 bg-cover bg-center" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroHome})` }}
+        />
         <div className="absolute inset-0 hero-gradient" />
-
+      
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white space-y-6">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
@@ -31,8 +36,7 @@ const Index = () => {
             <p className="text-lg md:text-xl text-white/90">
               آلاف العقارات المتاحة للإيجار في أفضل مناطق الإسكندرية
             </p>
-
-            {/* Quick Search */}
+      
             <div className="text-center mt-8">
               <Button asChild variant="outline" size="lg">
                 <Link to="/properties" className="text-black">
