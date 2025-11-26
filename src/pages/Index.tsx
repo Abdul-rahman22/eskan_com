@@ -63,20 +63,23 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <FeatureCard
-              icon={<Building2 className="h-8 w-8 text-primary" />}
-              title="آلاف العقارات"
-              text="مجموعة واسعة من العقارات في جميع مناطق الإسكندرية"
+              icon={<GraduationCap className="h-8 w-8 text-primary" />}
+              title="سكن طلاب"
+              text="مجموعة واسعة من العقارات لطالب جامعة الاسكندرية"
             />
+            
             <FeatureCard
-              icon={<Shield className="h-8 w-8 text-primary" />}
-              title="موثوق وآمن"
-              text="جميع العقارات معتمدة ومفحوصة من قبل فريقنا"
+              icon={<Users className="h-8 w-8 text-primary" />}
+              title="سكن عائلات"
+              text="توفير مجموعة من المساكن للاعائلات"
             />
+            
             <FeatureCard
-              icon={<Clock className="h-8 w-8 text-primary" />}
-              title="خدمة سريعة"
-              text="استجابة فورية وتواصل مباشر مع الوسطاء"
+              icon={<CalendarClock className="h-8 w-8 text-primary" />}
+              title="سكن يومي"
+              text="موجود سكن بى الحجز اليومي او الاسبوعى"
             />
+
             <FeatureCard
               icon={<Award className="h-8 w-8 text-primary" />}
               title="أفضل الأسعار"
