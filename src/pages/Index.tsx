@@ -5,19 +5,32 @@ import { AreaCard } from "@/components/AreaCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Building2, Shield, Clock, Award } from "lucide-react";
-import { alexandriaAreas } from "@/data/properties";
+import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
 import heroHome from "@/assets/hero-home.jpg";
 
-
 const Index = () => {
+  const [displayAreas, setDisplayAreas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const displayAreas = alexandriaAreas.slice(0, 8);
+  useEffect(() => {
+    const loadAreas = async () => {
+      try {
+        const data = await fetchAreas();
+        setDisplayAreas(data.slice(0, 8));
+      } catch (error) {
+        console.error("Failed to load areas:", error);
+        setDisplayAreas([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAreas();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
       <Navbar />
-
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden mt-16">
         <div
@@ -25,7 +38,6 @@ const Index = () => {
           style={{ backgroundImage: `url(${heroHome})` }}
         />
         <div className="absolute inset-0 hero-gradient1" />
-      
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white space-y-6">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
@@ -36,7 +48,6 @@ const Index = () => {
             <p className="text-lg md:text-xl text-white/90">
               آلاف العقارات المتاحة للإيجار في أفضل مناطق الإسكندرية
             </p>
-      
             <div className="text-center mt-8">
               <Button asChild variant="outline" size="lg">
                 <Link to="/properties" className="text-black">
@@ -47,7 +58,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
       {/* Features */}
       <section className="py-16 bg-accent/50">
         <div className="container mx-auto px-4">
@@ -75,12 +85,11 @@ const Index = () => {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            هل أنت وسيط عقاري؟
+            هل أنت وسيط عقاري?
           </h2>
           <p className="text-lg mb-8 text-white/90">
             انضم إلى منصتنا وابدأ في عرض عقاراتك لآلاف المستخدمين
@@ -90,23 +99,33 @@ const Index = () => {
           </Button>
         </div>
       </section>
-      
+
       <section className="py-16 bg-accent/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-2">استكشف مناطق الإسكندرية</h2>
             <p className="text-muted-foreground">اختر المنطقة المفضلة لديك</p>
           </div>
-      
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {displayAreas.map((area) => (
-              <AreaCard
-                key={area}
-                area={area}
-              />
-            ))}
-          </div>
-      
+
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">جاري تحميل المناطق...</p>
+            </div>
+          ) : displayAreas.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {displayAreas.map((area) => (
+                <AreaCard
+                  key={area.id}
+                  area={area}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500">لم تتمكن من تحميل المناطق</p>
+            </div>
+          )}
+
           <div className="text-center mt-8">
             <Button asChild variant="outline" size="lg">
               <Link to="/properties">عرض جميع المناطق</Link>
@@ -114,10 +133,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-
-
-
       <Footer />
     </div>
   );
