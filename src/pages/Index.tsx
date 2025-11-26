@@ -8,6 +8,7 @@ import { Search, Building2, Shield, Clock, Award } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
 import heroHome from "@/assets/hero-home.jpg";
+import { GraduationCap, Users, CalendarClock } from "lucide-react";
 
 const Index = () => {
   const [displayAreas, setDisplayAreas] = useState([]);
