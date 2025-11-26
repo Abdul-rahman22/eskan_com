@@ -128,7 +128,7 @@ All colors MUST be HSL.
 @layer components {
   .hero-gradient1 {
     background: var(--gradient-hero);
-    opacity: 0.6; /* قلل الرقم لتخفيف الأزرق */
+    opacity: 0.9; /* قلل الرقم لتخفيف الأزرق */
   }
   
   .hero-gradient {
