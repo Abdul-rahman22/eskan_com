@@ -128,6 +128,7 @@ All colors MUST be HSL.
 @layer components {
   .hero-gradient {
     background: var(--gradient-hero);
+    opacity: 0.4; /* قلل الرقم لتخفيف الأزرق */
   }
   
   .card-gradient-overlay {
