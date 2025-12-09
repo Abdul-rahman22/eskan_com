@@ -277,10 +277,6 @@ const PropertyDetails = () => {
                     </div>
                   </div>
 
-                  <div className="text-center pb-4 border-b border-border">
-                    <div className="text-sm text-blue-500 mb-1">اتواصل معنا</div>
-                  </div>
-
                   {/* رقم الهاتف + واتساب */}
                   <div className="pt-4 border-t border-border space-y-4">
                     <div className="text-center">
