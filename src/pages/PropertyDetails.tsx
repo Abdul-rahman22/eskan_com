@@ -282,18 +282,40 @@ const PropertyDetails = () => {
                   </div>
 
                   {/* رقم الهاتف + واتساب */}
-                  <div className="pt-4 border-t border-border text-center text-sm text-muted-foreground">
-                    <div className="flex items-center justify-center gap-2">
-                      <Phone className="h-4 w-4" />
-
+                  <div className="pt-4 border-t border-border space-y-4">
+                    <div className="text-center">
+                      <div className="text-xs text-muted-foreground mb-1">
+                        رقم المالك
+                      </div>
+                      <div
+                        className="text-lg font-semibold tracking-widest text-slate-800"
+                        dir="ltr"
+                      >
+                        {property.contact}
+                      </div>
+                    </div>
+                  
+                    <div className="flex flex-col gap-2">
+                      {/* زر واتساب */}
                       <a
                         href={`https://wa.me/${property.contact}?text=مرحبًا، أريد الاستفسار عن عقار: ${property.name}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 font-bold hover:underline"
+                        className="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-white py-2 text-sm font-medium transition-colors"
                         dir="ltr"
                       >
-                        {property.contact}
+                        <Phone className="h-4 w-4" />
+                        تواصل عبر واتساب
+                      </a>
+                  
+                      {/* زر اتصال مباشر */}
+                      <a
+                        href={`tel:${property.contact}`}
+                        className="inline-flex items-center justify-center gap-2 rounded-md border border-primary text-primary hover:bg-primary/5 py-2 text-sm font-medium transition-colors"
+                        dir="ltr"
+                      >
+                        <Phone className="h-4 w-4" />
+                        اتصال مباشر
                       </a>
                     </div>
                   </div>
