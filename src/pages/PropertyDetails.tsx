@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Bed,
   Bath,
@@ -141,23 +142,23 @@ const PropertyDetails = () => {
                 </AnimatePresence>
 
                 {/* السابق */}
-              {/* السابق */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
-                title="السابق"
-              >
-                ❮
-              </button>
-              
-              {/* التالي */}
-              <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
-                title="التالي"
-              >
-                ❯
-              </button>
+                  {/* السابق */}
+                  <button
+                    onClick={prevSlide}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
+                    title="السابق"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                  
+                  {/* التالي */}
+                  <button
+                    onClick={nextSlide}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full text-white"
+                    title="التالي"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
 
                 {/* النقاط */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
