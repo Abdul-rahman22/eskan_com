@@ -48,7 +48,7 @@ const PropertyDetails = () => {
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        جارٍ تحميل البيانات...
+        يرجى الانتظار...
       </div>
     );
 
@@ -255,7 +255,7 @@ const PropertyDetails = () => {
 
                   <div>
                     <h2 className="text-xl font-bold mb-3">الوصف</h2>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                       {property.description}
                     </p>
                   </div>
