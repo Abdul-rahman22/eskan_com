@@ -134,11 +134,11 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                   <SelectValue placeholder="اختر النوع" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="شقة">شقة</SelectItem>
+                  <SelectItem value="طلاب">طلاب</SelectItem>
+                  <SelectItem value="عائلات">عائلات</SelectItem>
                   <SelectItem value="استوديو">استوديو</SelectItem>
-                  <SelectItem value="دوبلكس">دوبلكس</SelectItem>
-                  <SelectItem value="بنتهاوس">بنتهاوس</SelectItem>
-                  <SelectItem value="فيلا">فيلا</SelectItem>
+                  <SelectItem value="مصيفين">مصيفين</SelectItem>
+                  <SelectItem value="حجز_يومي">حجز يومي</SelectItem>
                 </SelectContent>
               </Select>
             </div>
