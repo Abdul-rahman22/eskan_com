@@ -155,16 +155,23 @@ const Properties: React.FC = () => {
 
     const reasons: string[] = [];
 
-    if (currentFilters.usageType) {
-      const label =
-        USAGE_TYPE_LABELS[currentFilters.usageType] ||
-        currentFilters.usageType;
-      reasons.push(`لا توجد عقارات لـ "${label}"`);
-    }
+  if (currentFilters.usageType || currentFilters.area) {
+  const parts: string[] = [];
 
-    if (currentFilters.area) {
-      reasons.push(`في منطقة "${currentFilters.area}"`);
-    }
+  if (currentFilters.usageType) {
+    const label =
+      USAGE_TYPE_LABELS[currentFilters.usageType] ||
+      currentFilters.usageType;
+    parts.push(`لل${label}`);
+  }
+
+  if (currentFilters.area) {
+    parts.push(`في منطقة ${currentFilters.area}`);
+  }
+
+  reasons.push(`لا توجد عقارات ${parts.join(" ")}`);
+}
+
 
     if (currentFilters.rooms) {
       reasons.push(`بعدد "${currentFilters.rooms}" غرف`);
