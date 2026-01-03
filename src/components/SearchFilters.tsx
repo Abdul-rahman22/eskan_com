@@ -48,7 +48,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
       area,
       priceRange,
       rooms,
-      usageType,
+      usage_type: usageType,   // ← هنا التغيير
       furnished,
     });
   };
