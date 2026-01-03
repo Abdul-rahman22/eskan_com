@@ -1,22 +1,22 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Bed, Bath, Maximize2, MapPin, Star } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Bed, Bath, Maximize2, MapPin } from "lucide-react";
 
 // تأكد من أن هذا الرابط صحيح ويعمل
 const backendUrl = "https://abdo238923.pythonanywhere.com";
 
-// دالة تحويل نوع العقار من الإنجليزية إلى العربية
+// دالة تحويل نوع الاستخدام من الإنجليزية إلى العربية
 const getUsageTypeInArabic = (type: string | null | undefined): string => {
-  if (!type) return '';
+  if (!type) return "";
   const typeMapping: Record<string, string> = {
-    'families': 'عائلات',
-    'students': 'طلاب',
-    'studio': 'استوديو',
-    'vacation': 'مصيفي',
-    'daily': 'حجز يومي',
+    families: "عائلات",
+    students: "طلاب",
+    studio: "استوديو",
+    vacation: "مصيفي",
+    daily: "حجز يومي",
   };
   return typeMapping[type] || type;
 };
@@ -39,10 +39,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const getImageUrl = () => {
     const img = property.images?.[0]?.image_url;
     if (!img) return "/default.jpg"; // صورة بديلة في حال عدم وجود صور
-    
+
     // إذا كان الرابط كامل (يبدأ بـ http) نرجعه كما هو
-    if (img.startsWith('http')) return img;
-    
+    if (img.startsWith("http")) return img;
+
     // إذا كان الرابط نسبي، نضيف الدومين قبله
     return `${backendUrl}${img}`;
   };
@@ -50,7 +50,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   return (
     <Card className="property-card overflow-hidden group">
       <div className="relative h-64 overflow-hidden">
-
         {/* عرض الصورة باستخدام الدالة المصححة */}
         <img
           src={getImageUrl()}
@@ -80,7 +79,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </Badge>
         )}
 
-
         {/* السعر */}
         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
           <div className="bg-background/95 backdrop-blur-sm px-4 py-2 rounded-lg">
@@ -96,17 +94,17 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
       <CardContent className="p-4">
         <div className="space-y-3">
-        {/* العنوان والمنطقة */}
-        <div>
-          <h3 className="font-bold text-lg mb-1 line-clamp-1">
-            {property.name}
-          </h3>
-        
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4" style={{ color: "#fbbd23" }} />
-            <span>{areaName}</span>
+          {/* العنوان والمنطقة */}
+          <div>
+            <h3 className="font-bold text-lg mb-1 line-clamp-1">
+              {property.name}
+            </h3>
+
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4" style={{ color: "#fbbd23" }} />
+              <span>{areaName}</span>
+            </div>
           </div>
-        </div>
 
           {/* التفاصيل */}
           <div className="flex items-center gap-4 text-sm">
@@ -114,9 +112,12 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               <Bed className="h-4 w-4 text-muted-foreground" />
               <span>{property.rooms} غرف</span>
             </div>
-Add usage_type display to PropertyCard component with Arabic translation              <Bath className="h-4 w-4 text-muted-foreground" />
+
+            <div className="flex items-center gap-1">
+              <Bath className="h-4 w-4 text-muted-foreground" />
               <span>{property.bathrooms} حمام</span>
             </div>
+
             <div className="flex items-center gap-1">
               <Maximize2 className="h-4 w-4 text-muted-foreground" />
               <span>{property.size} م²</span>
@@ -125,11 +126,17 @@ Add usage_type display to PropertyCard component with Arabic translation        
 
           {/* الوسوم */}
           <div className="flex gap-2 flex-wrap">
-{property.usage_type && <Badge variant="outline">{getUsageTypeInArabic(property.usage_type)}</Badge>}
+            {property.usage_type && (
+              <Badge variant="outline">
+                {getUsageTypeInArabic(property.usage_type)}
+              </Badge>
+            )}
             <Badge variant="outline">
               {property.furnished ? "مفروشة" : "غير مفروشة"}
             </Badge>
-            {property.floor && <Badge variant="outline">الطابق {property.floor}</Badge>}
+            {property.floor && (
+              <Badge variant="outline">الطابق {property.floor}</Badge>
+            )}
           </div>
 
           {/* الأزرار */}
