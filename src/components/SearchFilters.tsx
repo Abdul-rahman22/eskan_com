@@ -145,7 +145,6 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               {/* 🔹 نوع العقار / الاستخدام */}
               <div className="space-y-2">
                 <Label>نوع العقار</Label>
-                  {<Select value={propertyType} onValueChange={setPropertyType}>}
                   <SelectTrigger>
                   <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
