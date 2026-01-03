@@ -118,6 +118,23 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                 </Select>
               )}
             </div>
+            
+            {/* 🔹 نوع العقار - الخيارات الثابتة */}
+            <div className="space-y-2">
+              <Label>نوع العقار</Label>
+              <Select value={usageType} onValueChange={setUsageType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر نوع العقار" />
+                </SelectTrigger>
+                <SelectContent>
+                  {USAGE_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             {/* 🔹 عدد الغرف */}
             <div className="space-y-2">
@@ -132,23 +149,6 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                   <SelectItem value="3">3 غرف</SelectItem>
                   <SelectItem value="4">4 غرف</SelectItem>
                   <SelectItem value="5+">5+ غرف</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 🔹 نوع الاستخدام - الخيارات الثابتة */}
-            <div className="space-y-2">
-              <Label>نوع العقار</Label>
-              <Select value={usageType} onValueChange={setUsageType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر نوع العقار" />
-                </SelectTrigger>
-                <SelectContent>
-                  {USAGE_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
                 </SelectContent>
               </Select>
             </div>
