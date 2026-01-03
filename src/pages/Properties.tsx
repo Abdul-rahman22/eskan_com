@@ -32,7 +32,7 @@ interface Property {
 interface Filters {
   area: string;
   rooms: string;
-  usage_type: string;   // ✅ بدل propertyType
+   propertyType: string;   // ✅ بدل propertyType
   furnished: string;
   priceRange: number[];
 }
