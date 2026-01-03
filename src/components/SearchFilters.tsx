@@ -23,7 +23,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
   const [area, setArea] = useState(initialArea || "");
   const [priceRange, setPriceRange] = useState([0, 20000]);
   const [rooms, setRooms] = useState("");
-  const [propertyType, setPropertyType] = useState("");
+  const [usageType, setUsageType] = useState("");
   const [furnished, setFurnished] = useState("");
   const [areas, setAreas] = useState<{ id: number; name: string }[]>([]);
   const [loadingAreas, setLoadingAreas] = useState(true);
@@ -48,7 +48,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
       area,
       priceRange,
       rooms,
-      propertyType,
+      usageType,
       furnished,
     });
   };
@@ -57,7 +57,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
     setArea("");
     setPriceRange([0, 20000]);
     setRooms("");
-    setPropertyType("");
+    setUsageType("");
     setFurnished("");
     onSearch({});
   };
@@ -129,7 +129,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               {/* 🔹 نوع العقار */}
               <div className="space-y-2">
               <Label>نوع العقار</Label>
-              <Select value={propertyType} onValueChange={setPropertyType}>
+              <Select value={usageType} onValueChange={setUsageType}>
               <SelectTrigger>
               <SelectValue placeholder="اختر النوع" />
               </SelectTrigger>
