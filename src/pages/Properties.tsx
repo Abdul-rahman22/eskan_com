@@ -147,10 +147,8 @@ const Properties: React.FC = () => {
     setFilteredProperties(filtered);
   };
 
-  // ----------- Empty Message -----------
+  // ----------- Empty Message (NO areaError here) -----------
   const getEmptyMessage = (): string => {
-    if (areaError) return areaError;
-
     if (!currentFilters) {
       return "لا توجد عقارات متاحة";
     }
@@ -208,7 +206,7 @@ const Properties: React.FC = () => {
             />
           </div>
 
-          {/* Area Error */}
+          {/* 🔴 Area Error (مرة واحدة فقط) */}
           {areaError && (
             <div className="text-center text-red-600 font-semibold mb-6">
               {areaError}
@@ -228,10 +226,7 @@ const Properties: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProperties.map((property) => (
-                  <PropertyCard
-                    key={property.id}
-                    property={property}
-                  />
+                  <PropertyCard key={property.id} property={property} />
                 ))}
               </div>
             </>
