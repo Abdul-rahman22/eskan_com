@@ -136,36 +136,6 @@ const Properties: React.FC = () => {
     setFilteredProperties(filtered);
   };
 
-  // 🔹 حساب الرسالة المناسبة
-  const getEmptyMessage = (): string => {
-    if (!currentFilters) {
-      return "لا توجد عقارات متاحة";
-    }
-
-    const reasons: string[] = [];
-
-    if (currentFilters.usageType) {
-      const typeLabel = USAGE_TYPE_LABELS[currentFilters.usageType] || currentFilters.usageType;
-      reasons.push(`لا توجد عقارات لل\u201c${typeLabel}\u201d`);
-    }
-
-    if (currentFilters.area) {
-      reasons.push(`في منطقة \u201c${currentFilters.area}\u201d`);
-    }
-
-    if (currentFilters.rooms) {
-      reasons.push(`ب\u201c${currentFilters.rooms} غرف\u0629\u201d`);
-    }
-
-    if (currentFilters.propertyType) {
-      reasons.push(`من نوع \u201c${currentFilters.propertyType}\u201d`);
-    }
-
-    return reasons.length > 0
-      ? reasons.join(" و")
-      : "لا توجد عقارات تطابق معاييرك";
-  };
-
   // ----------- UI -----------
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
