@@ -295,6 +295,62 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+          {/* How It Works Section */}
+          <section className="py-12 md:py-20 bg-background">
+            <div className="container mx-auto px-4">
+              <motion.div 
+                className="text-center mb-10 md:mb-16"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+              >
+                <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-3">
+                  <Sparkles className="h-4 w-4" />
+                  كيف يعمل الموقع
+                </span>
+                <h2 className="text-2xl md:text-4xl font-bold mb-3">أربع خطوات بسيطة</h2>
+                <p className="text-muted-foreground max-w-xl mx-auto">
+                  ابحث عن سكنك المثالي بكل سهولة من خلال خطوات بسيطة
+                </p>
+              </motion.div>
+          
+              <motion.div 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+              >
+                {howItWorks.map((item, index) => (
+                  <motion.div 
+                    key={index}
+                    className="relative"
+                    variants={fadeInUp}
+                  >
+                    {/* Connector Line */}
+                    {index < howItWorks.length - 1 && (
+                      <div className="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-border -translate-x-1/2" />
+                    )}
+                    
+                    <div className="relative bg-accent/30 rounded-2xl p-6 text-center hover:bg-accent/50 transition-colors">
+                      <div className="absolute -top-4 right-4 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
+                        {item.step}
+                      </div>
+                      <motion.div 
+                        className="inline-flex p-4 bg-primary/10 rounded-2xl mb-4 mt-2"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        <item.icon className="h-8 w-8 text-primary" />
+                      </motion.div>
+                      <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </section>
 
       {/* Why Choose Us */}
       <section className="py-12 md:py-20 bg-background">
