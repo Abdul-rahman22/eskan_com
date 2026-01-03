@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import { AreaCard } from "@/components/AreaCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, MessageSquare } from "lucide-react";
 import {
   Search,
   Award,
@@ -20,6 +19,7 @@ import {
   ThumbsUp,
   BadgeCheck,
   Home,
+  Star,
 } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
@@ -34,7 +34,6 @@ import {
 
 type AreaType = {
   id: number | string;
-  // عدل الحقول هنا حسب شكل الـ area الراجع من الـ API
   name?: string;
   [key: string]: any;
 };
@@ -124,6 +123,33 @@ const Index = () => {
     },
   ];
 
+  const testimonials = [
+    {
+      name: "أحمد محمود",
+      role: "طالب جامعي",
+      content:
+        "لقيت سكن قريب من جامعة الإسكندرية بسهولة، والتواصل مع المالك كان سريع وواضح.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    {
+      name: "سارة أحمد",
+      role: "طالبة",
+      content:
+        "المنصة ساعدتني أختار بين أكتر من شقة للطالبات بأسعار مناسبة وأماكن آمنة.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/women/44.jpg",
+    },
+    {
+      name: "محمد علي",
+      role: "رب أسرة",
+      content:
+        "كمستأجر لعائلتي، قدرت ألاقي شقة مناسبة في منطقة هادية وبسعر كويس في وقت قصير.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/men/67.jpg",
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
       <Navbar />
@@ -180,14 +206,13 @@ const Index = () => {
               الإسكندرية.
             </motion.p>
 
-            {/* Search Box */}
-              <div className="text-center mt-8">
-                <Button asChild variant="outline" size="lg">
-                  <Link to="/properties" className="text-blue-600">
-                    عرض جميع المناطق
-                  </Link>
-                </Button>
-              </div>
+            <div className="text-center mt-8">
+              <Button asChild variant="outline" size="lg">
+                <Link to="/properties" className="text-blue-600">
+                  عرض جميع المناطق
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         </div>
 
@@ -430,74 +455,73 @@ const Index = () => {
         </div>
       </section>
 
-{/* Testimonials Section */}
-<section className="py-12 md:py-20 bg-accent/30">
-  <div className="container mx-auto px-4">
-    <motion.div
-      className="text-center mb-10 md:mb-12"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={fadeInUp}
-    >
-      <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-3">
-        <MessageSquare className="h-4 w-4" />
-        آراء العملاء
-      </span>
-      <h2 className="text-2xl md:text-4xl font-bold mb-3">
-        ماذا يقول المستخدمون؟
-      </h2>
-      <p className="text-muted-foreground">
-        تجارب حقيقية من طلاب وعائلات استخدموا المنصة
-      </p>
-    </motion.div>
+      {/* Testimonials Section */}
+      <section className="py-12 md:py-20 bg-accent/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-10 md:mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-3">
+              <MessageSquare className="h-4 w-4" />
+              آراء العملاء
+            </span>
+            <h2 className="text-2xl md:text-4xl font-bold mb-3">
+              ماذا يقول المستخدمون؟
+            </h2>
+            <p className="text-muted-foreground">
+              تجارب حقيقية من طلاب وعائلات استخدموا المنصة
+            </p>
+          </motion.div>
 
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-3 gap-6"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={staggerContainer}
-    >
-      {testimonials.map((testimonial, index) => (
-        <motion.div
-          key={index}
-          className="bg-background rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-          variants={fadeInUp}
-          whileHover={{ y: -5 }}
-        >
-          {/* Stars */}
-          <div className="flex gap-1 mb-4">
-            {[...Array(testimonial.rating)].map((_, i) => (
-              <Star
-                key={i}
-                className="h-4 w-4 text-secondary fill-secondary"
-              />
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="bg-background rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                variants={fadeInUp}
+                whileHover={{ y: -5 }}
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="h-4 w-4 text-secondary fill-secondary"
+                    />
+                  ))}
+                </div>
+
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  "{testimonial.content}"
+                </p>
+
+                <div className="flex items-center gap-3">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {testimonial.role}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             ))}
-          </div>
-
-          <p className="text-muted-foreground mb-6 leading-relaxed">
-            "{testimonial.content}"
-          </p>
-
-          <div className="flex items-center gap-3">
-            <img
-              src={testimonial.image}
-              alt={testimonial.name}
-              className="w-12 h-12 rounded-full object-cover"
-            />
-            <div>
-              <div className="font-semibold">{testimonial.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {testimonial.role}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      ))}
-    </motion.div>
-  </div>
-</section>
+          </motion.div>
+        </div>
+      </section>
 
       {/* CTA Section - للوسطاء */}
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -529,7 +553,11 @@ const Index = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center"
             variants={fadeInUp}
           >
-            <Button size="lg" variant="secondary" className="gap-2 text-base px-8">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="gap-2 text-base px-8"
+            >
               سجل كوسيط عقاري
             </Button>
             <Button
