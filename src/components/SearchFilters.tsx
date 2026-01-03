@@ -126,6 +126,21 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
+             div className="space-y-2">
+              <Label>نوع العقار</Label>
+              <Select value={propertyType} onValueChange={setPropertyType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر نوع العقار" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="شقة">شقة</SelectItem>
+                  <SelectItem value="فيلا">فيلا</SelectItem>
+                  <SelectItem value="استوديو">استوديو</SelectItem>
+                  <SelectItem value="شاليه">شاليه</SelectItem>
+                  {/* أضف الخيارات حسب أنواعك */}
+                </SelectContent>
+              </Select>
+            </div>
 
 
             {/* 🔹 حالة الأثاث */}
