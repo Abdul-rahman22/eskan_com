@@ -40,7 +40,7 @@ interface Filters {
   priceRange: number[];
 }
 
-// 🔹 خريطة أنواع الاستخدام للرسالة
+// ----------- Usage Type Labels -----------
 const USAGE_TYPE_LABELS: { [key: string]: string } = {
   students: "طلاب",
   families: "عائلات",
@@ -53,23 +53,27 @@ const USAGE_TYPE_LABELS: { [key: string]: string } = {
 const Properties: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialArea = searchParams.get("area") || "";
+
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentFilters, setCurrentFilters] = useState<Filters | null>(null);
 
-  // ----------- Fetch Data -----------
+  const [currentFilters, setCurrentFilters] = useState<Filters | null>(null);
+  const [areaError, setAreaError] = useState<string | null>(null);
+
+  // ----------- Fetch Properties -----------
   useEffect(() => {
     const fetchProperties = async () => {
       setLoading(true);
       try {
         const { data } = await axios.get(`${API_URL}/properties/`);
         setProperties(data);
-        // Filter by area from URL (if exists)
+
         setFilteredProperties(
           initialArea
             ? data.filter((p: Property) => {
-                const pArea = typeof p.area === "object" ? p.area.name : p.area;
+                const pArea =
+                  typeof p.area === "object" ? p.area.name : p.area;
                 return pArea === initialArea;
               })
             : data
@@ -84,20 +88,27 @@ const Properties: React.FC = () => {
     fetchProperties();
   }, [initialArea]);
 
-  // ----------- Handle Filters -----------
+  // ----------- Handle Search (Area Required) -----------
   const handleSearch = (filters: Filters) => {
     setCurrentFilters(filters);
-    let filtered = [...properties];
 
-    // Filter by Area
-    if (filters.area) {
-      filtered = filtered.filter((p) => {
-        const pArea = typeof p.area === "object" ? p.area.name : p.area;
-        return pArea === filters.area;
-      });
+    // 🔴 المنطقة مطلوبة
+    if (!filters.area) {
+      setAreaError("من فضلك اختر المنطقة أولاً");
+      setFilteredProperties([]);
+      return;
     }
 
-    // Filter by Rooms
+    setAreaError(null);
+    let filtered = [...properties];
+
+    // Area
+    filtered = filtered.filter((p) => {
+      const pArea = typeof p.area === "object" ? p.area.name : p.area;
+      return pArea === filters.area;
+    });
+
+    // Rooms
     if (filters.rooms) {
       const roomCount = filters.rooms === "5+" ? 5 : Number(filters.rooms);
       filtered = filtered.filter((p) => {
@@ -108,23 +119,23 @@ const Properties: React.FC = () => {
       });
     }
 
-    // Filter by Property Type
+    // Property Type
     if (filters.propertyType) {
       filtered = filtered.filter((p) => p.type === filters.propertyType);
     }
 
-    // 🔹 Filter by Usage Type
+    // Usage Type
     if (filters.usageType) {
       filtered = filtered.filter((p) => p.usage_type === filters.usageType);
     }
 
-    // Filter by Furnished
+    // Furnished
     if (filters.furnished !== "") {
       const isFurnished = filters.furnished === "true";
       filtered = filtered.filter((p) => p.furnished === isFurnished);
     }
 
-    // Filter by Price Range
+    // Price Range
     if (filters.priceRange.length === 2) {
       filtered = filtered.filter(
         (p) =>
@@ -136,8 +147,10 @@ const Properties: React.FC = () => {
     setFilteredProperties(filtered);
   };
 
-// 🔹 حساب الرسالة المناسبة
+  // ----------- Empty Message -----------
   const getEmptyMessage = (): string => {
+    if (areaError) return areaError;
+
     if (!currentFilters) {
       return "لا توجد عقارات متاحة";
     }
@@ -145,32 +158,36 @@ const Properties: React.FC = () => {
     const reasons: string[] = [];
 
     if (currentFilters.usageType) {
-      const typeLabel = USAGE_TYPE_LABELS[currentFilters.usageType] || currentFilters.usageType;
-      reasons.push(`لا توجد عقارات لل\u201c${typeLabel}\u201d`);
+      const label =
+        USAGE_TYPE_LABELS[currentFilters.usageType] ||
+        currentFilters.usageType;
+      reasons.push(`لا توجد عقارات لـ "${label}"`);
     }
 
     if (currentFilters.area) {
-      reasons.push(`في منطقة \u201c${currentFilters.area}\u201d`);
+      reasons.push(`في منطقة "${currentFilters.area}"`);
     }
 
     if (currentFilters.rooms) {
-      reasons.push(`ب\u201c${currentFilters.rooms} غرف\u0629\u201d`);
+      reasons.push(`بعدد "${currentFilters.rooms}" غرف`);
     }
 
     if (currentFilters.propertyType) {
-      reasons.push(`من نوع \u201c${currentFilters.propertyType}\u201d`);
+      reasons.push(`من نوع "${currentFilters.propertyType}"`);
     }
 
-    return reasons.length > 0
-      ? reasons.join(" و")
-      : "لا توجد عقارات تطابق معاييرك";
+    return reasons.length
+      ? reasons.join(" و ")
+      : "لا توجد عقارات تطابق معايير البحث";
   };
+
   // ----------- UI -----------
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
       <Navbar />
+
       <main className="flex-1 mt-16">
-        {/* Header section */}
+        {/* Header */}
         <div className="bg-primary/5 py-12">
           <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold mb-2">عقارات للإيجار</h1>
@@ -182,38 +199,55 @@ const Properties: React.FC = () => {
           </div>
         </div>
 
-        {/* Filters + List */}
+        {/* Filters */}
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
-            <SearchFilters onSearch={handleSearch} initialArea={initialArea} />
+            <SearchFilters
+              onSearch={handleSearch}
+              initialArea={initialArea}
+            />
           </div>
+
+          {/* Area Error */}
+          {areaError && (
+            <div className="text-center text-red-600 font-semibold mb-6">
+              {areaError}
+            </div>
+          )}
+
+          {/* Content */}
           {loading ? (
             <div className="text-center text-gray-500 py-20">
               جارٍ تحميل العقارات...
             </div>
           ) : filteredProperties.length > 0 ? (
             <>
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-muted-foreground">
-                  عرض {filteredProperties.length} عقار
-                </p>
-              </div>
+              <p className="text-muted-foreground mb-6">
+                عرض {filteredProperties.length} عقار
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProperties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                  />
                 ))}
               </div>
             </>
           ) : (
             <div className="text-center py-20">
-              <h3 className="text-2xl font-bold mb-2">{getEmptyMessage()}</h3>
-              <p className="text-muted-foreground mb-6">
-                حاول تعديل معايير البحث لالعثور على عقارات مناسبة
+              <h3 className="text-2xl font-bold mb-2">
+                {getEmptyMessage()}
+              </h3>
+              <p className="text-muted-foreground">
+                حاول تعديل معايير البحث
               </p>
             </div>
           )}
         </div>
       </main>
+
       <Footer />
     </div>
   );
