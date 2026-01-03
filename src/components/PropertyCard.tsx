@@ -122,14 +122,30 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
           </div>
 
-          {/* ✅ الوسوم */}
-          <div className="flex gap-2 flex-wrap">
-            <Badge variant="outline">{property.type}</Badge>
-            <Badge variant="outline">
-              {property.furnished ? "مفروشة" : "غير مفروشة"}
-            </Badge>
-            <Badge variant="outline">الطابق {property.floor}</Badge>
-          </div>
+              {/* ✅ الوسوم */}
+              <div className="flex gap-2 flex-wrap">
+                {/* نوع الاستخدام (طلاب/عائلات/...) */}
+                {property.usage_type && (
+                  <Badge variant="outline">
+                    {property.usage_type_ar || getUsageTypeInArabic(property.usage_type)}
+                  </Badge>
+                )}
+              
+                {/* نوع العقار الأساسي لو بتحفظه في field type (شقة/فيلا...) */}
+                {property.type && (
+                  <Badge variant="outline">
+                    {property.type}
+                  </Badge>
+                )}
+              
+                <Badge variant="outline">
+                  {property.furnished ? "مفروشة" : "غير مفروشة"}
+                </Badge>
+              
+                {property.floor && (
+                  <Badge variant="outline">الطابق {property.floor}</Badge>
+                )}
+              </div>
 
           {/* الأزرار */}
           <div className="flex gap-2 pt-2">
