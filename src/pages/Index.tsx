@@ -99,13 +99,14 @@ const Index = () => {
         "البحث والتصفح مجاني بالكامل للمستخدمين، قد يتم احتساب رسوم خدمة على بعض الإعلانات المدفوعة.",
     },
   ];
-  
+
   const stats = [
-      { value: "5000+", label: "عقار متاح" },
-      { value: "40+", label: "منطقة" },
-      { value: "1000+", label: "عميل سعيد" },
-      { value: "200+", label: "وسيط معتمد" },
-    ];
+    { value: "5000+", label: "عقار متاح" },
+    { value: "40+", label: "منطقة" },
+    { value: "1000+", label: "عميل سعيد" },
+    { value: "200+", label: "وسيط معتمد" },
+  ];
+
   const advantages = [
     {
       icon: BadgeCheck,
@@ -161,7 +162,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section - Animated */}
-      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden mt-16">
+      <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden mt-16">
         <motion.div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroHome})` }}
@@ -212,18 +213,8 @@ const Index = () => {
               الإسكندرية.
             </motion.p>
 
-            <div className="text-center mt-8">
-              <Button asChild variant="outline" size="lg">
-                <Link to="/properties" className="text-blue-600">
-                  عرض جميع المناطق
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-            {/* Stats */}
             <motion.div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 md:pt-10 px-2"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-4 md:pt-6 px-2"
               variants={staggerContainer}
             >
               {stats.map((stat, index) => (
@@ -241,6 +232,16 @@ const Index = () => {
                 </motion.div>
               ))}
             </motion.div>
+
+            <div className="text-center mt-6">
+              <Button asChild variant="outline" size="lg">
+                <Link to="/properties" className="text-blue-600">
+                  عرض جميع المناطق
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
 
         <motion.div
           className="absolute bottom-6 left-1/2 -translate-x-1/2"
