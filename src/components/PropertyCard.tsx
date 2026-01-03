@@ -5,10 +5,9 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Bed, Bath, Maximize2, MapPin } from "lucide-react";
 
-// تأكد من أن هذا الرابط صحيح ويعمل
 const backendUrl = "https://abdo238923.pythonanywhere.com";
 
-// دالة تحويل نوع الاستخدام من الإنجليزية إلى العربية
+// 🔹 دالة تحويل نوع الاستخدام من الإنجليزية إلى العربية
 const getUsageTypeInArabic = (type: string | null | undefined): string => {
   if (!type) return "";
   const typeMapping: Record<string, string> = {
@@ -21,36 +20,31 @@ const getUsageTypeInArabic = (type: string | null | undefined): string => {
   return typeMapping[type] || type;
 };
 
-// استخدام any هنا لتجنب أي مشاكل في التوافق، يمكنك استيراد الواجهة الموحدة لاحقاً
 interface PropertyCardProps {
   property: any;
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
-
+  
   // معالجة المنطقة
   const areaName =
     typeof property.area === "object" && property.area !== null
       ? property.area.name
       : property.area || "غير محدد";
-
+  
   // دالة لاستخراج رابط الصورة الصحيح
   const getImageUrl = () => {
     const img = property.images?.[0]?.image_url;
-    if (!img) return "/default.jpg"; // صورة بديلة في حال عدم وجود صور
-
-    // إذا كان الرابط كامل (يبدأ بـ http) نرجعه كما هو
+    if (!img) return "/default.jpg";
     if (img.startsWith("http")) return img;
-
-    // إذا كان الرابط نسبي، نضيف الدومين قبله
     return `${backendUrl}${img}`;
   };
 
   return (
     <Card className="property-card overflow-hidden group">
       <div className="relative h-64 overflow-hidden">
-        {/* عرض الصورة باستخدام الدالة المصححة */}
+        {/* عرض الصورة */}
         <img
           src={getImageUrl()}
           alt={property.name}
@@ -68,17 +62,17 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             }
           }}
         />
-
+        
         {/* طبقة التظليل */}
         <div className="card-gradient-overlay absolute inset-0" />
-
-        {/* شارة مميز */}
-        {property.featured && (
-          <Badge className="absolute top-4 left-4 bg-secondary text-secondary-foreground">
-            مميز
+        
+        {/* 🔹 شارة نوع الاستخدام (بدل مميز) */}
+        {property.usage_type && (
+          <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground font-bold">
+            {property.usage_type_ar || getUsageTypeInArabic(property.usage_type)}
           </Badge>
         )}
-
+        
         {/* السعر */}
         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
           <div className="bg-background/95 backdrop-blur-sm px-4 py-2 rounded-lg">
@@ -91,7 +85,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </div>
         </div>
       </div>
-
+      
       <CardContent className="p-4">
         <div className="space-y-3">
           {/* العنوان والمنطقة */}
@@ -99,14 +93,13 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <h3 className="font-bold text-lg mb-1 line-clamp-1">
               {property.name}
             </h3>
-
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" style={{ color: "#fbbd23" }} />
               <span>{areaName}</span>
             </div>
           </div>
-
-          {/* ✅ تفاصيل العقار */}
+          
+          {/* تفاصيل العقار */}
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <Bed className="h-4 w-4 text-muted-foreground" />
@@ -121,32 +114,34 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               <span>{property.size} م²</span>
             </div>
           </div>
-
-              {/* ✅ الوسوم */}
-              <div className="flex gap-2 flex-wrap">
-                {/* نوع الاستخدام (طلاب/عائلات/...) */}
-                {property.usage_type && (
-                  <Badge variant="outline">
-                    {property.usage_type_ar || getUsageTypeInArabic(property.usage_type)}
-                  </Badge>
-                )}
-              
-                {/* نوع العقار الأساسي لو بتحفظه في field type (شقة/فيلا...) */}
-                {property.type && (
-                  <Badge variant="outline">
-                    {property.type}
-                  </Badge>
-                )}
-              
-                <Badge variant="outline">
-                  {property.furnished ? "مفروشة" : "غير مفروشة"}
-                </Badge>
-              
-                {property.floor && (
-                  <Badge variant="outline">الطابق {property.floor}</Badge>
-                )}
-              </div>
-
+          
+          {/* 🔹 الوسوم - بدون usage_type (لأنه في الأعلى الآن) */}
+          <div className="flex gap-2 flex-wrap">
+            {/* نوع العقار الأساسي */}
+            {property.type && (
+              <Badge variant="outline">
+                {property.type}
+              </Badge>
+            )}
+            
+            {/* حالة الأثاث */}
+            <Badge variant="outline">
+              {property.furnished ? "مفروشة" : "غير مفروشة"}
+            </Badge>
+            
+            {/* الطابق */}
+            {property.floor && (
+              <Badge variant="outline">الطابق {property.floor}</Badge>
+            )}
+            
+            {/* مميز (إذا كان featured = true) */}
+            {property.featured && (
+              <Badge className="bg-yellow-500 text-white">
+                ⭐ مميز
+              </Badge>
+            )}
+          </div>
+          
           {/* الأزرار */}
           <div className="flex gap-2 pt-2">
             <Button asChild className="flex-1">
