@@ -180,12 +180,13 @@ const Index = () => {
             </motion.p>
 
             {/* Search Box */}
-                      <div className="text-center mt-8">
-            <Button asChild variant="outline" size="lg">
-              <Link to="/properties">عرض جميع المناطق</Link>
-            </Button>
-          </div>
-
+              <div className="text-center mt-8">
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/properties" className="text-blue-600">
+                    عرض جميع المناطق
+                  </Link>
+                </Button>
+              </div>
           </motion.div>
         </div>
 
