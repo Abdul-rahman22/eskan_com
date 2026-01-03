@@ -137,7 +137,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             {/* مميز (إذا كان featured = true) */}
             {property.featured && (
               <Badge className="bg-yellow-500 text-white">
-                ⭐ مميز
+                مميز
               </Badge>
             )}
           </div>
