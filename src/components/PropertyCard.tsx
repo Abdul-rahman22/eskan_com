@@ -106,37 +106,29 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
           </div>
 
-          {/* التفاصيل */}
+          {/* ✅ تفاصيل العقار */}
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <Bed className="h-4 w-4 text-muted-foreground" />
               <span>{property.rooms} غرف</span>
             </div>
-
             <div className="flex items-center gap-1">
               <Bath className="h-4 w-4 text-muted-foreground" />
               <span>{property.bathrooms} حمام</span>
             </div>
-
             <div className="flex items-center gap-1">
               <Maximize2 className="h-4 w-4 text-muted-foreground" />
               <span>{property.size} م²</span>
             </div>
           </div>
 
-          {/* الوسوم */}
+          {/* ✅ الوسوم */}
           <div className="flex gap-2 flex-wrap">
-            {property.usage_type && (
-              <Badge variant="outline">
-                {getUsageTypeInArabic(property.usage_type)}
-              </Badge>
-            )}
+            <Badge variant="outline">{property.type}</Badge>
             <Badge variant="outline">
               {property.furnished ? "مفروشة" : "غير مفروشة"}
             </Badge>
-            {property.floor && (
-              <Badge variant="outline">الطابق {property.floor}</Badge>
-            )}
+            <Badge variant="outline">الطابق {property.floor}</Badge>
           </div>
 
           {/* الأزرار */}
