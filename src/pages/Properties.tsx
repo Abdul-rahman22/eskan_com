@@ -23,8 +23,8 @@ interface Property {
   bathrooms?: number;
   size?: number;
   type?: string;
-  usage_type?: string; // 🔹 إضافة usage_type
-  usage_type_ar?: string; // 🔹 إضافة usage_type_ar
+  usage_type?: string;
+  usage_type_ar?: string;
   furnished?: boolean;
   floor?: number;
   featured?: boolean;
@@ -35,10 +35,19 @@ interface Filters {
   area: string;
   rooms: string;
   propertyType: string;
-  usageType: string; // 🔹 إضافة usageType للفلاتر
+  usageType: string;
   furnished: string;
   priceRange: number[];
 }
+
+// 🔹 خريطة أنواع الاستخدام للرسالة
+const USAGE_TYPE_LABELS: { [key: string]: string } = {
+  students: "طلاب",
+  families: "عائلات",
+  studio: "استوديو",
+  vacation: "مصيفين",
+  daily: "حجز يومي",
+};
 
 // ----------- Component -----------
 const Properties: React.FC = () => {
@@ -47,6 +56,7 @@ const Properties: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentFilters, setCurrentFilters] = useState<Filters | null>(null);
 
   // ----------- Fetch Data -----------
   useEffect(() => {
@@ -76,6 +86,7 @@ const Properties: React.FC = () => {
 
   // ----------- Handle Filters -----------
   const handleSearch = (filters: Filters) => {
+    setCurrentFilters(filters);
     let filtered = [...properties];
 
     // Filter by Area
@@ -102,7 +113,7 @@ const Properties: React.FC = () => {
       filtered = filtered.filter((p) => p.type === filters.propertyType);
     }
 
-    // 🔹 Filter by Usage Type (النوع الجديد)
+    // 🔹 Filter by Usage Type
     if (filters.usageType) {
       filtered = filtered.filter((p) => p.usage_type === filters.usageType);
     }
@@ -123,6 +134,36 @@ const Properties: React.FC = () => {
     }
 
     setFilteredProperties(filtered);
+  };
+
+  // 🔹 حساب الرسالة المناسبة
+  const getEmptyMessage = (): string => {
+    if (!currentFilters) {
+      return "لا توجد عقارات متاحة";
+    }
+
+    const reasons: string[] = [];
+
+    if (currentFilters.usageType) {
+      const typeLabel = USAGE_TYPE_LABELS[currentFilters.usageType] || currentFilters.usageType;
+      reasons.push(`لا توجد عقارات لل\u201c${typeLabel}\u201d`);
+    }
+
+    if (currentFilters.area) {
+      reasons.push(`في منطقة \u201c${currentFilters.area}\u201d`);
+    }
+
+    if (currentFilters.rooms) {
+      reasons.push(`ب\u201c${currentFilters.rooms} غرف\u0629\u201d`);
+    }
+
+    if (currentFilters.propertyType) {
+      reasons.push(`من نوع \u201c${currentFilters.propertyType}\u201d`);
+    }
+
+    return reasons.length > 0
+      ? reasons.join(" و")
+      : "لا توجد عقارات تطابق معاييرك";
   };
 
   // ----------- UI -----------
@@ -166,9 +207,9 @@ const Properties: React.FC = () => {
             </>
           ) : (
             <div className="text-center py-20">
-              <h3 className="text-2xl font-bold mb-2">لا توجد نتائج</h3>
-              <p className="text-muted-foreground">
-                جرب تعديل معايير البحث للعثور على عقارات مناسبة
+              <h3 className="text-2xl font-bold mb-2">{getEmptyMessage()}</h3>
+              <p className="text-muted-foreground mb-6">
+                حاول تعديل معايير البحث لالعثور على عقارات مناسبة
               </p>
             </div>
           )}
