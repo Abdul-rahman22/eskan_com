@@ -7,9 +7,7 @@ import { SearchFilters } from "@/components/SearchFilters";
 import { useSearchParams } from "react-router-dom";
 import { API_URL } from "@/config";
 
-
 // ----------- Interfaces -----------
-
 interface Area {
   id: number;
   name: string;
@@ -25,6 +23,8 @@ interface Property {
   bathrooms?: number;
   size?: number;
   type?: string;
+  usage_type?: string; // 🔹 إضافة usage_type
+  usage_type_ar?: string; // 🔹 إضافة usage_type_ar
   furnished?: boolean;
   floor?: number;
   featured?: boolean;
@@ -35,32 +35,26 @@ interface Filters {
   area: string;
   rooms: string;
   propertyType: string;
+  usageType: string; // 🔹 إضافة usageType للفلاتر
   furnished: string;
   priceRange: number[];
 }
 
-
 // ----------- Component -----------
-
 const Properties: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialArea = searchParams.get("area") || "";
-
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
-
   // ----------- Fetch Data -----------
-
   useEffect(() => {
     const fetchProperties = async () => {
       setLoading(true);
-
       try {
         const { data } = await axios.get(`${API_URL}/properties/`);
         setProperties(data);
-
         // Filter by area from URL (if exists)
         setFilteredProperties(
           initialArea
@@ -80,9 +74,7 @@ const Properties: React.FC = () => {
     fetchProperties();
   }, [initialArea]);
 
-
   // ----------- Handle Filters -----------
-
   const handleSearch = (filters: Filters) => {
     let filtered = [...properties];
 
@@ -97,10 +89,8 @@ const Properties: React.FC = () => {
     // Filter by Rooms
     if (filters.rooms) {
       const roomCount = filters.rooms === "5+" ? 5 : Number(filters.rooms);
-
       filtered = filtered.filter((p) => {
         const propertyRooms = Number(p.rooms ?? 0);
-
         return filters.rooms === "5+"
           ? propertyRooms >= roomCount
           : propertyRooms === roomCount;
@@ -110,6 +100,11 @@ const Properties: React.FC = () => {
     // Filter by Property Type
     if (filters.propertyType) {
       filtered = filtered.filter((p) => p.type === filters.propertyType);
+    }
+
+    // 🔹 Filter by Usage Type (النوع الجديد)
+    if (filters.usageType) {
+      filtered = filtered.filter((p) => p.usage_type === filters.usageType);
     }
 
     // Filter by Furnished
@@ -130,13 +125,10 @@ const Properties: React.FC = () => {
     setFilteredProperties(filtered);
   };
 
-
   // ----------- UI -----------
-
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
       <Navbar />
-
       <main className="flex-1 mt-16">
         {/* Header section */}
         <div className="bg-primary/5 py-12">
@@ -155,7 +147,6 @@ const Properties: React.FC = () => {
           <div className="mb-8">
             <SearchFilters onSearch={handleSearch} initialArea={initialArea} />
           </div>
-
           {loading ? (
             <div className="text-center text-gray-500 py-20">
               جارٍ تحميل العقارات...
@@ -167,7 +158,6 @@ const Properties: React.FC = () => {
                   عرض {filteredProperties.length} عقار
                 </p>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProperties.map((property) => (
                   <PropertyCard key={property.id} property={property} />
@@ -184,7 +174,6 @@ const Properties: React.FC = () => {
           )}
         </div>
       </main>
-
       <Footer />
     </div>
   );
