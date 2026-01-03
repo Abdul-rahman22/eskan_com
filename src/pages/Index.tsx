@@ -101,8 +101,6 @@ const Index = () => {
   ];
 
   const stats = [
-    { value: "5000+", label: "عقار متاح" },
-    { value: "40+", label: "منطقة" },
     { value: "1000+", label: "عميل سعيد" },
     { value: "200+", label: "وسيط معتمد" },
   ];
