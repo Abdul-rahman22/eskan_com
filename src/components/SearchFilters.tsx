@@ -23,7 +23,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
   const [area, setArea] = useState(initialArea || "");
   const [priceRange, setPriceRange] = useState([0, 20000]);
   const [rooms, setRooms] = useState("");
-  const [usageType, setUsageType] = useState("");
+  const [propertyType, setPropertyType] = useState("");
   const [furnished, setFurnished] = useState("");
   const [areas, setAreas] = useState<{ id: number; name: string }[]>([]);
   const [loadingAreas, setLoadingAreas] = useState(true);
