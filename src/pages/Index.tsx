@@ -221,6 +221,26 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
+            {/* Stats */}
+            <motion.div
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 md:pt-10 px-2"
+              variants={staggerContainer}
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-xl"
+                  variants={scaleIn}
+                >
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs sm:text-sm text-white/80 mt-1">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
 
         <motion.div
           className="absolute bottom-6 left-1/2 -translate-x-1/2"
