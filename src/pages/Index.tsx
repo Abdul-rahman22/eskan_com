@@ -430,71 +430,74 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-12 md:py-20 bg-accent/30">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-10 md:mb-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-3">
-              <MessageSquare className="h-4 w-4" />
-              آراء العملاء
-            </span>
-            <h2 className="text-2xl md:text-4xl font-bold mb-3">
-              ماذا يقول عملاؤنا
-            </h2>
-            <p className="text-muted-foreground">تجارب حقيقية من مستخدمي المنصة</p>
-          </motion.div>
+{/* Testimonials Section */}
+<section className="py-12 md:py-20 bg-accent/30">
+  <div className="container mx-auto px-4">
+    <motion.div
+      className="text-center mb-10 md:mb-12"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+    >
+      <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-3">
+        <MessageSquare className="h-4 w-4" />
+        آراء العملاء
+      </span>
+      <h2 className="text-2xl md:text-4xl font-bold mb-3">
+        ماذا يقول المستخدمون؟
+      </h2>
+      <p className="text-muted-foreground">
+        تجارب حقيقية من طلاب وعائلات استخدموا المنصة
+      </p>
+    </motion.div>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="bg-background rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-                variants={fadeInUp}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 text-secondary fill-secondary"
-                    />
-                  ))}
-                </div>
-
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  "{testimonial.content}"
-                </p>
-
-                <div className="flex items-center gap-3">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {testimonial.role}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={staggerContainer}
+    >
+      {testimonials.map((testimonial, index) => (
+        <motion.div
+          key={index}
+          className="bg-background rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+          variants={fadeInUp}
+          whileHover={{ y: -5 }}
+        >
+          {/* Stars */}
+          <div className="flex gap-1 mb-4">
+            {[...Array(testimonial.rating)].map((_, i) => (
+              <Star
+                key={i}
+                className="h-4 w-4 text-secondary fill-secondary"
+              />
             ))}
-          </motion.div>
-        </div>
-      </section>
+          </div>
+
+          <p className="text-muted-foreground mb-6 leading-relaxed">
+            "{testimonial.content}"
+          </p>
+
+          <div className="flex items-center gap-3">
+            <img
+              src={testimonial.image}
+              alt={testimonial.name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <div>
+              <div className="font-semibold">{testimonial.name}</div>
+              <div className="text-xs text-muted-foreground">
+                {testimonial.role}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+</section>
 
       {/* CTA Section - للوسطاء */}
       <section className="py-16 md:py-24 relative overflow-hidden">
