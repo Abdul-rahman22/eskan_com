@@ -19,22 +19,24 @@ interface SearchFiltersProps {
   initialArea?: string;
 }
 
-interface UsageType {
-  value: string;
-  label: string;
-}
+// 🔹 الخيارات الثابتة لأنواع الاستخدام
+const USAGE_TYPES = [
+  { value: "students", label: "طلاب" },
+  { value: "families", label: "عائلات" },
+  { value: "studio", label: "استوديو" },
+  { value: "vacation", label: "مصيفين" },
+  { value: "daily", label: "حجز يومي" },
+];
 
 export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => {
   const [area, setArea] = useState(initialArea || "");
   const [priceRange, setPriceRange] = useState([0, 20000]);
   const [rooms, setRooms] = useState("");
   const [propertyType, setPropertyType] = useState("");
-  const [usageType, setUsageType] = useState(""); // 🔹 نوع الاستخدام الجديد
+  const [usageType, setUsageType] = useState("");
   const [furnished, setFurnished] = useState("");
   const [areas, setAreas] = useState<{ id: number; name: string }[]>([]);
-  const [usageTypes, setUsageTypes] = useState<UsageType[]>([]); // 🔹 حفظ أنواع الاستخدام من API
   const [loadingAreas, setLoadingAreas] = useState(true);
-  const [loadingUsageTypes, setLoadingUsageTypes] = useState(true); // 🔹 تحميل أنواع الاستخدام
 
   // 🔹 جلب المناطق من Django
   useEffect(() => {
@@ -51,57 +53,13 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
       .finally(() => setLoadingAreas(false));
   }, []);
 
-  // 🔹 جلب أنواع الاستخدام (Usage Types) من API
-  useEffect(() => {
-    const fetchUsageTypes = async () => {
-      try {
-        // طلب واحد فقط للحصول على جميع الـ properties للحصول على usage_type الخاص بهم
-        const response = await axios.get(`${API_URL}/properties/`);
-        const properties = response.data.results || response.data;
-        
-        // استخراج الـ usage_types الفريدة من البيانات
-        const uniqueUsageTypes = new Map<string, string>();
-        
-        properties.forEach((property: any) => {
-          if (property.usage_type && property.usage_type_ar) {
-            uniqueUsageTypes.set(property.usage_type, property.usage_type_ar);
-          }
-        });
-        
-        // تحويل الـ Map إلى مصفوفة
-        const usageTypesArray: UsageType[] = Array.from(uniqueUsageTypes).map(
-          ([value, label]) => ({
-            value,
-            label,
-          })
-        );
-        
-        setUsageTypes(usageTypesArray);
-      } catch (err) {
-        console.error("❌ خطأ أثناء جلب أنواع الاستخدام:", err);
-        // إذا فشل الجلب من API، استخدم الخيارات الثابتة كبديل
-        setUsageTypes([
-          { value: "families", label: "عائلات" },
-          { value: "students", label: "طلاب" },
-          { value: "studio", label: "استوديو" },
-          { value: "vacation", label: "مصيفين" },
-          { value: "daily", label: "حجز يومي" },
-        ]);
-      } finally {
-        setLoadingUsageTypes(false);
-      }
-    };
-
-    fetchUsageTypes();
-  }, []);
-
   const handleSearch = () => {
     onSearch({
       area,
       priceRange,
       rooms,
       propertyType,
-      usageType, // 🔹 إرسال نوع الاستخدام
+      usageType,
       furnished,
     });
   };
@@ -111,7 +69,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
     setPriceRange([0, 20000]);
     setRooms("");
     setPropertyType("");
-    setUsageType(""); // 🔹 إعادة تعيين نوع الاستخدام
+    setUsageType("");
     setFurnished("");
     onSearch({});
   };
@@ -178,31 +136,37 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
-            {/* 🔹 نوع الاستخدام (الجديد) */}
+            {/* 🔹 نوع العقار */}
             <div className="space-y-2">
               <Label>نوع العقار</Label>
-              {loadingUsageTypes ? (
-                <p className="text-gray-500 text-sm">جارٍ تحميل أنواع العقارات...</p>
-              ) : (
-                <Select value={usageType} onValueChange={setUsageType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر نوع العقار" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {usageTypes.length > 0 ? (
-                      usageTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value="no-types" disabled>
-                        لا توجد أنواع متاحة
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              )}
+              <Select value={propertyType} onValueChange={setPropertyType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر نوع العقار" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="شقة">شقة</SelectItem>
+                  <SelectItem value="فيلا">فيلا</SelectItem>
+                  <SelectItem value="استوديو">استوديو</SelectItem>
+                  <SelectItem value="شاليه">شاليه</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 🔹 نوع الاستخدام - الخيارات الثابتة */}
+            <div className="space-y-2">
+              <Label>نوع الاستخدام</Label>
+              <Select value={usageType} onValueChange={setUsageType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر نوع الاستخدام" />
+                </SelectTrigger>
+                <SelectContent>
+                  {USAGE_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* 🔹 حالة الأثاث */}
