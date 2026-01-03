@@ -100,6 +100,7 @@ const Index = () => {
     },
   ];
 
+  // بطاقتين فقط
   const stats = [
     { value: "1000+", label: "عميل سعيد" },
     { value: "200+", label: "وسيط معتمد" },
@@ -211,26 +212,24 @@ const Index = () => {
               الإسكندرية.
             </motion.p>
 
+            {/* Stats (عميل سعيد + وسيط معتمد) */}
             <motion.div
-                className="grid grid-cols-2 gap-4 sm:gap-6 pt-4 md:pt-6 px-2"
-                variants={staggerContainer}
-              >
-                {stats.slice(2).map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-xl"
-                    variants={scaleIn}
-                  >
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs sm:text-sm text-white/80 mt-1">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-
+              className="grid grid-cols-2 gap-4 sm:gap-6 pt-4 md:pt-6 px-2"
+              variants={staggerContainer}
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-xl"
+                  variants={scaleIn}
+                >
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-secondary">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs sm:text-sm text-white/80 mt-1">
+                    {stat.label}
+                  </div>
+                </motion.div>
               ))}
             </motion.div>
 
