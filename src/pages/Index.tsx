@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { AreaCard } from "@/components/AreaCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Star, MessageSquare } from "lucide-react";
 import {
   Search,
   Award,
