@@ -178,25 +178,9 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
-            {/* 🔹 نوع العقار */}
-            <div className="space-y-2">
-              <Label>نوع العقار</Label>
-              <Select value={propertyType} onValueChange={setPropertyType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر نوع العقار" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="شقة">شقة</SelectItem>
-                  <SelectItem value="فيلا">فيلا</SelectItem>
-                  <SelectItem value="استوديو">استوديو</SelectItem>
-                  <SelectItem value="شاليه">شاليه</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* 🔹 نوع الاستخدام (الجديد) */}
             <div className="space-y-2">
-              <Label>نوع الاستخدام</Label>
+              <Label>نوع العقار</Label>
               {loadingUsageTypes ? (
                 <p className="text-gray-500 text-sm">جارٍ تحميل أنواع الاستخدام...</p>
               ) : (
