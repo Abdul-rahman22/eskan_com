@@ -8,6 +8,19 @@ import { useState } from "react";
 // تأكد من أن هذا الرابط صحيح ويعمل
 const backendUrl = "https://abdo238923.pythonanywhere.com";
 
+// دالة تحويل نوع العقار من الإنجليزية إلى العربية
+const getUsageTypeInArabic = (type: string | null | undefined): string => {
+  if (!type) return '';
+  const typeMapping: Record<string, string> = {
+    'families': 'عائلات',
+    'students': 'طلاب',
+    'studio': 'استوديو',
+    'vacation': 'مصيفي',
+    'daily': 'حجز يومي',
+  };
+  return typeMapping[type] || type;
+};
+
 // استخدام any هنا لتجنب أي مشاكل في التوافق، يمكنك استيراد الواجهة الموحدة لاحقاً
 interface PropertyCardProps {
   property: any;
@@ -101,8 +114,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               <Bed className="h-4 w-4 text-muted-foreground" />
               <span>{property.rooms} غرف</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Bath className="h-4 w-4 text-muted-foreground" />
+Add usage_type display to PropertyCard component with Arabic translation              <Bath className="h-4 w-4 text-muted-foreground" />
               <span>{property.bathrooms} حمام</span>
             </div>
             <div className="flex items-center gap-1">
@@ -113,7 +125,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
           {/* الوسوم */}
           <div className="flex gap-2 flex-wrap">
-            {property.type && <Badge variant="outline">{property.type}</Badge>}
+{property.usage_type && <Badge variant="outline">{getUsageTypeInArabic(property.usage_type)}</Badge>}
             <Badge variant="outline">
               {property.furnished ? "مفروشة" : "غير مفروشة"}
             </Badge>
