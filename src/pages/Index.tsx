@@ -180,48 +180,6 @@ const Index = () => {
             </motion.p>
 
             {/* Search Box */}
-            <motion.div className="px-2 sm:px-4" variants={fadeInUp}>
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-2xl max-w-2xl mx-auto">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="relative flex-1">
-                    <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      placeholder="ابحث عن منطقة أو نوع سكن..."
-                      className="border-0 bg-accent/50 pr-10 h-12 sm:h-14 text-base rounded-xl"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <Button
-                    size="lg"
-                    className="h-12 sm:h-14 px-6 sm:px-8 rounded-xl text-base gap-2 w-full sm:w-auto"
-                    asChild
-                  >
-                    <Link
-                      to={`/properties?search=${encodeURIComponent(
-                        searchQuery
-                      )}`}
-                    >
-                      <Search className="h-5 w-5" />
-                      <span>بحث</span>
-                    </Link>
-                  </Button>
-                </div>
-
-                <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
-                  {["سكن طلاب", "سكن عائلات", "سكن يومي"].map((label, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      className="flex-shrink-0 px-4 py-2 bg-accent hover:bg-primary hover:text-white rounded-full text-sm transition-colors"
-                      onClick={() => setSearchQuery(label)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
 
