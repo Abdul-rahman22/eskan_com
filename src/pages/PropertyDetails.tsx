@@ -279,19 +279,6 @@ const PropertyDetails = () => {
                     </div>
                   </div>
 
-                  {/* رقم الهاتف + واتساب */}
-                  <div className="pt-4 border-t border-border space-y-4">
-                    <div className="text-center">
-                      <div className="text-xs text-muted-foreground mb-1">
-                        رقم الهاتف 
-                      </div>
-                      <div
-                        className="text-lg font-semibold tracking-widest text-slate-800"
-                        dir="ltr"
-                      >
-                        {property.contact}
-                      </div>
-                    </div>
                   
                     <div className="flex flex-col gap-2">
                       {/* زر واتساب */}
