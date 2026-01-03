@@ -48,7 +48,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
       area,
       priceRange,
       rooms,
-      usageType,   // ← هنا التغيير
+      propertyType,
       furnished,
     });
   };
@@ -57,7 +57,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
     setArea("");
     setPriceRange([0, 20000]);
     setRooms("");
-    setUsageType("");
+    setPropertyType("");
     setFurnished("");
     onSearch({});
   };
@@ -126,10 +126,11 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
             
+
               {/* 🔹 نوع العقار / الاستخدام */}
               <div className="space-y-2">
                 <Label>نوع العقار</Label>
-                  {/* <Select value={propertyType} onValueChange={setPropertyType}> */}
+                  {<Select value={propertyType} onValueChange={setPropertyType}>}
                   <SelectTrigger>
                   <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
@@ -142,6 +143,8 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                   </SelectContent>
                 </Select>
               </div>
+
+
 
             {/* 🔹 حالة الأثاث */}
             <div className="space-y-2">
