@@ -313,6 +313,26 @@ const PropertyDetails = () => {
                   </div>
                 </CardContent>
               </Card>
+                        {/* Location Card */}
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-bold mb-4">الموقع</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-medium">{property.area}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {property.address}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 h-48 bg-muted rounded-lg flex items-center justify-center">
+                    <span className="text-muted-foreground">خريطة الموقع</span>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
