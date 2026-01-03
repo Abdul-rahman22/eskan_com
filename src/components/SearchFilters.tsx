@@ -182,11 +182,11 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
             <div className="space-y-2">
               <Label>نوع العقار</Label>
               {loadingUsageTypes ? (
-                <p className="text-gray-500 text-sm">جارٍ تحميل أنواع الاستخدام...</p>
+                <p className="text-gray-500 text-sm">جارٍ تحميل أنواع العقارات...</p>
               ) : (
                 <Select value={usageType} onValueChange={setUsageType}>
                   <SelectTrigger>
-                    <SelectValue placeholder="اختر نوع الاستخدام" />
+                    <SelectValue placeholder="اختر نوع العقار" />
                   </SelectTrigger>
                   <SelectContent>
                     {usageTypes.length > 0 ? (
