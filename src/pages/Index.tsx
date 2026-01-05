@@ -24,7 +24,8 @@ import {
 } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
-import heroHome from "@/assets/Alex-home.jpg";
+import heroHome from "@/assets/hero-home.jpg";
+import alexHome from "@/assets/Alex-home.jpg";
 import { motion } from "framer-motion";
 import {
   Accordion,
@@ -432,7 +433,7 @@ const Index = () => {
             >
               <div className="relative rounded-2xl overflow-hidden">
                 <img
-                  src={heroHome}
+                  src={alexHome}
                   alt="Alexandria housing"
                   className="w-full h-[300px] md:h-[400px] object-cover"
                 />
