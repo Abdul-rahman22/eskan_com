@@ -20,25 +20,25 @@ interface SearchFiltersProps {
   initialArea?: string;
 }
 
-// 🔹 الخيارات الثابتة لأنواع العقارات
-const PROPERTY_TYPES = [
-  { value: "شقة", label: "شقة" },
-  { value: "استوديو", label: "استوديو" },
-  { value: "دوبلكس", label: "دوبلكس" },
-  { value: "بنتهاوس", label: "بنتهاوس" },
-  { value: "فيلا", label: "فيلا" },
+// 🔹 الخيارات الثابتة لأنواع الاستخدام (نفس القديمة)
+const USAGE_TYPES = [
+  { value: "students", label: "طلاب" },
+  { value: "families", label: "عائلات" },
+  { value: "studio", label: "استوديو" },
+  { value: "vacation", label: "مصيفين" },
+  { value: "daily", label: "حجز يومي" },
 ];
 
 export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => {
   const [area, setArea] = useState(initialArea || "");
   const [priceRange, setPriceRange] = useState([0, 20000]);
   const [rooms, setRooms] = useState("");
-  const [propertyType, setPropertyType] = useState("");
+  const [usageType, setUsageType] = useState("");   // بدل propertyType
   const [furnished, setFurnished] = useState("");
   const [areas, setAreas] = useState<{ id: number; name: string }[]>([]);
   const [loadingAreas, setLoadingAreas] = useState(true);
 
-  // 🔹 جلب المناطق من Django (المحافظة على الـ API)
+  // 🔹 جلب المناطق من Django
   useEffect(() => {
     axios
       .get(`${API_URL}/areas/`)
@@ -58,7 +58,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
       area,
       priceRange,
       rooms,
-      propertyType,
+      usageType,   // إرسال usageType في الفلاتر
       furnished,
     });
   };
@@ -67,24 +67,24 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
     setArea("");
     setPriceRange([0, 20000]);
     setRooms("");
-    setPropertyType("");
+    setUsageType("");
     setFurnished("");
     onSearch({});
   };
 
-  const hasActiveFilters = 
-    area || 
-    rooms || 
-    propertyType || 
-    furnished || 
-    priceRange[0] > 0 || 
+  const hasActiveFilters =
+    area ||
+    rooms ||
+    usageType ||
+    furnished ||
+    priceRange[0] > 0 ||
     priceRange[1] < 20000;
 
   return (
     <Card className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
       <CardContent className="p-4 sm:p-6">
         <div className="space-y-5">
-          {/* Header مع التحسينات الجديدة */}
+          {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-primary/10 p-2 rounded-lg">
@@ -97,10 +97,10 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
               >
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleReset} 
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReset}
                   className="text-destructive hover:text-destructive"
                 >
                   <X className="h-4 w-4 ml-1" />
@@ -110,9 +110,9 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
             )}
           </div>
 
-          {/* Filters مع الأيقونات والتصميم الجديد */}
+          {/* Filters */}
           <div className="space-y-4">
-            {/* 🔹 المنطقة - مع الحفاظ على الـ API */}
+            {/* المنطقة */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -144,18 +144,18 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               )}
             </div>
 
-            {/* 🔹 نوع العقار - الخيارات الجديدة */}
+            {/* نوع الاستخدام (طلاب / عائلات ...إلخ) */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
                 <Home className="h-4 w-4 text-muted-foreground" />
                 نوع العقار
               </Label>
-              <Select value={propertyType} onValueChange={setPropertyType}>
+              <Select value={usageType} onValueChange={setUsageType}>
                 <SelectTrigger className="h-11 bg-background/50">
-                  <SelectValue placeholder="اختر النوع" />
+                  <SelectValue placeholder="اختر نوع العقار" />
                 </SelectTrigger>
                 <SelectContent>
-                  {PROPERTY_TYPES.map((type) => (
+                  {USAGE_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -164,7 +164,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
-            {/* 🔹 عدد الغرف */}
+            {/* عدد الغرف */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
                 <DoorOpen className="h-4 w-4 text-muted-foreground" />
@@ -184,7 +184,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
-            {/* 🔹 حالة الأثاث */}
+            {/* حالة الأثاث */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
                 <Sofa className="h-4 w-4 text-muted-foreground" />
@@ -201,7 +201,7 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
               </Select>
             </div>
 
-            {/* 🔹 السعر - التصميم المحسن */}
+            {/* السعر */}
             <div className="space-y-3">
               <Label className="flex items-center gap-2 text-sm font-medium">
                 <Coins className="h-4 w-4 text-muted-foreground" />
@@ -231,13 +231,13 @@ export const SearchFilters = ({ onSearch, initialArea }: SearchFiltersProps) => 
             </div>
           </div>
 
-          {/* زر البحث المحسن */}
+          {/* زر البحث */}
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Button 
-              onClick={handleSearch} 
+            <Button
+              onClick={handleSearch}
               className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
             >
               <Search className="h-5 w-5 ml-2" />
