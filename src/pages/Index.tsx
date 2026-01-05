@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
-import heroHome from "@/assets/hero-home.jpg";
+import heroHome from "@/assets/Alex-home2.jpg";
 import alexHome from "@/assets/Alex-home.jpg";
 import { motion } from "framer-motion";
 import {
