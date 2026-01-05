@@ -263,13 +263,13 @@ const Index = () => {
               ))}
             </motion.div>
 
-            <div className="text-center mt-6">
-              <Button asChild variant="outline" size="lg">
-                <Link to="/properties" className="text-blue-600">
-                  عرض جميع المناطق
-                </Link>
-              </Button>
-            </div>
+              <div className="text-center mt-6">
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/properties" className="text-black">
+                    عرض جميع المناطق
+                  </Link>
+                </Button>
+              </div>
           </motion.div>
         </div>
 
