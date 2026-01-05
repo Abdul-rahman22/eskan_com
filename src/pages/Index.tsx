@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
-import heroHome from "@/assets/hero-home.jpg";
 import heroHome from "@/assets/Alex-home.jpg";
 import { motion } from "framer-motion";
 import {
@@ -431,28 +430,26 @@ const Index = () => {
               viewport={{ once: true }}
               variants={scaleIn}
             >
-            <div className="relative rounded-2xl overflow-hidden">
-                  <img
-                    src={heroHome}
-                    alt="Alexandria housing"
-                    className="w-full h-[300px] md:h-[400px] object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
-                  <div className="absolute bottom-6 right-6 left-6 text-white">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                        <Home className="h-8 w-8" />
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold">الإسكندرية</div>
-                        <div className="text-white/80 text-sm">
-                          خيارات سكن متنوعة لكل الاحتياجات
-                        </div>
+              <div className="relative rounded-2xl overflow-hidden">
+                <img
+                  src={heroHome}
+                  alt="Alexandria housing"
+                  className="w-full h-[300px] md:h-[400px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+                <div className="absolute bottom-6 right-6 left-6 text-white">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                      <Home className="h-8 w-8" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold">الإسكندرية</div>
+                      <div className="text-white/80 text-sm">
+                        خيارات سكن متنوعة لكل الاحتياجات
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
             </motion.div>
           </div>
@@ -501,7 +498,7 @@ const Index = () => {
         </div>
       </section>
 
-            {/* Testimonials Section */}
+      {/* Testimonials Section */}
       <section className="py-12 md:py-20 bg-accent/30">
         <div className="container mx-auto px-4">
           <motion.div
@@ -569,7 +566,6 @@ const Index = () => {
         </div>
       </section>
 
-
       {/* FAQ Section */}
       <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4">
@@ -584,7 +580,7 @@ const Index = () => {
               <MessageSquare className="h-4 w-4" />
               الأسئلة الشائعة
             </span>
-            <h2 className="text-2xl md:text-4xl font-bold mb-3">
+            <h2 className="text-2xl md:4xl font-bold mb-3">
               هل لديك سؤال؟
             </h2>
             <p className="text-muted-foreground">
@@ -637,7 +633,6 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
-
 
       {/* CTA Section - للوسطاء */}
       <section className="py-16 md:py-24 relative overflow-hidden">
