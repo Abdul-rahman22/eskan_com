@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { AreaCard } from "@/components/AreaCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import heroHome from "../assets/Alex-home.jpg";
+
 import {
   Search,
   Award,
@@ -429,26 +431,28 @@ const Index = () => {
               viewport={{ once: true }}
               variants={scaleIn}
             >
-              <div className="relative rounded-2xl overflow-hidden">
-                <img
-                  src={heroHome}
-                  alt="Alexandria housing"
-                  className="w-full h-[300px] md:h-[400px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
-                <div className="absolute bottom-6 right-6 left-6 text-white">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                      <Home className="h-8 w-8" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">الإسكندرية</div>
-                      <div className="text-white/80 text-sm">
-                        خيارات سكن متنوعة لكل الاحتياجات
+            <div className="relative rounded-2xl overflow-hidden">
+                  <img
+                    src={heroHome}
+                    alt="Alexandria housing"
+                    className="w-full h-[300px] md:h-[400px] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+                  <div className="absolute bottom-6 right-6 left-6 text-white">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                        <Home className="h-8 w-8" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold">الإسكندرية</div>
+                        <div className="text-white/80 text-sm">
+                          خيارات سكن متنوعة لكل الاحتياجات
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
               </div>
             </motion.div>
           </div>
