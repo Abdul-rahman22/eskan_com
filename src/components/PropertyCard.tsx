@@ -134,13 +134,12 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               <Badge variant="outline">الطابق {property.floor}</Badge>
             )}
             
-         {/* مميز (إذا كان featured = true) */}
+        {/* مميز (إذا كان featured = true) */}
             {property.featured && (
               <Badge className="bg-[hsl(var(--secondary))] text-white">
                 مميز
               </Badge>
             )}
-
           </div>
           
           {/* الأزرار */}
