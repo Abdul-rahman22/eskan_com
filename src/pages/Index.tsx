@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import { AreaCard } from "@/components/AreaCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import heroHome from "../assets/Alex-home.jpg";
 
 import {
   Search,
@@ -26,6 +25,7 @@ import {
 import { fetchAreas } from "@/api";
 import { Link } from "react-router-dom";
 import heroHome from "@/assets/hero-home.jpg";
+import heroHome from "@/assets/Alex-home.jpg";
 import { motion } from "framer-motion";
 import {
   Accordion,
