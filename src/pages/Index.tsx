@@ -635,54 +635,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section - للوسطاء */}
-      <section className="py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 hero-gradient1" />
-        <motion.div
-          className="container mx-auto px-4 text-center relative z-10"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <motion.div variants={fadeInUp}>
-            <Home className="h-12 w-12 md:h-16 md:w-16 text-white/80 mx-auto mb-4 md:mb-6" />
-          </motion.div>
-          <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"
-            variants={fadeInUp}
-          >
-            هل أنت وسيط عقاري؟
-          </motion.h2>
-          <motion.p
-            className="text-base md:text-lg mb-6 md:mb-8 text-white/90 max-w-xl mx-auto px-4"
-            variants={fadeInUp}
-          >
-            انضم إلى منصتنا وابدأ في عرض عقاراتك لآلاف الطلاب والعائلات في
-            الإسكندرية.
-          </motion.p>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            variants={fadeInUp}
-          >
-            <Button
-              size="lg"
-              variant="secondary"
-              className="gap-2 text-base px-8"
-            >
-              سجل كوسيط عقاري
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="gap-2 text-base px-8 bg-transparent border-white text-white hover:bg-white/10"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              اتصل بنا
-            </Button>
-          </motion.div>
-        </motion.div>
-      </section>
 
       <Footer />
     </div>
