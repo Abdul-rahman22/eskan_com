@@ -313,6 +313,38 @@ const PropertyDetails = () => {
                   </div>
                 </CardContent>
               </Card>
+              <Card>
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <Shield className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm">عقار موثق</div>
+                        <div className="text-xs text-muted-foreground">تم التحقق من البيانات</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <Clock className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm">استجابة سريعة</div>
+                        <div className="text-xs text-muted-foreground">يرد خلال ساعة</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                        <Star className="h-5 w-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm">تقييم ممتاز</div>
+                        <div className="text-xs text-muted-foreground">4.8 من 5 نجوم</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
             </div>
           </div>
         </div>
