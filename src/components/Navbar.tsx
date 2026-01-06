@@ -67,7 +67,6 @@ const Navbar = () => {
               <User className="h-5 w-5" />
             </Button> */}
             <Button size="sm" className="gap-2">
-              <Phone className="h-4 w-4" />
               <span> تسجيل الدخول </span>
             </Button>
           </div>
