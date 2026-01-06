@@ -1,4 +1,4 @@
-import { Menu, Phone } from "lucide-react";
+import { Menu, Phone, Heart, User } from "lucide-react";
 import logo from "../assets/logo1.png";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -13,11 +13,12 @@ const Navbar = () => {
     { path: "/", label: "الرئيسية" },
     { path: "/properties", label: "العقارات" },
     { path: "/about", label: "من نحن" },
+    // { path: "/contact", label: "تواصل معنا" },
+    // { path: "/admin", label: "لوحة التحكم" },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border shadow-sm relative">
-      {/* المحتوى الأساسي */}
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -59,6 +60,12 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            {/* <Button variant="ghost" size="icon">
+              <Heart className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <User className="h-5 w-5" />
+            </Button> */}
             <Button size="sm" className="gap-2">
               <Phone className="h-4 w-4" />
               <span>اتصل بنا</span>
@@ -90,6 +97,14 @@ const Navbar = () => {
                 ))}
 
                 <div className="flex flex-col gap-2 mt-4">
+                  {/* <Button variant="outline" className="w-full gap-2">
+                    <Heart className="h-4 w-4" />
+                    المفضلة
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2">
+                    <User className="h-4 w-4" />
+                    حسابي
+                  </Button> */}
                   <Button className="w-full gap-2">
                     <Phone className="h-4 w-4" />
                     اتصل بنا
@@ -100,17 +115,6 @@ const Navbar = () => {
           </Sheet>
         </div>
       </div>
-
-      {/* ===== Blur خفيف في آخر الـ Navbar فقط ===== */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-background/60 backdrop-blur-md"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 100%)",
-          maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 100%)",
-        }}
-      />
     </nav>
   );
 };
