@@ -135,11 +135,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             )}
             
         {/* مميز (إذا كان featured = true) */}
-            {property.featured && (
-              <Badge className="bg-[hsl(var(--secondary))] text-white">
-                مميز
-              </Badge>
-            )}
+              {property.featured && (
+                <Badge className="bg-[#ffb914] text-white">
+                  مميز
+                </Badge>
+              )}
           </div>
           
           {/* الأزرار */}
