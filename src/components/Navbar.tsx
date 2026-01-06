@@ -13,6 +13,7 @@ const Navbar = () => {
     { path: "/", label: "الرئيسية" },
     { path: "/properties", label: "العقارات" },
     { path: "/about", label: "من نحن" },
+    // يمكنك إضافة روابط لاحقًا
     // { path: "/contact", label: "تواصل معنا" },
     // { path: "/admin", label: "لوحة التحكم" },
   ];
@@ -35,9 +36,7 @@ const Navbar = () => {
               <span className="font-bold text-xl text-primary">
                 Eskan Egypt
               </span>
-              <span className="text-xs text-muted-foreground">
-                اسكان مصر
-              </span>
+              <span className="text-xs text-muted-foreground">اسكان مصر</span>
             </div>
           </Link>
 
@@ -48,9 +47,7 @@ const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(link.path)
-                    ? "text-primary"
-                    : "text-foreground"
+                  isActive(link.path) ? "text-primary" : "text-foreground"
                 }`}
               >
                 {link.label}
@@ -60,13 +57,21 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            {/* مثال على أيقونات */}
             {/* <Button variant="ghost" size="icon">
               <Heart className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button> */}
-            <Link to="/login" className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+
+            {/* زر تسجيل الدخول */}
+            <Link
+              to="/login"
+              className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              تسجيل الدخول
+            </Link>
           </div>
 
           {/* Mobile Menu */}
@@ -84,9 +89,7 @@ const Navbar = () => {
                     key={link.path}
                     to={link.path}
                     className={`text-lg font-medium transition-colors hover:text-primary p-3 rounded-lg ${
-                      isActive(link.path)
-                        ? "bg-accent text-primary"
-                        : ""
+                      isActive(link.path) ? "bg-accent text-primary" : ""
                     }`}
                   >
                     {link.label}
@@ -94,6 +97,7 @@ const Navbar = () => {
                 ))}
 
                 <div className="flex flex-col gap-2 mt-4">
+                  {/* أيقونات إضافية للموبايل */}
                   {/* <Button variant="outline" className="w-full gap-2">
                     <Heart className="h-4 w-4" />
                     المفضلة
