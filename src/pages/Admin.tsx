@@ -18,12 +18,15 @@ import { mockProperties } from "@/data/properties";
 const Admin = () => {
   const { toast } = useToast();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegister, setIsRegister] = useState(false); // جديد: تبديل بين تسجيل الدخول والتسجيل
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState(""); // للاسم في التسجيل
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo login - في التطبيق الحقيقي يجب استخدام Lovable Cloud
+    // Demo login - في التطبيق الحقيقي يجب استخدام Backend فعلي (Next Auth, Django API, ...)[web:1]
     if (email === "admin@sakn-egypt.com" && password === "admin123") {
       setIsLoggedIn(true);
       toast({
@@ -39,6 +42,19 @@ const Admin = () => {
     }
   };
 
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    // هنا المفروض تستدعي API للتسجيل وتخزين المستخدم في DB (Django / Next.js Route Handler)[web:1]
+    toast({
+      title: "تم إنشاء الحساب بنجاح",
+      description: "يمكنك الآن تسجيل الدخول باستخدام بياناتك",
+    });
+
+    // بعد التسجيل نرجع لفورم تسجيل الدخول
+    setIsRegister(false);
+    setPassword("");
+  };
+
   const handleDeleteProperty = (id: string) => {
     toast({
       title: "تم الحذف",
@@ -46,52 +62,120 @@ const Admin = () => {
     });
   };
 
+  // شاشة تسجيل الدخول / إنشاء حساب
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5" dir="rtl">
         <Card className="w-full max-w-md mx-4">
           <CardHeader>
             <CardTitle className="text-2xl text-center">
-              تسجيل الدخول - لوحة التحكم
+              {isRegister ? "إنشاء حساب جديد" : "تسجيل الدخول - لوحة التحكم"}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">البريد الإلكتروني</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@sakn-egypt.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">كلمة المرور</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                تسجيل الدخول
-              </Button>
-              <p className="text-sm text-center text-muted-foreground">
-                Demo: admin@sakn-egypt.com / admin123
-              </p>
-            </form>
+            {isRegister ? (
+              // فورم التسجيل
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">الاسم</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="الاسم الكامل"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">كلمة المرور</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  إنشاء حساب
+                </Button>
+                <p className="text-sm text-center text-muted-foreground">
+                  لديك حساب بالفعل؟{" "}
+                  <button
+                    type="button"
+                    className="underline"
+                    onClick={() => setIsRegister(false)}
+                  >
+                    تسجيل الدخول
+                  </button>
+                </p>
+              </form>
+            ) : (
+              // فورم تسجيل الدخول
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="admin@sakn-egypt.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">كلمة المرور</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  تسجيل الدخول
+                </Button>
+                <p className="text-sm text-center text-muted-foreground">
+                  Demo: admin@sakn-egypt.com / admin123
+                </p>
+                <p className="text-sm text-center text-muted-foreground mt-2">
+                  ليس لديك حساب؟{" "}
+                  <button
+                    type="button"
+                    className="underline"
+                    onClick={() => {
+                      setIsRegister(true);
+                      setPassword("");
+                    }}
+                  >
+                    إنشاء حساب جديد
+                  </button>
+                </p>
+              </form>
+            )}
           </CardContent>
         </Card>
       </div>
     );
   }
 
+  // باقي صفحة لوحة التحكم كما هي
   return (
     <div className="min-h-screen flex flex-col bg-muted/30" dir="rtl">
       <Navbar />
@@ -105,7 +189,11 @@ const Admin = () => {
             </div>
             <Button 
               variant="outline" 
-              onClick={() => setIsLoggedIn(false)}
+              onClick={() => {
+                setIsLoggedIn(false);
+                setEmail("");
+                setPassword("");
+              }}
             >
               تسجيل الخروج
             </Button>
