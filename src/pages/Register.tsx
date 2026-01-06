@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export default function RegisterPage() {
@@ -70,25 +71,82 @@ export default function RegisterPage() {
         </div>
 
         <div className="px-8 py-8">
-          {success && <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">✓ تم إنشاء الحساب بنجاح!</div>}
-          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">{error}</div>}
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
+              ✓ تم إنشاء الحساب بنجاح!
+            </div>
+          )}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="الاسم الأول" className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
-              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="الاسم الأخير" className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="الاسم الأول"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+              />
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="الاسم الأخير"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+              />
             </div>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required placeholder="اسم المستخدم" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="البريد الإلكتروني" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="كلمة المرور (8+ أحرف)" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
-            <input type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} required placeholder="تأكيد كلمة المرور" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" />
-            <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition disabled:opacity-50">
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="اسم المستخدم"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="البريد الإلكتروني"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="كلمة المرور (8+ أحرف)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            <input
+              type="password"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              required
+              placeholder="تأكيد كلمة المرور"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition disabled:opacity-50"
+            >
               {loading ? 'جاري...' : 'إنشاء الحساب'}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            <p>لديك حساب؟ <Link href="/login" className="text-green-600 hover:text-green-800 font-medium">تسجيل دخول</Link></p>
+            <p>
+              لديك حساب؟{' '}
+              <Link to="/login" className="text-green-600 hover:text-green-800 font-medium">
+                تسجيل دخول
+              </Link>
+            </p>
           </div>
         </div>
       </div>
