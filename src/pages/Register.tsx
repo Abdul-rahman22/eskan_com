@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdo238923.pythonanywhere.com';
+
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError(null);
 
+    // Check if passwords match
     if (password !== passwordConfirm) {
       setError('كلمات المرور غير متطابقة');
       setLoading(false);
@@ -42,20 +44,37 @@ export default function RegisterPage() {
 
       const data = await response.json();
 
+      // Check if response status is not OK (e.g., 400, 500, etc.)
+      if (!response.ok) {
+        const errorMessage = data.error || data.errors?.toString() || 'حدث خطأ في التسجيل';
+        setError(errorMessage);
+        setLoading(false);
+        return;
+      }
+
+      // Handle successful registration
       if (data.success) {
         localStorage.setItem('auth_token', data.token);
         setSuccess(true);
+        
+        // Reset form fields
         setUsername('');
         setEmail('');
         setPassword('');
         setPasswordConfirm('');
         setFirstName('');
         setLastName('');
+        
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
       } else {
         setError(data.error || JSON.stringify(data.errors));
       }
     } catch (err) {
-      setError('خطأ في الاتصال');
+      console.error('Registration error:', err);
+      setError('خطأ في الاتصال بالخادم');
     } finally {
       setLoading(false);
     }
@@ -72,7 +91,7 @@ export default function RegisterPage() {
         <div className="px-8 py-8">
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-              ✓ تم إنشاء الحساب بنجاح!
+              ✓ تم إنشاء الحساب بنجاح! برجاء الانتظار...
             </div>
           )}
           {error && (
@@ -98,6 +117,7 @@ export default function RegisterPage() {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
               />
             </div>
+
             <input
               type="text"
               value={username}
@@ -106,6 +126,7 @@ export default function RegisterPage() {
               placeholder="اسم المستخدم"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
+
             <input
               type="email"
               value={email}
@@ -114,6 +135,7 @@ export default function RegisterPage() {
               placeholder="البريد الإلكتروني"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
+
             <input
               type="password"
               value={password}
@@ -122,6 +144,7 @@ export default function RegisterPage() {
               placeholder="كلمة المرور (8+ أحرف)"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
+
             <input
               type="password"
               value={passwordConfirm}
@@ -130,6 +153,7 @@ export default function RegisterPage() {
               placeholder="تأكيد كلمة المرور"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
+
             <button
               type="submit"
               disabled={loading}
