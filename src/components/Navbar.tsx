@@ -68,7 +68,7 @@ const Navbar = () => {
             </Button> */}
             <Button size="sm" className="gap-2">
               <Phone className="h-4 w-4" />
-              <span>اتصل بنا</span>
+              <span> تسجيل الدخول </span>
             </Button>
           </div>
 
