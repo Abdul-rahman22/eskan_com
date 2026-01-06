@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export default function LoginPage() {
@@ -31,10 +32,10 @@ export default function LoginPage() {
         setUsername('');
         setPassword('');
       } else {
-        setError(data.error || 'Failed to login');
+        setError(data.error || 'فشل تسجيل الدخول');
       }
     } catch (err) {
-      setError('Network error');
+      setError('خطأ في الاتصال بالشبكة');
     } finally {
       setLoading(false);
     }
@@ -55,19 +56,40 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">كلمة المرور</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
             </div>
-            <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50"
+            >
               {loading ? 'جاري المحاولة...' : 'تسجيل الدخول'}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            <p>ليس لديك حساب؟ <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium">انشئ حسابا</Link></p>
+            <p>
+              ليس لديك حساب؟{' '}
+              <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+                انشئ حسابا
+              </Link>
+            </p>
           </div>
         </div>
       </div>
