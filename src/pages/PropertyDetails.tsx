@@ -216,10 +216,10 @@ const PropertyDetails = () => {
                           </Badge>
                         )}
                         {property.featured && (
-                          <Badge className="bg-[hsl(var(--secondary))] text-white">
-                            مميز
-                          </Badge>
-                        )}
+                            <Badge className="bg-[#ffb914] text-black hover:bg-[#e6a813] transition-colors">
+                              مميز
+                            </Badge>
+                          )}
                       </div>
                     </div>
 
