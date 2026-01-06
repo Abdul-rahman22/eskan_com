@@ -66,9 +66,7 @@ const Navbar = () => {
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button> */}
-            <Button size="sm" className="gap-2">
-              <span> تسجيل الدخول </span>
-            </Button>
+            <Link to="/login" className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
           </div>
 
           {/* Mobile Menu */}
