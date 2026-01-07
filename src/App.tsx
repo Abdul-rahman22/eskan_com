@@ -3,7 +3,6 @@ import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { PropertyProvider } from "@/context/PropertyContext";
 
 import Index from "./pages/Index";
 import Properties from "./pages/Properties";
@@ -15,53 +14,34 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import AddProperty from "./pages/AddProperty";
-import PropertiesList from "./pages/PropertiesList";
-import EditProperty from "./pages/EditProperty";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <PropertyProvider>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/properties" element={<Properties />} />
-            <Route path="/property/:id" element={<PropertyDetails />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/properties" element={<Properties />} />
+          <Route path="/property/:id" element={<PropertyDetails />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<Dashboard />} />}
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
 
-            {/* Dashboard Routes */}
-            <Route
-              path="/dashboard"
-              element={<ProtectedRoute element={<Dashboard />} />}
-            />
-            <Route
-              path="/dashboard/add"
-              element={<ProtectedRoute element={<AddProperty />} />}
-            />
-            <Route
-              path="/dashboard/properties"
-              element={<ProtectedRoute element={<PropertiesList />} />}
-            />
-            <Route
-              path="/dashboard/edit/:id"
-              element={<ProtectedRoute element={<EditProperty />} />}
-            />
-
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <RadixToaster />
-          <SonnerToaster position="top-center" />
-        </BrowserRouter>
-      </TooltipProvider>
-    </PropertyProvider>
+        <RadixToaster />
+        <SonnerToaster />
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
