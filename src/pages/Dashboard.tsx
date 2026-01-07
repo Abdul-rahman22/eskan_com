@@ -6,56 +6,11 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Building2, Plus, Edit, Trash2 } from "lucide-react";
-
-const mockProperties = [
-  {
-    id: "1",
-    name: "شقة فاخرة",
-    area: "سيدي بشر",
-    price: 500000,
-    rooms: 3,
-    bathrooms: 2,
-    size: 150,
-    status: "pending" as const,
-    images: ["/placeholder.svg"],
-  },
-  {
-    id: "2",
-    name: "فيلا حديثة",
-    area: "سموحة",
-    price: 1200000,
-    rooms: 4,
-    bathrooms: 3,
-    size: 250,
-    status: "approved" as const,
-    images: ["/placeholder.svg"],
-  },
-  {
-    id: "3",
-    name: "شقة في المنتزه",
-    area: "المنتزه",
-    price: 600000,
-    rooms: 3,
-    bathrooms: 2,
-    size: 180,
-    status: "approved" as const,
-    images: ["/placeholder.svg"],
-  },
-];
+import { Building2, Plus } from "lucide-react";
 
 export default function Dashboard() {
-  47
-    = useState(mockProperties);
-    const navigate = useNavigate();
-
-  const handleView = (id: string) => {
-    console.log("View property:", id);
-  };
-
-  const handleEdit = (id: string) => {
-    console.log("Edit property:", id);
-  };
+  const [properties, setProperties] = useState(mockProperties);
+  const navigate = useNavigate();
 
   const handleDelete = (id: string) => {
     setProperties(properties.filter((p) => p.id !== id));
@@ -68,7 +23,6 @@ export default function Dashboard() {
         subtitle="إدارة العقارات والحسابات"
       />
 
-      {/* الإحصائيات */}
       <div className="p-6 lg:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <StatCard
@@ -79,42 +33,42 @@ export default function Dashboard() {
           />
           <StatCard
             title="العقارات النشطة"
-            value={properties.filter((p) => p.status === "approved").length}
+            value={properties.filter(p => p.status === "approved").length}
             icon={Building2}
             variant="success"
           />
           <StatCard
             title="قيد المراجعة"
-            value={properties.filter((p) => p.status === "pending").length}
+            value={properties.filter(p => p.status === "pending").length}
             icon={Building2}
             variant="warning"
           />
           <StatCard
             title="المرفوضة"
-            value={properties.filter((p) => p.status === "rejected").length}
+            value={properties.filter(p => p.status === "rejected").length}
             icon={Building2}
             variant="destructive"
           />
         </div>
 
-        {/* قائمة العقارات */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-foreground">العقارات</h2>
-            <Button className="gap-2">
-                    onClick={() => navigate('/add')}
+            <h2 className="text-2xl font-bold">العقارات</h2>
+
+            <Button
+              className="gap-2"
+              onClick={() => navigate("/add")}
+            >
               <Plus className="h-4 w-4" />
               إضافة عقار جديد
             </Button>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {properties.map((property) => (
+            {properties.map(property => (
               <PropertyCard
                 key={property.id}
                 property={property}
-                onView={handleView}
-                onEdit={handleEdit}
                 onDelete={handleDelete}
               />
             ))}
