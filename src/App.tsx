@@ -13,7 +13,6 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
 import Dashboard from "./pages/Dashboard";
 import AddProperty from "./pages/AddProperty";
 import PropertiesList from "./pages/PropertiesList";
@@ -38,11 +37,23 @@ const App = () => (
           {/* Admin */}
           <Route path="/admin" element={<Admin />} />
 
-          {/* Dashboard with nested routes */}
-          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />}>
-            <Route path="add" element={<ProtectedRoute element={<AddProperty />} />} />
-            <Route path="properties" element={<ProtectedRoute element={<PropertiesList />} />} />
-          </Route>
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<Dashboard />} />}
+          />
+
+          {/* Add Property */}
+          <Route
+            path="/dashboard/add"
+            element={<ProtectedRoute element={<AddProperty />} />}
+          />
+
+          {/* Properties List */}
+          <Route
+            path="/dashboard/properties"
+            element={<ProtectedRoute element={<PropertiesList />} />}
+          />
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
@@ -56,4 +67,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App; 
+export default App;
