@@ -22,7 +22,10 @@ export default function RegisterPage() {
 
   // -------- تحقق من اسم المستخدم قبل الإرسال -------------
   useEffect(() => {
-    if (!username) { setUsernameStatus('idle'); return; }
+    if (!username || username.length < 4) { 
+      setUsernameStatus('idle'); 
+      return; 
+    }
     setUsernameStatus('checking');
     const timer = setTimeout(async () => {
       try {
@@ -52,9 +55,11 @@ export default function RegisterPage() {
     return () => clearTimeout(timer);
   }, [email]);
 
+  const usernameTooShort = username && username.length < 4;
   const hasError =
     usernameStatus === 'taken' ||
     emailStatus === 'taken' ||
+    usernameTooShort ||
     (password && password !== passwordConfirm);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -167,10 +172,13 @@ export default function RegisterPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="اسم المستخدم"
+              placeholder="اسم المستخدم (4+ أحرف)"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
-            {usernameStatus !== 'idle' && (
+            {usernameTooShort && (
+              <p className="text-sm text-red-600">اسم المستخدم يجب أن يكون 4 أحرف على الأقل</p>
+            )}
+            {usernameStatus !== 'idle' && !usernameTooShort && (
               <p className={`text-sm ${usernameStatus==='available'?'text-green-600':usernameStatus==='taken'?'text-red-600':'text-gray-500'}`}>
                 {statusText[usernameStatus]}
               </p>
@@ -184,11 +192,6 @@ export default function RegisterPage() {
               placeholder="البريد الإلكتروني"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
             />
-            {emailStatus !== 'idle' && (
-              <p className={`text-sm ${emailStatus==='available'?'text-green-600':emailStatus==='taken'?'text-red-600':'text-gray-500'}`}>
-                {statusText[emailStatus]}
-              </p>
-            )}
 
             <input
               type="password"
