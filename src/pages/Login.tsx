@@ -31,6 +31,11 @@ export default function LoginPage() {
         setSuccess(true);
         setUsername('');
         setPassword('');
+              
+      // Redirect to dashboard after 1 second
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 1000);
       } else {
         setError(data.error || 'فشل تسجيل الدخول');
       }
