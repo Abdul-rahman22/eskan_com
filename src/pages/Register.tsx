@@ -21,7 +21,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError(null);
 
-    // تقدر تسيب تشيك تطابق الباسورد هنا أو تعتمد على الباك إند فقط
+    // ممكن تسيب التشيك ده أو تعتمد على الباك إند بس
     if (password !== passwordConfirm) {
       setError('كلمات المرور غير متطابقة');
       setLoading(false);
@@ -44,23 +44,24 @@ export default function RegisterPage() {
 
       const data = await response.json();
 
+      // لو في أخطاء validation من Django REST
       if (!response.ok) {
-        // 1) اسم المستخدم مكرر
+        // 1) خطأ في اسم المستخدم (مكرر أو فورمات)
         if (data.username) {
           const msg = Array.isArray(data.username) ? data.username[0] : data.username;
-          setError(msg || 'اسم المستخدم موجود بالفعل');
+          setError(msg || 'هناك مشكلة في اسم المستخدم');
         }
-        // 2) الإيميل مكرر
+        // 2) خطأ في الإيميل (مكرر)
         else if (data.email) {
           const msg = Array.isArray(data.email) ? data.email[0] : data.email;
-          setError(msg || 'البريد الإلكتروني مستخدم بالفعل');
+          setError(msg || 'هناك مشكلة في البريد الإلكتروني');
         }
-        // 3) مشكلة في الباسورد (زي "Passwords do not match.")
+        // 3) خطأ في الباسورد (زي "Passwords do not match.")
         else if (data.password) {
           const msg = Array.isArray(data.password) ? data.password[0] : data.password;
           setError(msg || 'هناك مشكلة في كلمة المرور');
         }
-        // 4) لو الـ serializer راجع dict جوه error
+        // 4) لو الـ validate رجّع dict في key واحد
         else if (data.error) {
           setError(
             typeof data.error === 'string'
@@ -68,7 +69,7 @@ export default function RegisterPage() {
               : JSON.stringify(data.error)
           );
         }
-        // 5) fallback لأي فورم تاني من الأخطاء
+        // 5) fallback لأي حالة غير متوقعة
         else {
           setError('حدث خطأ في التسجيل');
         }
@@ -77,14 +78,15 @@ export default function RegisterPage() {
         return;
       }
 
-      // في حالة النجاح
+      // في حالة النجاح (ظبط ده حسب شكل الريسبونس اللي عندك)
       if (data.success) {
         if (data.token) {
           localStorage.setItem('auth_token', data.token);
         }
+
         setSuccess(true);
 
-        // مسح الفورم
+        // مسح الحقول
         setUsername('');
         setEmail('');
         setPassword('');
@@ -92,15 +94,17 @@ export default function RegisterPage() {
         setFirstName('');
         setLastName('');
 
+        // توجيه لصفحة تسجيل الدخول
         setTimeout(() => {
           window.location.href = '/login';
         }, 2000);
       } else {
+        // لو انت في الباك إند مش مرجع success ومرجع errors بس
         setError(data.error || JSON.stringify(data.errors));
       }
     } catch (err) {
       console.error('Registration error:', err);
-      // دي بس لما يكون في مشكلة نت حقيقية
+      // دي بتطلع بس لو النت أو السيرفر فعلاً فيهم مشكلة
       setError('خطأ في الاتصال بالخادم');
     } finally {
       setLoading(false);
@@ -111,7 +115,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-12">
-        <h1 className="text-3xl font-bold text-white">Eskan Egypt</h1>
+          <h1 className="text-3xl font-bold text-white">Eskan Egypt</h1>
           <p className="text-green-100 mt-2">إنشاء حساب</p>
         </div>
 
