@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdo238923.pythonanywhere.com';
 
 export default function LoginPage() {
+    const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,7 +27,7 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
-
+import { useNavigate } from 'react-router-dom';
       if (data.success) {
         localStorage.setItem('auth_token', data.token);
         setSuccess(true);
@@ -34,11 +36,9 @@ export default function LoginPage() {
               
       // Redirect to dashboard after 1 second
       setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 1000);
+      navigate('/dashboard');
       } else {
         setError(data.error || 'فشل تسجيل الدخول');
-      }
     } catch (err) {
       setError('خطأ في الاتصال بالشبكة');
     } finally {
