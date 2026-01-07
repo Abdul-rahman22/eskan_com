@@ -1,6 +1,7 @@
 'use client';
+
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -8,7 +9,21 @@ import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Building2, Plus } from "lucide-react";
 
-const mockProperties = [
+type PropertyStatus = "pending" | "approved" | "rejected";
+
+interface Property {
+  id: string;
+  name: string;
+  area: string;
+  price: number;
+  rooms: number;
+  bathrooms: number;
+  size: number;
+  status: PropertyStatus;
+  images: string[];
+}
+
+const mockProperties: Property[] = [
   {
     id: "1",
     name: "شقة فاخرة",
@@ -17,7 +32,7 @@ const mockProperties = [
     rooms: 3,
     bathrooms: 2,
     size: 150,
-    status: "pending" as const,
+    status: "pending",
     images: ["/placeholder.svg"],
   },
   {
@@ -28,7 +43,7 @@ const mockProperties = [
     rooms: 4,
     bathrooms: 3,
     size: 250,
-    status: "approved" as const,
+    status: "approved",
     images: ["/placeholder.svg"],
   },
   {
@@ -39,27 +54,36 @@ const mockProperties = [
     rooms: 3,
     bathrooms: 2,
     size: 180,
-    status: "approved" as const,
+    status: "approved",
     images: ["/placeholder.svg"],
   },
 ];
 
 export default function Dashboard() {
-  const [properties, setProperties] = useState(mockProperties);
+  const [properties, setProperties] = useState<Property[]>(mockProperties);
   const navigate = useNavigate();
 
+  const handleView = (id: string) => {
+    console.log("عرض العقار:", id);
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/edit/${id}`);
+  };
+
   const handleDelete = (id: string) => {
-    setProperties(properties.filter((p) => p.id !== id));
+    setProperties(prev => prev.filter(p => p.id !== id));
   };
 
   return (
     <DashboardLayout>
       <DashboardHeader
         title="لوحة التحكم"
-        subtitle="إدارة العقارات والحسابات"
+        subtitle="إدارة العقارات الخاصة بك"
       />
 
       <div className="p-6 lg:p-8">
+        {/* الإحصائيات */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <StatCard
             title="إجمالي العقارات"
@@ -87,6 +111,7 @@ export default function Dashboard() {
           />
         </div>
 
+        {/* قائمة العقارات */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">العقارات</h2>
@@ -105,7 +130,9 @@ export default function Dashboard() {
               <PropertyCard
                 key={property.id}
                 property={property}
-                onDelete={handleDelete}
+                onView={() => handleView(property.id)}
+                onEdit={() => handleEdit(property.id)}
+                onDelete={() => handleDelete(property.id)}
               />
             ))}
           </div>
