@@ -14,6 +14,8 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import AddProperty from "./pages/AddProperty";
+import PropertiesList from "./pages/PropertiesList";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
             path="/dashboard"
             element={<ProtectedRoute element={<Dashboard />} />}
           />
+                <Route path="/add" element={<AddProperty />} />
+      <Route path="/properties-list" element={<PropertiesList />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
