@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdo238923.pythonanywhere.com';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "https://abdo238923.pythonanywhere.com";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,33 +14,36 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('auth_token'); // نفس الاسم
+      // مهم: نفس الاسم المستخدم في LoginPage
+      const token = localStorage.getItem("authtoken");
 
       if (!token) {
-        navigate('/login');
+        navigate("/login");
         return;
       }
 
       try {
+        // عدّل الـ path هنا حسب الباك إند عندك
+        // لو endpoint الصحيح مثلاً /api/v1/users/me/ غيّر السطر ده
         const response = await fetch(`${API_BASE}/api/v1/users/auth/me/`, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
-          localStorage.removeItem('auth_token');
-          navigate('/login');
+          localStorage.removeItem("authtoken");
+          navigate("/login");
           return;
         }
 
         const data = await response.json();
         setUser(data);
       } catch (err) {
-        setError('خطأ في جلب البيانات');
         console.error(err);
+        setError("خطأ في جلب البيانات");
       } finally {
         setLoading(false);
       }
@@ -49,15 +53,15 @@ export default function Dashboard() {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    navigate('/login');
+    localStorage.removeItem("authtoken");
+    navigate("/login");
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">جاري التحميل...</p>
         </div>
       </div>
@@ -69,10 +73,10 @@ export default function Dashboard() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8">
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-            {error || 'غير مصرح لك بالدخول'}
+            {error || "غير مصرح لك بالدخول"}
           </div>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate("/login")}
             className="w-full bg-red-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-red-700 transition"
           >
             العودة للدخول
@@ -101,15 +105,34 @@ export default function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">مرحباً بك في لوحة التحكم</h2>
-          
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            مرحباً بك في لوحة التحكم
+          </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* معلومات المستخدم */}
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white">
               <h3 className="text-lg font-semibold mb-4">معلومات المستخدم</h3>
-              <p className="mb-2"><span className="font-medium">اسم المستخدم:</span> {user?.username}</p>
-              <p className="mb-2"><span className="font-medium">البريد الإلكتروني:</span> {user?.email}</p>
-              {user?.first_name && <p className="mb-2"><span className="font-medium">الاسم الأول:</span> {user?.first_name}</p>}
-              {user?.last_name && <p><span className="font-medium">الاسم الأخير:</span> {user?.last_name}</p>}
+              <p className="mb-2">
+                <span className="font-medium">اسم المستخدم:</span>{" "}
+                {user?.username}
+              </p>
+              <p className="mb-2">
+                <span className="font-medium">البريد الإلكتروني:</span>{" "}
+                {user?.email}
+              </p>
+              {user?.first_name && (
+                <p className="mb-2">
+                  <span className="font-medium">الاسم الأول:</span>{" "}
+                  {user.first_name}
+                </p>
+              )}
+              {user?.last_name && (
+                <p>
+                  <span className="font-medium">الاسم الأخير:</span>{" "}
+                  {user.last_name}
+                </p>
+              )}
             </div>
 
             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-6 text-white">
