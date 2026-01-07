@@ -20,7 +20,7 @@ export default function RegisterPage() {
   const [usernameStatus, setUsernameStatus] = useState<'idle'|'checking'|'available'|'taken'>('idle');
   const [emailStatus, setEmailStatus] = useState<'idle'|'checking'|'available'|'taken'>('idle');
 
-  // ✅ Debounce للتحقق من username
+  // -------- تحقق من اسم المستخدم قبل الإرسال -------------
   useEffect(() => {
     if (!username) { setUsernameStatus('idle'); return; }
     setUsernameStatus('checking');
@@ -32,11 +32,11 @@ export default function RegisterPage() {
       } catch {
         setUsernameStatus('idle');
       }
-    }, 600);
+    }, 500);
     return () => clearTimeout(timer);
   }, [username]);
 
-  // ✅ Debounce للتحقق من email
+  // -------- تحقق من البريد قبل الإرسال -------------
   useEffect(() => {
     if (!email) { setEmailStatus('idle'); return; }
     setEmailStatus('checking');
@@ -48,7 +48,7 @@ export default function RegisterPage() {
       } catch {
         setEmailStatus('idle');
       }
-    }, 600);
+    }, 500);
     return () => clearTimeout(timer);
   }, [email]);
 
@@ -57,15 +57,21 @@ export default function RegisterPage() {
     emailStatus === 'taken' ||
     (password && password !== passwordConfirm);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (hasError) return;
 
     setLoading(true);
     setError(null);
 
+    if (password !== passwordConfirm) {
+      setError('كلمات المرور غير متطابقة');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(`${API_BASE}/api/v1/users/auth/register/`, {
+      const response = await fetch(`${API_BASE}/api/v1/users/auth/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,85 +83,152 @@ export default function RegisterPage() {
           last_name: lastName,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError('حدث خطأ في التسجيل');
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMessage = data.error || data.errors?.toString() || 'حدث خطأ في التسجيل';
+        setError(errorMessage);
         return;
       }
-      setSuccess(true);
-      localStorage.setItem('auth_token', data.token);
-      setTimeout(() => { window.location.href = '/login'; }, 2000);
+
+      if (data.success) {
+        localStorage.setItem('auth_token', data.token);
+        setSuccess(true);
+
+        // Reset form
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setPasswordConfirm('');
+        setFirstName('');
+        setLastName('');
+
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
+      } else {
+        setError(data.error || JSON.stringify(data.errors));
+      }
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('خطأ في الاتصال بالخادم');
     } finally {
       setLoading(false);
     }
   };
 
-  const statusText = { checking:'جاري التحقق...', available:'✓ متاح', taken:'✗ مستخدم بالفعل' };
+  const statusText = {
+    checking: 'جاري التحقق...',
+    available: '✓ متاح',
+    taken: '✗ مستخدم بالفعل',
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <div className="bg-white p-8 w-full max-w-md rounded-lg shadow">
-        <h2 className="text-2xl font-bold mb-4 text-center">إنشاء حساب</h2>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-12">
+          <h1 className="text-3xl font-bold text-white">Eskan Egypt</h1>
+          <p className="text-green-100 mt-2">إنشاء حساب</p>
+        </div>
 
-        {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
-        {success && <div className="mb-4 text-green-600 text-sm text-center">تم إنشاء الحساب بنجاح</div>}
+        <div className="px-8 py-8">
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
+              ✓ تم إنشاء الحساب بنجاح! برجاء الانتظار...
+            </div>
+          )}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            placeholder="اسم المستخدم"
-            value={username}
-            onChange={(e)=>setUsername(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-          {usernameStatus !== 'idle' && (
-            <p className={`text-sm ${usernameStatus==='available'?'text-green-600':usernameStatus==='taken'?'text-red-600':'text-gray-500'}`}>
-              {statusText[usernameStatus]}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="الاسم الأول"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+              />
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="الاسم الأخير"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+              />
+            </div>
+
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="اسم المستخدم"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            {usernameStatus !== 'idle' && (
+              <p className={`text-sm ${usernameStatus==='available'?'text-green-600':usernameStatus==='taken'?'text-red-600':'text-gray-500'}`}>
+                {statusText[usernameStatus]}
+              </p>
+            )}
+
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="البريد الإلكتروني"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            {emailStatus !== 'idle' && (
+              <p className={`text-sm ${emailStatus==='available'?'text-green-600':emailStatus==='taken'?'text-red-600':'text-gray-500'}`}>
+                {statusText[emailStatus]}
+              </p>
+            )}
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="كلمة المرور (8+ أحرف)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+
+            <input
+              type="password"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              required
+              placeholder="تأكيد كلمة المرور"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            {password && password !== passwordConfirm && (
+              <p className="text-sm text-red-600">كلمات المرور غير متطابقة</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || hasError}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition disabled:opacity-50"
+            >
+              {loading ? 'جاري...' : 'إنشاء الحساب'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-gray-600">
+            <p>
+              لديك حساب؟{' '}
+              <Link to="/login" className="text-green-600 hover:text-green-800 font-medium">
+                تسجيل دخول
+              </Link>
             </p>
-          )}
-
-          <input
-            placeholder="البريد الإلكتروني"
-            value={email}
-            onChange={(e)=>setEmail(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-          {emailStatus !== 'idle' && (
-            <p className={`text-sm ${emailStatus==='available'?'text-green-600':emailStatus==='taken'?'text-red-600':'text-gray-500'}`}>
-              {statusText[emailStatus]}
-            </p>
-          )}
-
-          <input
-            type="password"
-            placeholder="كلمة المرور"
-            value={password}
-            onChange={(e)=>setPassword(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-
-          <input
-            type="password"
-            placeholder="تأكيد كلمة المرور"
-            value={passwordConfirm}
-            onChange={(e)=>setPasswordConfirm(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-
-          {password && password !== passwordConfirm && (
-            <p className="text-sm text-red-600">كلمات المرور غير متطابقة</p>
-          )}
-
-          <button
-            disabled={loading || hasError}
-            className="w-full bg-green-600 text-white py-2 rounded disabled:opacity-50"
-          >
-            {loading ? 'جاري...' : 'إنشاء الحساب'}
-          </button>
-        </form>
-
-        <p className="text-sm text-center mt-4">
-          لديك حساب؟ <Link to="/login" className="text-green-600">تسجيل دخول</Link>
-        </p>
+          </div>
+        </div>
       </div>
     </div>
   );
