@@ -1,7 +1,6 @@
 'use client';
-
 import React, { useState } from "react";
-import { useNavigate, Outlet } from "react-router-dom"; // <--- Outlet
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -34,14 +33,18 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const handleView = (id: string) => console.log("عرض العقار:", id);
-  const handleEdit = (id: string) => navigate(`/dashboard/properties`); // مثال لتعديل
+  const handleEdit = (id: string) => navigate(`/dashboard/edit/${id}`);
   const handleDelete = (id: string) => setProperties(prev => prev.filter(p => p.id !== id));
 
   return (
     <DashboardLayout>
-      <DashboardHeader title="لوحة التحكم" subtitle="إدارة العقارات الخاصة بك" />
+      <DashboardHeader
+        title="لوحة التحكم"
+        subtitle="إدارة العقارات الخاصة بك"
+      />
 
       <div className="p-6 lg:p-8">
+        {/* Stats */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <StatCard title="إجمالي العقارات" value={properties.length} icon={Building2} variant="primary" />
           <StatCard title="العقارات النشطة" value={properties.filter(p => p.status === "approved").length} icon={Building2} variant="success" />
@@ -49,6 +52,7 @@ export default function Dashboard() {
           <StatCard title="المرفوضة" value={properties.filter(p => p.status === "rejected").length} icon={Building2} variant="destructive" />
         </div>
 
+        {/* Properties List */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">العقارات</h2>
@@ -60,14 +64,17 @@ export default function Dashboard() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {properties.map(property => (
-              <PropertyCard key={property.id} property={property} onView={() => handleView(property.id)} onEdit={() => handleEdit(property.id)} onDelete={() => handleDelete(property.id)} />
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onView={() => handleView(property.id)}
+                onEdit={() => handleEdit(property.id)}
+                onDelete={() => handleDelete(property.id)}
+              />
             ))}
           </div>
         </div>
       </div>
-
-      {/* Nested routes */}
-      <Outlet />
     </DashboardLayout>
   );
 }
