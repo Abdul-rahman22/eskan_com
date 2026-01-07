@@ -31,8 +31,8 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />  {/* استخدم ProtectedRoute هنا */}
-          <Route path="*" element={<NotFound />} />
+                    <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+          
         </Routes>
         {/* Toasters بعد Routes عشان يشوفوا كل الصفحات */}
         <RadixToaster />
