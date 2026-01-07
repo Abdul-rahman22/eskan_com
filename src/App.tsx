@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +41,6 @@ const App = () => (
 
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
