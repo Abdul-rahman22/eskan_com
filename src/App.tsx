@@ -13,6 +13,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import Dashboard from "./pages/Dashboard";
 import AddProperty from "./pages/AddProperty";
 import PropertiesList from "./pages/PropertiesList";
@@ -37,23 +38,11 @@ const App = () => (
           {/* Admin */}
           <Route path="/admin" element={<Admin />} />
 
-          {/* Dashboard (Protected) */}
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute element={<Dashboard />} />}
-          />
-
-          {/* Add Property (Protected) */}
-          <Route
-            path="/add"
-            element={<ProtectedRoute element={<AddProperty />} />}
-          />
-
-          {/* Other protected pages */}
-          <Route
-            path="/properties-list"
-            element={<ProtectedRoute element={<PropertiesList />} />}
-          />
+          {/* Dashboard with nested routes */}
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />}>
+            <Route path="add" element={<ProtectedRoute element={<AddProperty />} />} />
+            <Route path="properties" element={<ProtectedRoute element={<PropertiesList />} />} />
+          </Route>
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
