@@ -13,8 +13,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('auth_token');
-      
+      const token = localStorage.getItem('auth_token'); // نفس الاسم
+
       if (!token) {
         navigate('/login');
         return;
@@ -84,7 +84,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
           <div>
@@ -100,13 +99,11 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">مرحباً بك في لوحة التحكم</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* User Info Card */}
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white">
               <h3 className="text-lg font-semibold mb-4">معلومات المستخدم</h3>
               <p className="mb-2"><span className="font-medium">اسم المستخدم:</span> {user?.username}</p>
@@ -115,14 +112,12 @@ export default function Dashboard() {
               {user?.last_name && <p><span className="font-medium">الاسم الأخير:</span> {user?.last_name}</p>}
             </div>
 
-            {/* Quick Stats */}
             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-6 text-white">
               <h3 className="text-lg font-semibold mb-4">الإحصائيات</h3>
               <p className="text-4xl font-bold mb-2">0</p>
               <p>العقارات المنشورة</p>
             </div>
 
-            {/* Actions Card */}
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 text-white">
               <h3 className="text-lg font-semibold mb-4">الإجراءات</h3>
               <button className="w-full bg-white text-purple-600 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition mb-2">
@@ -135,7 +130,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Properties Section */}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <h3 className="text-xl font-bold text-gray-800 mb-6">عقاراتك</h3>
           <div className="text-center py-12">
