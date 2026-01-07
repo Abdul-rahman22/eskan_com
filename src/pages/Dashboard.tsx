@@ -8,7 +8,7 @@ import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { useProperties } from "@/context/PropertyContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Building2, Plus, Edit, Trash2, Search } from "lucide-react";
+import { Building2, Plus, Edit, Trash2, Search } from "lucide-react", Plus }
 import {
   Select,
   SelectContent,
@@ -69,6 +69,14 @@ export default function Dashboard() {
         subtitle="إدارة العقارات والحسابات"
       />
       {/* الإحصائيات */}
+
+        <Button
+    onClick={() => router.push('/Add')}
+    className="gap-2"
+  >
+    <Plus className="h-4 w-4" />
+    إضافة عقار
+  </Button>
       <div className="p-6 lg:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <StatCard
