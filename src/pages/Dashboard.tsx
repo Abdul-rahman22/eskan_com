@@ -8,6 +8,42 @@ import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Building2, Plus } from "lucide-react";
 
+const mockProperties = [
+  {
+    id: "1",
+    name: "شقة فاخرة",
+    area: "سيدي بشر",
+    price: 500000,
+    rooms: 3,
+    bathrooms: 2,
+    size: 150,
+    status: "pending" as const,
+    images: ["/placeholder.svg"],
+  },
+  {
+    id: "2",
+    name: "فيلا حديثة",
+    area: "سموحة",
+    price: 1200000,
+    rooms: 4,
+    bathrooms: 3,
+    size: 250,
+    status: "approved" as const,
+    images: ["/placeholder.svg"],
+  },
+  {
+    id: "3",
+    name: "شقة في المنتزه",
+    area: "المنتزه",
+    price: 600000,
+    rooms: 3,
+    bathrooms: 2,
+    size: 180,
+    status: "approved" as const,
+    images: ["/placeholder.svg"],
+  },
+];
+
 export default function Dashboard() {
   const [properties, setProperties] = useState(mockProperties);
   const navigate = useNavigate();
