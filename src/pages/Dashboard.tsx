@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useMemo } from "react";
+import { useRouter } from 'next/navigation';
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -18,6 +19,7 @@ import {
 
 export default function Dashboard() {
   const { properties, deleteProperty, getPropertiesByStatus } = useProperties();
+    const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("all");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -53,6 +55,10 @@ export default function Dashboard() {
         setIsDeleting(false);
       }
     }
+  };
+
+    const handleEdit = (id: string) => {
+    router.push(`/Edit?id=${id}`);
   };
 
   // العرض
@@ -140,8 +146,9 @@ export default function Dashboard() {
                   <PropertyCard
                     property={property}
                     onView={() => console.log("عرض:", property.id)}
-                    onEdit={() => console.log("تعديل:", property.id)}
-                    onDelete={() => handleDelete(property.id)}
+                    onEdit={() {handleEdit}
+                    onDelete={() => 56
+                      (property.id)}
                   />
                 </div>
               ))}
