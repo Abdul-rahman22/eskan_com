@@ -140,6 +140,7 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: PropertyFormP
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="name_en"
@@ -153,6 +154,7 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: PropertyFormP
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="area"
@@ -177,6 +179,7 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: PropertyFormP
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="address"
@@ -198,6 +201,285 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: PropertyFormP
           <h3 className="mb-4 text-lg font-semibold text-foreground">تفاصيل العقار</h3>
           <div className="grid gap-4 md:grid-cols-3">
             <FormField
-              
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>السعر (ج.م)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              
+            <FormField
+              control={form.control}
+              name="rooms"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>عدد الغرف</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="bathrooms"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>عدد الحمامات</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="size"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>المساحة (م²)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="floor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>الطابق</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="furnished"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center gap-3 rounded-lg border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="!mt-0 cursor-pointer">مفروش</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="usage_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>نوع الاستخدام</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر نوع الاستخدام" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {USAGE_TYPES.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>النوع</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر النوع" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {PROPERTY_TYPES.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Description & Contact */}
+        <div className="rounded-xl bg-card p-6 shadow-card">
+          <h3 className="mb-4 text-lg font-semibold text-foreground">الوصف والتواصل</h3>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وصف العقار</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="وصف تفصيلي للعقار..."
+                      className="min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contact"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وسيلة التواصل</FormLabel>
+                  <FormControl>
+                    <Input placeholder="رقم الهاتف أو البريد الإلكتروني" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Media Upload */}
+        <div className="rounded-xl bg-card p-6 shadow-card">
+          <h3 className="mb-4 text-lg font-semibold text-foreground">الصور والفيديو</h3>
+          
+          {/* Images */}
+          <div className="mb-6">
+            <label className="mb-2 block text-sm font-medium text-foreground">
+              صور العقار
+            </label>
+            <div className="flex flex-wrap gap-4">
+              {imagePreviews.map((preview, index) => (
+                <div
+                  key={index}
+                  className="relative h-24 w-24 overflow-hidden rounded-lg border"
+                >
+                  <img
+                    src={preview}
+                    alt={`Preview ${index + 1}`}
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 text-destructive-foreground transition-colors hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 transition-colors hover:border-primary hover:bg-primary/5">
+                <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                <span className="mt-1 text-xs text-muted-foreground">إضافة صورة</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Videos */}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-foreground">
+              فيديوهات العقار
+            </label>
+            <div className="flex flex-wrap gap-4">
+              {videoPreviews.map((preview, index) => (
+                <div
+                  key={index}
+                  className="relative h-24 w-24 overflow-hidden rounded-lg border"
+                >
+                  <video
+                    src={preview}
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeVideo(index)}
+                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 text-destructive-foreground transition-colors hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 transition-colors hover:border-primary hover:bg-primary/5">
+                <Video className="h-6 w-6 text-muted-foreground" />
+                <span className="mt-1 text-xs text-muted-foreground">إضافة فيديو</span>
+                <input
+                  type="file"
+                  accept="video/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleVideoUpload}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          size="lg"
+          className="w-full gradient-primary text-lg font-semibold"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              جاري الإرسال...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <Upload className="h-5 w-5" />
+              إضافة العقار
+            </span>
+          )}
+        </Button>
+      </form>
+    </Form>
+  );
+}
