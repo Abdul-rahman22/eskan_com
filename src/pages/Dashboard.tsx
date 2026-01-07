@@ -15,7 +15,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchUserData = async () => {
       // مهم: نفس الاسم المستخدم في LoginPage
-      const token = localStorage.getItem("authtoken");
+      const token = localStorage.getItem("auth_token");
 
       if (!token) {
         navigate("/login");
@@ -34,7 +34,7 @@ export default function Dashboard() {
         });
 
         if (!response.ok) {
-          localStorage.removeItem("authtoken");
+          localStorage.removeItem("auth_token");
           navigate("/login");
           return;
         }
@@ -53,7 +53,7 @@ export default function Dashboard() {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("authtoken");
+    localStorage.removeItem("auth_token");
     navigate("/login");
   };
 
