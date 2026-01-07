@@ -25,23 +25,41 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public pages */}
           <Route path="/" element={<Index />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Admin */}
+          <Route path="/admin" element={<Admin />} />
+
+          {/* Dashboard (Protected) */}
           <Route
             path="/dashboard"
             element={<ProtectedRoute element={<Dashboard />} />}
           />
-                <Route path="/add" element={<AddProperty />} />
-      <Route path="/properties-list" element={<PropertiesList />} />
+
+          {/* Add Property (Protected) */}
+          <Route
+            path="/add"
+            element={<ProtectedRoute element={<AddProperty />} />}
+          />
+
+          {/* Other protected pages */}
+          <Route
+            path="/properties-list"
+            element={<ProtectedRoute element={<PropertiesList />} />}
+          />
+
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
 
+        {/* Global UI */}
         <RadixToaster />
         <SonnerToaster />
       </BrowserRouter>
