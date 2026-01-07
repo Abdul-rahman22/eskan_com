@@ -11,32 +11,25 @@ interface StatusBadgeProps {
 const statusConfig = {
   pending: {
     label: 'قيد المراجعة',
-    className:
-      'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
+    className: 'bg-warning/15 text-warning border-warning/30',
     icon: Clock,
   },
   approved: {
     label: 'تم الموافقة',
-    className:
-      'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
+    className: 'bg-success/15 text-success border-success/30',
     icon: CheckCircle,
   },
   rejected: {
     label: 'تم الرفض',
-    className:
-      'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
+    className: 'bg-destructive/15 text-destructive border-destructive/30',
     icon: XCircle,
   },
 };
 
-export function StatusBadge({
-  status,
-  showIcon = true,
-  size = 'md',
-}: StatusBadgeProps) {
+export function StatusBadge({ status, showIcon = true, size = 'md' }: StatusBadgeProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
-
+  
   return (
     <span
       className={cn(
