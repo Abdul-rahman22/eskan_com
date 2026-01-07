@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -61,6 +61,8 @@ interface Props {
   isLoading?: boolean;
 }
 
+/* ================= Component ================= */
+
 export function PropertyForm({ onSubmit, initialData, isLoading }: Props) {
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
@@ -88,44 +90,54 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: Props) {
     },
   });
 
-  const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
     onSubmit({ ...data, images, videos });
   };
 
+  /* ================= JSX ================= */
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
 
         {/* ===== Basic Info ===== */}
         <Section title="المعلومات الأساسية">
           <TwoCols>
-            <Field name="name" label="اسم العقار" />
-            <Field name="name_en" label="الاسم بالإنجليزي" dir="ltr" />
+            <TextField control={form.control} name="name" label="اسم العقار" />
+            <TextField control={form.control} name="name_en" label="الاسم بالإنجليزي" dir="ltr" />
           </TwoCols>
 
-          <SelectField name="area" label="المنطقة" options={AREAS} />
-          <Field name="address" label="العنوان" />
+          <SelectField
+            control={form.control}
+            name="area"
+            label="المنطقة"
+            options={AREAS}
+          />
+
+          <TextField control={form.control} name="address" label="العنوان" />
         </Section>
 
         {/* ===== Details ===== */}
         <Section title="تفاصيل العقار">
           <TwoCols>
-            <NumberField name="price" label="السعر" />
-            <NumberField name="size" label="المساحة (م²)" />
-            <NumberField name="rooms" label="عدد الغرف" />
-            <NumberField name="bathrooms" label="عدد الحمامات" />
-            <NumberField name="floor" label="الدور" />
+            <NumberField control={form.control} name="price" label="السعر" />
+            <NumberField control={form.control} name="size" label="المساحة (م²)" />
+            <NumberField control={form.control} name="rooms" label="عدد الغرف" />
+            <NumberField control={form.control} name="bathrooms" label="عدد الحمامات" />
+            <NumberField control={form.control} name="floor" label="الدور" />
           </TwoCols>
 
-          <CheckboxField name="furnished" label="مفروش" />
+          <CheckboxField control={form.control} name="furnished" label="مفروش" />
 
           <TwoCols>
             <SelectField
+              control={form.control}
               name="usage_type"
               label="نوع الاستخدام"
               options={USAGE_TYPES}
             />
             <SelectField
+              control={form.control}
               name="type"
               label="نوع العقار"
               options={PROPERTY_TYPES}
@@ -135,31 +147,32 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: Props) {
 
         {/* ===== Description ===== */}
         <Section title="الوصف والتواصل">
-          <TextareaField name="description" label="وصف العقار" />
-          <Field name="contact" label="رقم التواصل" />
+          <TextareaField control={form.control} name="description" label="وصف العقار" />
+          <TextField control={form.control} name="contact" label="رقم التواصل" />
         </Section>
 
-        {/* ===== Media ===== */}
-        <Section title="الصور والفيديو">
-          <MediaUploader
+        {/* ===== Images ===== */}
+        <Section title="الصور">
+          <MediaBlock
             previews={imagePreviews}
             onRemove={(i) => {
               setImages(p => p.filter((_, x) => x !== i));
               setImagePreviews(p => p.filter((_, x) => x !== i));
             }}
-            accept="image/*"
-            icon={<ImageIcon />}
             onUpload={(files) => {
               setImages(p => [...p, ...files]);
               setImagePreviews(p => [...p, ...files.map(f => URL.createObjectURL(f))]);
             }}
+            accept="image/*"
+            icon={<ImageIcon />}
           />
+        </Section>
 
-          <MediaUploader
+        {/* ===== Videos ===== */}
+        <Section title="الفيديو">
+          <MediaBlock
             previews={videoPreviews}
             video
-            accept="video/*"
-            icon={<Video />}
             onRemove={(i) => {
               setVideos(p => p.filter((_, x) => x !== i));
               setVideoPreviews(p => p.filter((_, x) => x !== i));
@@ -168,10 +181,12 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: Props) {
               setVideos(p => [...p, ...files]);
               setVideoPreviews(p => [...p, ...files.map(f => URL.createObjectURL(f))]);
             }}
+            accept="video/*"
+            icon={<Video />}
           />
         </Section>
 
-        <Button type="submit" disabled={isLoading} className="w-full" size="lg">
+        <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
           {isLoading ? "جاري الإرسال..." : "إضافة العقار"}
         </Button>
       </form>
@@ -179,7 +194,7 @@ export function PropertyForm({ onSubmit, initialData, isLoading }: Props) {
   );
 }
 
-/* ===== Helpers ===== */
+/* ================= Helpers ================= */
 
 const Section = ({ title, children }: any) => (
   <div className="rounded-xl bg-card p-6 shadow">
@@ -192,8 +207,9 @@ const TwoCols = ({ children }: any) => (
   <div className="grid md:grid-cols-2 gap-4">{children}</div>
 );
 
-const Field = ({ name, label, dir }: any) => (
+const TextField = ({ control, name, label, dir }: any) => (
   <FormField
+    control={control}
     name={name}
     render={({ field }) => (
       <FormItem>
@@ -207,12 +223,11 @@ const Field = ({ name, label, dir }: any) => (
   />
 );
 
-const NumberField = ({ name, label }: any) => (
-  <Field name={name} label={label} />
-);
+const NumberField = (props: any) => <TextField {...props} />;
 
-const TextareaField = ({ name, label }: any) => (
+const TextareaField = ({ control, name, label }: any) => (
   <FormField
+    control={control}
     name={name}
     render={({ field }) => (
       <FormItem>
@@ -220,13 +235,15 @@ const TextareaField = ({ name, label }: any) => (
         <FormControl>
           <Textarea {...field} />
         </FormControl>
+        <FormMessage />
       </FormItem>
     )}
   />
 );
 
-const CheckboxField = ({ name, label }: any) => (
+const CheckboxField = ({ control, name, label }: any) => (
   <FormField
+    control={control}
     name={name}
     render={({ field }) => (
       <FormItem className="flex items-center gap-2">
@@ -237,22 +254,23 @@ const CheckboxField = ({ name, label }: any) => (
   />
 );
 
-const SelectField = ({ name, label, options }: any) => (
+const SelectField = ({ control, name, label, options }: any) => (
   <FormField
+    control={control}
     name={name}
     render={({ field }) => (
       <FormItem>
         <FormLabel>{label}</FormLabel>
-        <Select onValueChange={field.onChange} value={field.value}>
+        <Select value={field.value} onValueChange={field.onChange}>
           <FormControl>
             <SelectTrigger>
               <SelectValue placeholder="اختر" />
             </SelectTrigger>
           </FormControl>
           <SelectContent>
-            {options.map((o: any) => (
-              <SelectItem key={o.value} value={o.value}>
-                {o.label}
+            {options.map((o: string) => (
+              <SelectItem key={o} value={o}>
+                {o}
               </SelectItem>
             ))}
           </SelectContent>
@@ -260,4 +278,36 @@ const SelectField = ({ name, label, options }: any) => (
       </FormItem>
     )}
   />
+);
+
+const MediaBlock = ({ previews, onUpload, onRemove, accept, icon, video }: any) => (
+  <div className="flex flex-wrap gap-4">
+    {previews.map((src: string, i: number) => (
+      <div key={i} className="relative h-24 w-24">
+        {video ? (
+          <video src={src} className="h-full w-full object-cover rounded" />
+        ) : (
+          <img src={src} className="h-full w-full object-cover rounded" />
+        )}
+        <button
+          type="button"
+          onClick={() => onRemove(i)}
+          className="absolute top-1 right-1 bg-destructive p-1 rounded-full"
+        >
+          <X size={14} />
+        </button>
+      </div>
+    ))}
+
+    <label className="h-24 w-24 flex flex-col items-center justify-center border-2 border-dashed rounded cursor-pointer">
+      {icon}
+      <input
+        type="file"
+        multiple
+        accept={accept}
+        hidden
+        onChange={(e) => onUpload(Array.from(e.target.files || []))}
+      />
+    </label>
+  </div>
 );
