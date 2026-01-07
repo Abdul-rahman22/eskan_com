@@ -6,16 +6,11 @@ import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
-
   const isActive = (path: string) => location.pathname === path;
-
   const navLinks = [
     { path: "/", label: "الرئيسية" },
     { path: "/properties", label: "العقارات" },
     { path: "/about", label: "من نحن" },
-    // يمكنك إضافة روابط لاحقًا
-    // { path: "/contact", label: "تواصل معنا" },
-    // { path: "/admin", label: "لوحة التحكم" },
   ];
 
   return (
@@ -57,14 +52,6 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            {/* مثال على أيقونات */}
-            {/* <Button variant="ghost" size="icon">
-              <Heart className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button> */}
-
             {/* زر تسجيل الدخول */}
             <Link
               to="/login"
@@ -81,7 +68,6 @@ const Navbar = () => {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-
             <SheetContent side="right" className="w-[300px]">
               <div className="flex flex-col gap-4 mt-8">
                 {navLinks.map((link) => (
@@ -95,21 +81,14 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
-
-                <div className="flex flex-col gap-2 mt-4">
-                  {/* أيقونات إضافية للموبايل */}
-                  {/* <Button variant="outline" className="w-full gap-2">
-                    <Heart className="h-4 w-4" />
-                    المفضلة
-                  </Button>
-                  <Button variant="outline" className="w-full gap-2">
-                    <User className="h-4 w-4" />
-                    حسابي
-                  </Button> */}
-                  <Button className="w-full gap-2">
-                    <Phone className="h-4 w-4" />
-                    اتصل بنا
-                  </Button>
+                <div className="flex flex-col gap-2 mt-4 border-t pt-4">
+                  {/* زر تسجيل الدخول للموبايل */}
+                  <Link
+                    to="/login"
+                    className="text-center text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  >
+                    تسجيل الدخول
+                  </Link>
                 </div>
               </div>
             </SheetContent>
