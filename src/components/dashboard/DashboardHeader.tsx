@@ -12,12 +12,8 @@ export function DashboardHeader({ title, subtitle }: DashboardHeaderProps) {
     <header className="sticky top-0 z-20 border-b bg-card/80 backdrop-blur-sm">
       <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
-          )}
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{title}</h1>
+          {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-3">
           <div className="relative hidden sm:block">
