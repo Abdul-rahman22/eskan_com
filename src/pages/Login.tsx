@@ -9,12 +9,12 @@ const API_BASE =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error,   setError]   = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,34 +24,27 @@ export default function LoginPage() {
     try {
       const response = await fetch(`${API_BASE}/api/v1/users/auth/login/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        // حفظ التوكن
+        // اسم المفتاح خليه زي ما بتستخدمه في Dashboard
         localStorage.setItem("authtoken", data.token);
 
         setSuccess(true);
         setUsername("");
         setPassword("");
 
-        // توجيه للداشبورد بعد النجاح مباشرة
+        // توجيه للداشبورد بعد النجاح
         navigate("/dashboard");
-        // أو لو حابب تأخير بسيط:
-        // setTimeout(() => navigate("/dashboard"), 1500);
       } else {
-        setError(data.error || "حدث خطأ في تسجيل الدخول");
+        setError(data.error || "فشل تسجيل الدخول");
       }
     } catch (err) {
-      setError("تعذر الاتصال بالسيرفر، حاول مرة أخرى");
+      setError("خطأ في الاتصال بالشبكة");
     } finally {
       setLoading(false);
     }
@@ -72,7 +65,7 @@ export default function LoginPage() {
         <div className="px-8 py-8">
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-              تم تسجيل الدخول بنجاح.
+              ✓ تم تسجيل الدخول بنجاح!
             </div>
           )}
 
@@ -111,13 +104,12 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Submit */}
+            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50"
-            *
-          >
+            >
               {loading ? "جارٍ تسجيل الدخول..." : "تسجيل الدخول"}
             </button>
           </form>
@@ -129,7 +121,7 @@ export default function LoginPage() {
                 to="/register"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                إنشاء حساب جديد
+                انشئ حسابا
               </Link>
             </p>
           </div>
