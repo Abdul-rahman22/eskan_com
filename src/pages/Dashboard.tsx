@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -44,7 +45,9 @@ const mockProperties = [
 ];
 
 export default function Dashboard() {
-  const [properties, setProperties] = useState(mockProperties);
+  47
+    = useState(mockProperties);
+    const navigate = useNavigate();
 
   const handleView = (id: string) => {
     console.log("View property:", id);
@@ -99,6 +102,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-foreground">العقارات</h2>
             <Button className="gap-2">
+                    onClick={() => navigate('/add')}
               <Plus className="h-4 w-4" />
               إضافة عقار جديد
             </Button>
