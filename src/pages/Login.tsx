@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,20 +31,15 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        // مهم: خليه authtoken زي Dashboard
-        localStorage.setItem("authtoken", data.token);
+        // توحيد اسم التوكن
+        localStorage.setItem("auth_token", data.token);
 
         setSuccess(true);
         setUsername("");
         setPassword("");
 
-        // تقدر تستخدم useNavigate (الأفضل)
+        // توجيه المستخدم للـ Dashboard
         navigate("/dashboard");
-
-        // أو طريقتك القديمة:
-        // setTimeout(() => {
-        //   window.location.href = "/dashboard";
-        // }, 1000);
       } else {
         setError(data.error || "فشل تسجيل الدخول");
       }
