@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://abdo238923.pythonanywhere.com';
@@ -15,13 +15,71 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  
+  // حالات فحص اسم المستخدم
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+
+  // دالة فحص توفر اسم المستخدم
+  const checkUsernameAvailability = useCallback(async (usernameToCheck: string) => {
+    if (usernameToCheck.length < 3) {
+      setUsernameAvailable(null);
+      setUsernameError(null);
+      return;
+    }
+
+    setCheckingUsername(true);
+    setUsernameError(null);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/users/check-username/?username=${encodeURIComponent(usernameToCheck)}`);
+      const data = await response.json();
+
+      if (response.ok && data.available === false) {
+        setUsernameAvailable(false);
+        setUsernameError('اسم المستخدم موجود بالفعل');
+      } else if (response.ok && data.available === true) {
+        setUsernameAvailable(true);
+        setUsernameError(null);
+      } else {
+        setUsernameAvailable(null);
+        setUsernameError(data.error || 'خطأ في فحص اسم المستخدم');
+      }
+    } catch (err) {
+      setUsernameAvailable(null);
+      setUsernameError('خطأ في الاتصال');
+    } finally {
+      setCheckingUsername(false);
+    }
+  }, []);
+
+  // فحص اسم المستخدم عند تغيير القيمة
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkUsernameAvailability(username);
+    }, 500); // تأخير 500ms لتجنب طلبات كثيرة
+
+    return () => clearTimeout(timeoutId);
+  }, [username, checkUsernameAvailability]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // فحص اسم المستخدم قبل الإرسال
+    if (usernameError || usernameAvailable === false) {
+      setError('اسم المستخدم غير متاح');
+      return;
+    }
+
+    if (!usernameAvailable) {
+      setError('يرجى الانتظار حتى يتم فحص اسم المستخدم');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
-    // ممكن تسيب التشيك ده أو تعتمد على الباك إند بس
     if (password !== passwordConfirm) {
       setError('كلمات المرور غير متطابقة');
       setLoading(false);
@@ -44,67 +102,32 @@ export default function RegisterPage() {
 
       const data = await response.json();
 
-      // لو في أخطاء validation من Django REST
       if (!response.ok) {
-        // 1) خطأ في اسم المستخدم (مكرر أو فورمات)
-        if (data.username) {
-          const msg = Array.isArray(data.username) ? data.username[0] : data.username;
-          setError(msg || 'هناك مشكلة في اسم المستخدم');
-        }
-        // 2) خطأ في الإيميل (مكرر)
-        else if (data.email) {
-          const msg = Array.isArray(data.email) ? data.email[0] : data.email;
-          setError(msg || 'هناك مشكلة في البريد الإلكتروني');
-        }
-        // 3) خطأ في الباسورد (زي "Passwords do not match.")
-        else if (data.password) {
-          const msg = Array.isArray(data.password) ? data.password[0] : data.password;
-          setError(msg || 'هناك مشكلة في كلمة المرور');
-        }
-        // 4) لو الـ validate رجّع dict في key واحد
-        else if (data.error) {
-          setError(
-            typeof data.error === 'string'
-              ? data.error
-              : JSON.stringify(data.error)
-          );
-        }
-        // 5) fallback لأي حالة غير متوقعة
-        else {
-          setError('حدث خطأ في التسجيل');
-        }
-
+        const errorMessage = data.error || data.errors?.toString() || 'حدث خطأ في التسجيل';
+        setError(errorMessage);
         setLoading(false);
         return;
       }
 
-      // في حالة النجاح (ظبط ده حسب شكل الريسبونس اللي عندك)
       if (data.success) {
-        if (data.token) {
-          localStorage.setItem('auth_token', data.token);
-        }
-
+        localStorage.setItem('auth_token', data.token);
         setSuccess(true);
-
-        // مسح الحقول
+        
         setUsername('');
         setEmail('');
         setPassword('');
         setPasswordConfirm('');
         setFirstName('');
         setLastName('');
-
-        // توجيه لصفحة تسجيل الدخول
+        
         setTimeout(() => {
           window.location.href = '/login';
         }, 2000);
       } else {
-        // لو انت في الباك إند مش مرجع success ومرجع errors بس
         setError(data.error || JSON.stringify(data.errors));
       }
     } catch (err) {
       console.error('Registration error:', err);
-      // دي بتطلع بس لو النت أو السيرفر فعلاً فيهم مشكلة
       setError('خطأ في الاتصال بالخادم');
     } finally {
       setLoading(false);
@@ -125,7 +148,6 @@ export default function RegisterPage() {
               ✓ تم إنشاء الحساب بنجاح! برجاء الانتظار...
             </div>
           )}
-
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
               {error}
@@ -150,14 +172,48 @@ export default function RegisterPage() {
               />
             </div>
 
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="اسم المستخدم"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
-            />
+            <div>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setUsernameError(null);
+                  setUsernameAvailable(null);
+                }}
+                required
+                placeholder="اسم المستخدم"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition-all ${
+                  usernameError 
+                    ? 'border-red-300 focus:ring-red-500 bg-red-50' 
+                    : usernameAvailable === true 
+                    ? 'border-green-300 focus:ring-green-500 bg-green-50' 
+                    : 'border-gray-300 focus:ring-green-500'
+                }`}
+              />
+              {checkingUsername && (
+                <p className="mt-1 text-xs text-gray-500 flex items-center">
+                  <span className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-600 mr-1"></span>
+                  جاري الفحص...
+                </p>
+              )}
+              {usernameError && (
+                <p className="mt-1 text-xs text-red-600 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {usernameError}
+                </p>
+              )}
+              {usernameAvailable === true && (
+                <p className="mt-1 text-xs text-green-600 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  اسم المستخدم متاح
+                </p>
+              )}
+            </div>
 
             <input
               type="email"
@@ -188,8 +244,8 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition disabled:opacity-50"
+              disabled={loading || checkingUsername || usernameAvailable === false}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'جاري...' : 'إنشاء الحساب'}
             </button>
