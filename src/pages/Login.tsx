@@ -9,12 +9,12 @@ const API_BASE =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,15 +31,20 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        // اسم المفتاح خليه زي ما بتستخدمه في Dashboard
+        // مهم: خليه authtoken زي Dashboard
         localStorage.setItem("authtoken", data.token);
 
         setSuccess(true);
         setUsername("");
         setPassword("");
 
-        // توجيه للداشبورد بعد النجاح
+        // تقدر تستخدم useNavigate (الأفضل)
         navigate("/dashboard");
+
+        // أو طريقتك القديمة:
+        // setTimeout(() => {
+        //   window.location.href = "/dashboard";
+        // }, 1000);
       } else {
         setError(data.error || "فشل تسجيل الدخول");
       }
@@ -53,7 +58,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-12">
           <h1 className="text-3xl font-bold text-white">Eskan Egypt</h1>
           <p className="text-blue-100 mt-2">
@@ -61,7 +65,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Form */}
         <div className="px-8 py-8">
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
@@ -76,7 +79,6 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Username */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 اسم المستخدم
@@ -90,7 +92,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 كلمة المرور
@@ -104,7 +105,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
