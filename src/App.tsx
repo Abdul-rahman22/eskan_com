@@ -1,4 +1,3 @@
-// App.tsx
 import { Toaster as RadixToaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,11 +21,6 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      {/* Toasters */}
-      <RadixToaster />
-      <SonnerToaster />
-
-      {/* Router */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -37,10 +31,13 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-
-          {/* Catch-all route */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />  {/* استخدم ProtectedRoute هنا */}
           <Route path="*" element={<NotFound />} />
+        </Routes>
+        {/* Toasters بعد Routes عشان يشوفوا كل الصفحات */}
+        <RadixToaster />
+        <SonnerToaster />
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
