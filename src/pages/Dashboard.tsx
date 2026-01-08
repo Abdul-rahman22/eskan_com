@@ -44,33 +44,34 @@ export default function Dashboard() {
       />
 
       <div className="p-6 lg:p-8">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <StatCard
-            title="إجمالي العقارات"
-            value={properties.length}
-            icon={Building2}
-            variant="primary"
-          />
-          <StatCard
-            title="العقارات النشطة"
-            value={properties.filter(p => p.status === "approved").length}
-            icon={Building2}
-            variant="success"
-          />
-          <StatCard
-            title="قيد المراجعة"
-            value={properties.filter(p => p.status === "pending").length}
-            icon={Building2}
-            variant="warning"
-            className="shadow-lg" // ظل ثابت خفيف
-          />
-          <StatCard
-            title="المرفوضة"
-            value={properties.filter(p => p.status === "rejected").length}
-            icon={Building2}
-            variant="destructive"
-          />
-        </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                <StatCard
+                  title="إجمالي العقارات"
+                  value={properties.length}
+                  icon={Building2}
+                  variant="primary"
+                />
+                <StatCard
+                  title="العقارات النشطة"
+                  value={properties.filter(p => p.status === "approved").length}
+                  icon={Building2}
+                  variant="success"
+                />
+                <StatCard
+                  title="قيد المراجعة"
+                  value={properties.filter(p => p.status === "pending").length}
+                  icon={Building2}
+                  variant="warning"
+                  className="shadow" // ظل ثابت خفيف دائمًا
+                />
+                <StatCard
+                  title="المرفوضة"
+                  value={properties.filter(p => p.status === "rejected").length}
+                  icon={Building2}
+                  variant="destructive"
+                />
+              </div>
+
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
