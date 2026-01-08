@@ -6,7 +6,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Building2, CheckCircle, Hourglass, XCircle, Plus } from "lucide-react"; // استيراد Plus
+import { Building2, CheckCircle, Hourglass, XCircle, Plus } from "lucide-react";
 
 type PropertyStatus = "pending" | "approved" | "rejected";
 
@@ -45,30 +45,34 @@ export default function Dashboard() {
 
       <div className="p-6 lg:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {/* كل بطاقة لها ظل خفيف ثابت */}
           <StatCard
             title="إجمالي العقارات"
             value={properties.length}
-            icon={Building2} // أيقونة المباني للعقارات الكل
+            icon={() => <Building2 className="text-blue-500 w-5 h-5" />}
             variant="primary"
+            className="shadow rounded-lg bg-white"
           />
           <StatCard
             title="العقارات النشطة"
             value={properties.filter(p => p.status === "approved").length}
-            icon={CheckCircle} // أيقونة علامة صح للعقارات الموافقة
+            icon={() => <CheckCircle className="text-green-500 w-5 h-5" />}
             variant="success"
+            className="shadow rounded-lg bg-white"
           />
           <StatCard
             title="قيد المراجعة"
             value={properties.filter(p => p.status === "pending").length}
-            icon={Hourglass} // أيقونة الساعة للعقارات pending
+            icon={() => <Hourglass className="text-yellow-500 w-5 h-5" />}
             variant="warning"
-            className="shadow" // ظل ثابت خفيف دائمًا
+            className="shadow rounded-lg bg-white"
           />
           <StatCard
             title="المرفوضة"
             value={properties.filter(p => p.status === "rejected").length}
-            icon={XCircle} // أيقونة X للعقارات المرفوضة
+            icon={() => <XCircle className="text-red-500 w-5 h-5" />}
             variant="destructive"
+            className="shadow rounded-lg bg-white"
           />
         </div>
 
@@ -80,7 +84,7 @@ export default function Dashboard() {
               className="gap-2"
               onClick={() => navigate("/add")}
             >
-              <Plus className="h-4 w-4" /> {/* الآن Plus مستورد */}
+              <Plus className="h-4 w-4" />
               إضافة عقار جديد
             </Button>
           </div>
