@@ -40,11 +40,11 @@ export default function Dashboard() {
     <DashboardLayout>
       <DashboardHeader
         title="لوحة التحكم"
-        subtitle="إدارة العقارات الخاصة بك"
+        subtitle="إدارة العقارات والحسابات"
       />
 
       <div className="p-6 lg:p-8">
-        {/* Stats */}
+        {/* Stats Section */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <StatCard title="إجمالي العقارات" value={properties.length} icon={Building2} variant="primary" />
           <StatCard title="العقارات النشطة" value={properties.filter(p => p.status === "approved").length} icon={Building2} variant="success" />
