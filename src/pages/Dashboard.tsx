@@ -37,26 +37,48 @@ export default function Dashboard() {
   const handleDelete = (id: string) => setProperties(prev => prev.filter(p => p.id !== id));
 
   return (
-    <DashboardLayout>
+   <DashboardLayout>
       <DashboardHeader
         title="لوحة التحكم"
         subtitle="إدارة العقارات والحسابات"
       />
 
       <div className="p-6 lg:p-8">
-        {/* Stats Section */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <StatCard title="إجمالي العقارات" value={properties.length} icon={Building2} variant="primary" />
-          <StatCard title="العقارات النشطة" value={properties.filter(p => p.status === "approved").length} icon={Building2} variant="success" />
-          <StatCard title="قيد المراجعة" value={properties.filter(p => p.status === "pending").length} icon={Building2} variant="warning" />
-          <StatCard title="المرفوضة" value={properties.filter(p => p.status === "rejected").length} icon={Building2} variant="destructive" />
+          <StatCard
+            title="إجمالي العقارات"
+            value={properties.length}
+            icon={Building2}
+            variant="primary"
+          />
+          <StatCard
+            title="العقارات النشطة"
+            value={properties.filter(p => p.status === "approved").length}
+            icon={Building2}
+            variant="success"
+          />
+          <StatCard
+            title="قيد المراجعة"
+            value={properties.filter(p => p.status === "pending").length}
+            icon={Building2}
+            variant="warning"
+          />
+          <StatCard
+            title="المرفوضة"
+            value={properties.filter(p => p.status === "rejected").length}
+            icon={Building2}
+            variant="destructive"
+          />
         </div>
 
-        {/* Properties List */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">العقارات</h2>
-            <Button className="gap-2" onClick={() => navigate("/dashboard/add")}>
+
+            <Button
+              className="gap-2"
+              onClick={() => navigate("/add")}
+            >
               <Plus className="h-4 w-4" />
               إضافة عقار جديد
             </Button>
@@ -67,9 +89,7 @@ export default function Dashboard() {
               <PropertyCard
                 key={property.id}
                 property={property}
-                onView={() => handleView(property.id)}
-                onEdit={() => handleEdit(property.id)}
-                onDelete={() => handleDelete(property.id)}
+                onDelete={handleDelete}
               />
             ))}
           </div>
