@@ -6,7 +6,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Building2, CheckCircle, Hourglass, XCircle } from "lucide-react";
+import { Building2, CheckCircle, Hourglass, XCircle, Plus } from "lucide-react"; // استيراد Plus
 
 type PropertyStatus = "pending" | "approved" | "rejected";
 
@@ -37,41 +37,40 @@ export default function Dashboard() {
   const handleDelete = (id: string) => setProperties(prev => prev.filter(p => p.id !== id));
 
   return (
-   <DashboardLayout>
+    <DashboardLayout>
       <DashboardHeader
         title="لوحة التحكم"
         subtitle="إدارة العقارات والحسابات"
       />
 
-        <div className="p-6 lg:p-8">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-              <StatCard
-                title="إجمالي العقارات"
-                value={properties.length}
-                icon={Building2} // أيقونة المباني للعقارات الكل
-                variant="primary"
-              />
-              <StatCard
-                title="العقارات النشطة"
-                value={properties.filter(p => p.status === "approved").length}
-                icon={CheckCircle} // أيقونة علامة صح للعقارات الموافقة
-                variant="success"
-              />
-              <StatCard
-                title="قيد المراجعة"
-                value={properties.filter(p => p.status === "pending").length}
-                icon={Hourglass} // أيقونة الساعة للعقارات pending
-                variant="warning"
-                className="shadow" // ظل ثابت خفيف دائمًا
-              />
-              <StatCard
-                title="المرفوضة"
-                value={properties.filter(p => p.status === "rejected").length}
-                icon={XCircle} // أيقونة X للعقارات المرفوضة
-                variant="destructive"
-              />
-            </div>
-          </div>
+      <div className="p-6 lg:p-8">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <StatCard
+            title="إجمالي العقارات"
+            value={properties.length}
+            icon={Building2} // أيقونة المباني للعقارات الكل
+            variant="primary"
+          />
+          <StatCard
+            title="العقارات النشطة"
+            value={properties.filter(p => p.status === "approved").length}
+            icon={CheckCircle} // أيقونة علامة صح للعقارات الموافقة
+            variant="success"
+          />
+          <StatCard
+            title="قيد المراجعة"
+            value={properties.filter(p => p.status === "pending").length}
+            icon={Hourglass} // أيقونة الساعة للعقارات pending
+            variant="warning"
+            className="shadow" // ظل ثابت خفيف دائمًا
+          />
+          <StatCard
+            title="المرفوضة"
+            value={properties.filter(p => p.status === "rejected").length}
+            icon={XCircle} // أيقونة X للعقارات المرفوضة
+            variant="destructive"
+          />
+        </div>
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
@@ -81,7 +80,7 @@ export default function Dashboard() {
               className="gap-2"
               onClick={() => navigate("/add")}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4" /> {/* الآن Plus مستورد */}
               إضافة عقار جديد
             </Button>
           </div>
