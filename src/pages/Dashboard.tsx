@@ -3,10 +3,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { StatCard } from "@/components/dashboard/StatCard";
 import { PropertyCard } from "@/components/dashboard/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Building2, CheckCircle, Hourglass, XCircle, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 type PropertyStatus = "pending" | "approved" | "rejected";
 
@@ -43,7 +42,7 @@ export default function Dashboard() {
         subtitle="إدارة العقارات والحسابات"
       />
 
-
+      <div className="p-6 lg:p-8">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">العقارات</h2>
