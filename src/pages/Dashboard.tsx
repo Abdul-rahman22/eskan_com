@@ -43,38 +43,6 @@ export default function Dashboard() {
         subtitle="إدارة العقارات والحسابات"
       />
 
-      <div className="p-6 lg:p-8">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          {/* كل بطاقة لها ظل خفيف ثابت */}
-          <StatCard
-            title="إجمالي العقارات"
-            value={properties.length}
-            icon={() => <Building2 className="text-blue-500 w-5 h-5" />}
-            variant="primary"
-            className="shadow rounded-lg bg-white"
-          />
-          <StatCard
-            title="العقارات النشطة"
-            value={properties.filter(p => p.status === "approved").length}
-            icon={() => <CheckCircle className="text-green-500 w-5 h-5" />}
-            variant="success"
-            className="shadow rounded-lg bg-white"
-          />
-          <StatCard
-            title="قيد المراجعة"
-            value={properties.filter(p => p.status === "pending").length}
-            icon={() => <Hourglass className="text-yellow-500 w-5 h-5" />}
-            variant="warning"
-            className="shadow rounded-lg bg-white"
-          />
-          <StatCard
-            title="المرفوضة"
-            value={properties.filter(p => p.status === "rejected").length}
-            icon={() => <XCircle className="text-red-500 w-5 h-5" />}
-            variant="destructive"
-            className="shadow rounded-lg bg-white"
-          />
-        </div>
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
