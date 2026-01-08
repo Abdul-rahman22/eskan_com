@@ -62,6 +62,7 @@ export default function Dashboard() {
             value={properties.filter(p => p.status === "pending").length}
             icon={Building2}
             variant="warning"
+            className="shadow-lg" // ظل ثابت خفيف
           />
           <StatCard
             title="المرفوضة"
