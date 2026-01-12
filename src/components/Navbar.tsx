@@ -54,7 +54,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {/* زر تسجيل الدخول */}
             <Link
-              to="/login"
+              to="/auth"
               className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               تسجيل الدخول
@@ -84,7 +84,7 @@ const Navbar = () => {
                 <div className="flex flex-col gap-2 mt-4 border-t pt-4">
                   {/* زر تسجيل الدخول للموبايل */}
                   <Link
-                    to="/login"
+                    to="/auth"
                     className="text-center text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                   >
                     تسجيل الدخول
