@@ -1,24 +1,28 @@
+'use client';
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, Lock } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 
+/* ================= Types ================= */
 interface UserType {
   full_name: string;
-  email: string;
+  email?: string;
   phone?: string;
   city?: string;
   address?: string;
   bio?: string;
 }
 
+/* ================= LocalStorage Helpers ================= */
 const getStoredUser = (): UserType | null => {
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : null;
@@ -28,19 +32,18 @@ const saveUser = (user: UserType) => {
   localStorage.setItem("user", JSON.stringify(user));
 };
 
+/* ================= Component ================= */
 const Settings = () => {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: "",
     phone: "",
-    address: "",
     city: "",
+    address: "",
     bio: "",
   });
 
@@ -50,29 +53,32 @@ const Settings = () => {
     confirmPassword: "",
   });
 
-
-
+  /* ================= Fetch Profile ================= */
   useEffect(() => {
+    const fetchProfile = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const storedUser = getStoredUser();
+
+      if (storedUser) {
+        setUser(storedUser);
+        setFormData({
+          full_name: storedUser.full_name || "",
+          phone: storedUser.phone || "",
+          city: storedUser.city || "",
+          address: storedUser.address || "",
+          bio: storedUser.bio || "",
+        });
+      }
+      setLoading(false);
+    };
+
     fetchProfile();
   }, []);
 
-  const fetchProfile = async () => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-      setFormData({
-        full_name: storedUser.full_name || "",
-        phone: storedUser.phone || "",
-        address: storedUser.address || "",
-        city: storedUser.city || "",
-        bio: storedUser.bio || "",
-      });
-    }
-    setLoading(false);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  /* ================= Handlers ================= */
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -87,20 +93,17 @@ const Settings = () => {
     setSaving(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (user) {
-        const updatedUser: UserType = {
-          ...user,
-          ...formData,
-        };
+        const updatedUser = { ...user, ...formData };
         saveUser(updatedUser);
         setUser(updatedUser);
       }
 
       toast.success("تم حفظ التغييرات بنجاح");
-    } catch (error: any) {
-      toast.error(error.message || "حدث خطأ أثناء الحفظ");
+    } catch {
+      toast.error("حدث خطأ أثناء الحفظ");
     } finally {
       setSaving(false);
     }
@@ -108,7 +111,7 @@ const Settings = () => {
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error("كلمة المرور الجديدة غير متطابقة");
       return;
@@ -121,18 +124,21 @@ const Settings = () => {
 
     setSaving(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("تم تغيير كلمة المرور بنجاح");
-      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
-    } catch (error) {
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch {
       toast.error("حدث خطأ أثناء تغيير كلمة المرور");
     } finally {
       setSaving(false);
     }
   };
 
-
-
+  /* ================= Loading ================= */
   if (loading) {
     return (
       <DashboardLayout>
@@ -146,165 +152,119 @@ const Settings = () => {
   const settingsTabs = [
     { id: "profile", label: "الملف الشخصي", icon: User },
     { id: "security", label: "الأمان", icon: Lock },
-
   ];
 
+  /* ================= Render ================= */
   return (
     <DashboardLayout>
-      <div className="p-3 sm:p-4 lg:p-8">
-        {/* Page Header */}
+      <div className="p-4 lg:p-8 space-y-6">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 sm:mb-6"
         >
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-1 sm:mb-2">
+          <h1 className="text-2xl lg:text-3xl font-bold mb-1">
             إعدادات الحساب
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-muted-foreground">
             تخصيص حسابك وإعداداتك الشخصية
-  
+          </p>
+        </motion.div>
+
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-muted/50">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-2 w-full">
             {settingsTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger key={tab.id} value={tab.id} className="gap-2">
-                  <Icon className="h-4 w-4 hidden sm:block" />
-                  <span className="text-xs sm:text-sm">{tab.label}</span>
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
                 </TabsTrigger>
               );
             })}
           </TabsList>
 
-          {/* Profile Tab */}
-          <TabsContent value="profile" className="space-y-4 sm:space-y-6 mt-0">
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <Card className="border-border/50">
-                  <CardHeader>
-                    <CardTitle>المعلومات الشخصية</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">الاسم الكامل</label>
-                      <Input
-                        name="full_name"
-                        value={formData.full_name}
-                        onChange={handleInputChange}
-                        placeholder="أدخل اسمك الكامل"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">رقم الهاتف</label>
-                      <Input
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="01234567890"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">المدينة</label>
-                      <Input
-                        name="city"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        placeholder="القاهرة"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">العنوان</label>
-                      <Input
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        placeholder="عنوانك"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">السيرة الذاتية</label>
-                      <Textarea
-                        name="bio"
-                        value={formData.bio}
-                        onChange={handleInputChange}
-                        placeholder="اكتب نبذة قصيرة عنك"
-                        className="h-20"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+          {/* Profile */}
+          <TabsContent value="profile">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>المعلومات الشخصية</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Input
+                    name="full_name"
+                    placeholder="الاسم الكامل"
+                    value={formData.full_name}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    name="phone"
+                    placeholder="رقم الهاتف"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    name="city"
+                    placeholder="المدينة"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    name="address"
+                    placeholder="العنوان"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                  />
+                  <Textarea
+                    name="bio"
+                    placeholder="نبذة عنك"
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                  />
+                </CardContent>
+              </Card>
 
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full shadow-lg shadow-primary/20"
-                disabled={saving}
-              >
+              <Button disabled={saving} className="w-full">
                 {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
               </Button>
             </form>
           </TabsContent>
 
-          {/* Security Tab */}
-          <TabsContent value="security" className="space-y-4 sm:space-y-6 mt-0">
-            <form onSubmit={handlePasswordSubmit} className="space-y-4 sm:space-y-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <Card className="border-border/50">
-                  <CardHeader>
-                    <CardTitle>تغيير كلمة المرور</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">كلمة المرور الحالية</label>
-                      <Input
-                        name="currentPassword"
-                        type={showCurrentPassword ? "text" : "password"}
-                        value={passwordData.currentPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="••••••••"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">كلمة المرور الجديدة</label>
-                      <Input
-                        name="newPassword"
-                        type={showNewPassword ? "text" : "password"}
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="••••••••"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">تأكيد كلمة المرور</label>
-                      <Input
-                        name="confirmPassword"
-                        type={showNewPassword ? "text" : "password"}
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="••••••••"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+          {/* Security */}
+          <TabsContent value="security">
+            <form onSubmit={handlePasswordSubmit} className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>تغيير كلمة المرور</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Input
+                    type="password"
+                    name="currentPassword"
+                    placeholder="كلمة المرور الحالية"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <Input
+                    type="password"
+                    name="newPassword"
+                    placeholder="كلمة المرور الجديدة"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="تأكيد كلمة المرور"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </CardContent>
+              </Card>
 
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full shadow-lg shadow-primary/20"
-                disabled={saving}
-              >
+              <Button disabled={saving} className="w-full">
                 {saving ? "جاري التحديث..." : "تحديث كلمة المرور"}
               </Button>
             </form>
