@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: eskan-backend
+    runtime: python
+    runtimeVersion: 3.11
+    buildCommand: pip install -r backend/requirements.txt && python backend/manage.py migrate && python backend/manage.py collectstatic --noinput
+    startCommand: cd backend && gunicorn backend_project.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: "false"
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com,eskan.com,www.eskan.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eskan-db
+          property: connectionString
+      - key: REDIS_URL
+        value: "redis://localhost:6379/0"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com,https://eskan.com,https://www.eskan.com"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://*.onrender.com,https://eskan.com,https://www.eskan.com"
+      - key: SECRET_KEY
+        generateValue: true
+    healthCheckPath: /api/health/
+    domains:
+      - eskan.com
+      - www.eskan.com
+
+  - type: web
+    name: eskan-frontend
+    runtime: node
+    runtimeVersion: 18
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://eskan-backend.onrender.com"
+
+  - type: pserver
+    name: eskan-db
+    plan: free
+    ipAllowList: []
+
+  - type: pserver
+    name: eskan-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: eskan-db
+    databaseName: eskan_production
+    user: eskan_user
+    plan: free
