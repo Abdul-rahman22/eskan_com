@@ -46,6 +46,7 @@ const Auth = () => {
     passwordConfirm: "",
     fullName: "",
     phone: "",
+    accountType: "owner", // "owner", "agent", "agency"
   });
 
   // For login, we only need username and password
@@ -122,6 +123,7 @@ const Auth = () => {
             first_name: formData.fullName.split(" ")[0] || "",
             last_name: formData.fullName.split(" ")[1] || "",
             phone: formData.phone,
+            account_type: formData.accountType,
           }),
         });
 
@@ -254,6 +256,7 @@ const Auth = () => {
                   passwordConfirm: "",
                   fullName: "",
                   phone: "",
+                  accountType: "owner",
                 });
               }}
               className={`flex-1 py-3 px-6 rounded-xl text-sm font-medium transition-all duration-300 ${
@@ -417,6 +420,65 @@ const Auth = () => {
                       className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
                       required
                     />
+                  </div>
+                </div>
+
+                {/* Account Type Selection */}
+                <div className="space-y-3 pt-2">
+                  <Label className="text-foreground font-medium">
+                    نوع الحساب
+                  </Label>
+                  <div className="grid grid-cols-3 gap-3">
+                    <motion.button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, accountType: "owner" })
+                      }
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`p-4 rounded-xl border-2 transition-all text-center ${
+                        formData.accountType === "owner"
+                          ? "border-primary bg-primary/10 text-primary font-semibold"
+                          : "border-border hover:border-primary/50 text-muted-foreground"
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">🏠</div>
+                      <div className="text-sm">مالك عقار</div>
+                    </motion.button>
+
+                    <motion.button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, accountType: "agent" })
+                      }
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`p-4 rounded-xl border-2 transition-all text-center ${
+                        formData.accountType === "agent"
+                          ? "border-primary bg-primary/10 text-primary font-semibold"
+                          : "border-border hover:border-primary/50 text-muted-foreground"
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">👤</div>
+                      <div className="text-sm">وسيط</div>
+                    </motion.button>
+
+                    <motion.button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, accountType: "agency" })
+                      }
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`p-4 rounded-xl border-2 transition-all text-center ${
+                        formData.accountType === "agency"
+                          ? "border-primary bg-primary/10 text-primary font-semibold"
+                          : "border-border hover:border-primary/50 text-muted-foreground"
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">🏢</div>
+                      <div className="text-sm">مكتب عقارات</div>
+                    </motion.button>
                   </div>
                 </div>
 
