@@ -48,6 +48,10 @@ const Auth = () => {
     phone: "",
   });
 
+  // For login, we only need username and password
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   useEffect(() => {
     // Check if user is already logged in
     const token = localStorage.getItem("auth_token");
@@ -69,13 +73,13 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        // Login API call
+        // Login API call with username and password
         const response = await fetch(`${API_BASE}/api/v1/users/auth/login/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            username: formData.username || formData.email,
-            password: formData.password,
+            username: loginUsername,
+            password: loginPassword,
           }),
         });
 
@@ -87,10 +91,10 @@ const Auth = () => {
           // Save user data
           const userData: AuthUser = {
             id: data.user?.id || "user-1",
-            email: formData.email,
-            username: formData.username || formData.email,
-            full_name: data.user?.full_name || formData.fullName,
-            phone: data.user?.phone || formData.phone,
+            email: data.user?.email || loginUsername,
+            username: loginUsername,
+            full_name: data.user?.full_name || loginUsername,
+            phone: data.user?.phone || "",
           };
           localStorage.setItem("user", JSON.stringify(userData));
 
@@ -219,6 +223,8 @@ const Auth = () => {
             <button
               onClick={() => {
                 setIsLogin(true);
+                setLoginUsername("");
+                setLoginPassword("");
                 setFormData({
                   email: "",
                   username: "",
@@ -239,6 +245,8 @@ const Auth = () => {
             <button
               onClick={() => {
                 setIsLogin(false);
+                setLoginUsername("");
+                setLoginPassword("");
                 setFormData({
                   email: "",
                   username: "",
@@ -260,126 +268,207 @@ const Auth = () => {
 
           {/* Form */}
           <AnimatePresence mode="wait">
-            <motion.form
-              key={isLogin ? "login" : "signup"}
-              variants={formVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
-              {!isLogin && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-foreground font-medium">
-                      الاسم الكامل
-                    </Label>
-                    <div className="relative">
-                      <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        placeholder="أدخل اسمك الكامل"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
-                        required={!isLogin}
-                      />
-                    </div>
+            {isLogin ? (
+              <motion.form
+                key="login"
+                variants={formVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                onSubmit={handleSubmit}
+                className="space-y-5"
+              >
+                <div className="space-y-2">
+                  <Label htmlFor="loginUsername" className="text-foreground font-medium">
+                    اسم المستخدم
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="loginUsername"
+                      type="text"
+                      placeholder="أدخل اسم المستخدم"
+                      value={loginUsername}
+                      onChange={(e) => setLoginUsername(e.target.value)}
+                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required
+                    />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="username" className="text-foreground font-medium">
-                      اسم المستخدم
-                    </Label>
-                    <div className="relative">
-                      <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="username"
-                        name="username"
-                        type="text"
-                        placeholder="اسم المستخدم"
-                        value={formData.username}
-                        onChange={handleInputChange}
-                        className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
-                        required={!isLogin}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-foreground font-medium">
-                      رقم الهاتف
-                    </Label>
-                    <div className="relative">
-                      <Phone className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder="01xxxxxxxxx"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground font-medium">
-                  البريد الإلكتروني
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="example@email.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
-                    required
-                  />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground font-medium">
-                  كلمة المرور
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="pr-12 pl-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
-                    required
-                    minLength={6}
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="loginPassword" className="text-foreground font-medium">
+                    كلمة المرور
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="loginPassword"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      className="pr-12 pl-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-primary hover:underline"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
+                    نسيت كلمة المرور؟
                   </button>
                 </div>
-              </div>
 
-              {!isLogin && (
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-14 rounded-xl text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      جاري تسجيل الدخول...
+                    </>
+                  ) : (
+                    <>
+                      <span>تسجيل الدخول</span>
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </Button>
+              </motion.form>
+            ) : (
+              <motion.form
+                key="signup"
+                variants={formVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                onSubmit={handleSubmit}
+                className="space-y-5"
+              >
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-foreground font-medium">
+                    الاسم الكامل
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      placeholder="أدخل اسمك الكامل"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required={!isLogin}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="username" className="text-foreground font-medium">
+                    اسم المستخدم
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder="اسم المستخدم"
+                      value={formData.username}
+                      onChange={handleInputChange}
+                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required={!isLogin}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-medium">
+                    البريد الإلكتروني
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="example@email.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-foreground font-medium">
+                    رقم الهاتف
+                  </Label>
+                  <div className="relative">
+                    <Phone className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="01xxxxxxxxx"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-foreground font-medium">
+                    كلمة المرور
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="pr-12 pl-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      required
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="passwordConfirm" className="text-foreground font-medium">
                     تأكيد كلمة المرور
@@ -399,37 +488,26 @@ const Auth = () => {
                     />
                   </div>
                 </div>
-              )}
 
-              {isLogin && (
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    className="text-sm text-primary hover:underline"
-                  >
-                    نسيت كلمة المرور؟
-                  </button>
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-14 rounded-xl text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    {isLogin ? "جاري تسجيل الدخول..." : "جاري إنشاء الحساب..."}
-                  </>
-                ) : (
-                  <>
-                    <span>{isLogin ? "تسجيل الدخول" : "إنشاء حساب"}</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </>
-                )}
-              </Button>
-            </motion.form>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-14 rounded-xl text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      جاري إنشاء الحساب...
+                    </>
+                  ) : (
+                    <>
+                      <span>إنشاء حساب</span>
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </Button>
+              </motion.form>
+            )}
           </AnimatePresence>
 
           {/* Features */}
