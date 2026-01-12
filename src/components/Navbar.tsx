@@ -111,11 +111,6 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/favorites" className="cursor-pointer">
-                      المفضلة
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link to="/dashboard/settings" className="cursor-pointer">
                       الإعدادات
                     </Link>

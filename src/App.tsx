@@ -18,7 +18,6 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/dashboard/Dashboard";
 import AddProperty from "./pages/dashboard/AddProperty";
 import MyProperties from "./pages/dashboard/MyProperties";
-import Favorites from "./pages/dashboard/Favorites";
 import Settings from "./pages/dashboard/Settings";
 
 /* ===== Protection ===== */
@@ -56,10 +55,6 @@ const App = () => (
           <Route
             path="/dashboard/my-properties"
             element={<ProtectedRoute element={<MyProperties />} />}
-          />
-          <Route
-            path="/dashboard/favorites"
-            element={<ProtectedRoute element={<Favorites />} />}
           />
           <Route
             path="/dashboard/settings"

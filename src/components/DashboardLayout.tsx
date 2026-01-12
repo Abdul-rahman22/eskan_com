@@ -9,7 +9,6 @@ import {
   LayoutDashboard,
   Plus,
   List,
-  Heart,
   Settings,
   LogOut,
   User,
@@ -46,12 +45,6 @@ const menuItems = [
     label: "عقاراتي",
     icon: List,
     description: "إدارة عقاراتك",
-  },
-  {
-    path: "/dashboard/favorites",
-    label: "المفضلة",
-    icon: Heart,
-    description: "العقارات المحفوظة",
   },
   {
     path: "/dashboard/settings",
