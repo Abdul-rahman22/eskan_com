@@ -146,8 +146,7 @@ const Settings = () => {
   const settingsTabs = [
     { id: "profile", label: "الملف الشخصي", icon: User },
     { id: "security", label: "الأمان", icon: Lock },
-    { id: "notifications", label: "الإشعارات", icon: Bell },
-    { id: "privacy", label: "الخصوصية", icon: Shield },
+
   ];
 
   return (
