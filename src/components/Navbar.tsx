@@ -1,11 +1,47 @@
-import { Menu, Phone, Heart, User } from "lucide-react";
+import { Menu, Phone, Heart, User, LogOut } from "lucide-react";
 import logo from "../assets/logo1.png";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    const user = localStorage.getItem("user");
+    
+    if (token && user) {
+      setIsLoggedIn(true);
+      try {
+        const userData = JSON.parse(user);
+        setUserName(userData.full_name || "حسابي");
+      } catch {
+        setUserName("حسابي");
+      }
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   const isActive = (path: string) => location.pathname === path;
   const navLinks = [
     { path: "/", label: "الرئيسية" },
@@ -52,13 +88,53 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            {/* زر تسجيل الدخول */}
-            <Link
-              to="/auth"
-              className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              تسجيل الدخول
-            </Link>
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="default"
+                    className="gap-2"
+                  >
+                    <User className="h-4 w-4" />
+                    {userName}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer">
+                      لوحة التحكم
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/my-properties" className="cursor-pointer">
+                      عقاراتي
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/favorites" className="cursor-pointer">
+                      المفضلة
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard/settings" className="cursor-pointer">
+                      الإعدادات
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                    <LogOut className="h-4 w-4 ml-2" />
+                    تسجيل الخروج
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link
+                to="/auth"
+                className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                تسجيل الدخول
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -82,13 +158,43 @@ const Navbar = () => {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-2 mt-4 border-t pt-4">
-                  {/* زر تسجيل الدخول للموبايل */}
-                  <Link
-                    to="/auth"
-                    className="text-center text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                  >
-                    تسجيل الدخول
-                  </Link>
+                  {isLoggedIn ? (
+                    <>
+                      <Link
+                        to="/dashboard"
+                        className="text-center text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        لوحة التحكم
+                      </Link>
+                      <Link
+                        to="/dashboard/my-properties"
+                        className="text-center text-sm font-medium px-4 py-2 rounded-md bg-accent hover:bg-accent/90 transition-colors"
+                      >
+                        عقاراتي
+                      </Link>
+                      <Link
+                        to="/dashboard/settings"
+                        className="text-center text-sm font-medium px-4 py-2 rounded-md bg-accent hover:bg-accent/90 transition-colors"
+                      >
+                        الإعدادات
+                      </Link>
+                      <Button
+                        onClick={handleLogout}
+                        variant="destructive"
+                        className="w-full"
+                      >
+                        <LogOut className="h-4 w-4 ml-2" />
+                        تسجيل الخروج
+                      </Button>
+                    </>
+                  ) : (
+                    <Link
+                      to="/auth"
+                      className="text-center text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                    >
+                      تسجيل الدخول
+                    </Link>
+                  )}
                 </div>
               </div>
             </SheetContent>
