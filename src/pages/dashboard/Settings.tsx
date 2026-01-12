@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, Lock, Bell, Shield } from "lucide-react";
+import { User, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,21 +50,7 @@ const Settings = () => {
     confirmPassword: "",
   });
 
-  const [notifications, setNotifications] = useState({
-    email_notifications: true,
-    sms_notifications: false,
-    push_notifications: true,
-    property_updates: true,
-    new_messages: true,
-    marketing_emails: false,
-  });
 
-  const [privacy, setPrivacy] = useState({
-    profile_visible: true,
-    show_phone: false,
-    show_email: true,
-    allow_messages: true,
-  });
 
   useEffect(() => {
     fetchProfile();
@@ -145,25 +131,7 @@ const Settings = () => {
     }
   };
 
-  const handleNotificationSave = async () => {
-    setSaving(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast.success("تم حفظ إعدادات الإشعارات");
-    } finally {
-      setSaving(false);
-    }
-  };
 
-  const handlePrivacySave = async () => {
-    setSaving(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast.success("تم حفظ إعدادات الخصوصية");
-    } finally {
-      setSaving(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -196,12 +164,10 @@ const Settings = () => {
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
             تخصيص حسابك وإعداداتك الشخصية
-          </p>
-        </motion.div>
-
+  
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto p-1 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-muted/50">
             {settingsTabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -343,88 +309,6 @@ const Settings = () => {
                 {saving ? "جاري التحديث..." : "تحديث كلمة المرور"}
               </Button>
             </form>
-          </TabsContent>
-
-          {/* Notifications Tab */}
-          <TabsContent value="notifications" className="space-y-4 sm:space-y-6 mt-0">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle>تفضيلات الإشعارات</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {Object.entries(notifications).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <label className="text-sm font-medium capitalize">
-                        {key.replace(/_/g, " ")}
-                      </label>
-                      <Switch
-                        checked={value}
-                        onCheckedChange={(checked) =>
-                          setNotifications((prev) => ({
-                            ...prev,
-                            [key]: checked,
-                          }))
-                        }
-                      />
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <Button
-              onClick={handleNotificationSave}
-              size="lg"
-              className="w-full shadow-lg shadow-primary/20"
-              disabled={saving}
-            >
-              {saving ? "جاري الحفظ..." : "حفظ الإعدادات"}
-            </Button>
-          </TabsContent>
-
-          {/* Privacy Tab */}
-          <TabsContent value="privacy" className="space-y-4 sm:space-y-6 mt-0">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle>إعدادات الخصوصية</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {Object.entries(privacy).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <label className="text-sm font-medium capitalize">
-                        {key.replace(/_/g, " ")}
-                      </label>
-                      <Switch
-                        checked={value}
-                        onCheckedChange={(checked) =>
-                          setPrivacy((prev) => ({
-                            ...prev,
-                            [key]: checked,
-                          }))
-                        }
-                      />
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <Button
-              onClick={handlePrivacySave}
-              size="lg"
-              className="w-full shadow-lg shadow-primary/20"
-              disabled={saving}
-            >
-              {saving ? "جاري الحفظ..." : "حفظ الإعدادات"}
-            </Button>
           </TabsContent>
         </Tabs>
       </div>
