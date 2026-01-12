@@ -49,6 +49,13 @@ const Auth = () => {
     accountType: "owner", // "owner", "agent", "agency"
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    username: "",
+    password: "",
+    general: "",
+  });
+
   // For login, we only need username and password
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -62,10 +69,18 @@ const Auth = () => {
   }, [navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fieldName = e.target.name as keyof typeof errors;
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // إزالة الخطأ من الحقل عند الكتابة
+    if (errors[fieldName]) {
+      setErrors({
+        ...errors,
+        [fieldName]: "",
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -157,7 +172,31 @@ const Auth = () => {
             navigate("/dashboard");
           }
         } else {
-          toast.error(data.error || "فشل إنشاء الحساب");
+          // معالجة الأخطاء بشكل احترافي
+          const newErrors = { email: "", username: "", password: "", general: "" };
+          
+          if (data.errors) {
+            if (data.errors.username) {
+              newErrors.username = data.errors.username[0] || "اسم المستخدم موجود بالفعل";
+            }
+            if (data.errors.email) {
+              newErrors.email = data.errors.email[0] || "البريد الإلكتروني موجود بالفعل";
+            }
+          } else if (data.error) {
+            if (data.error.includes("username")) {
+              newErrors.username = "اسم المستخدم موجود بالفعل";
+            } else if (data.error.includes("email")) {
+              newErrors.email = "البريد الإلكتروني موجود بالفعل";
+            } else {
+              newErrors.general = data.error;
+            }
+          }
+          
+          setErrors(newErrors);
+          
+          if (newErrors.general) {
+            toast.error(newErrors.general);
+          }
         }
       }
     } catch (error: any) {
@@ -390,7 +429,9 @@ const Auth = () => {
                     اسم المستخدم
                   </Label>
                   <div className="relative">
-                    <User className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <User className={`absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 ${
+                      errors.username ? "text-red-500" : "text-muted-foreground"
+                    }`} />
                     <Input
                       id="username"
                       name="username"
@@ -398,10 +439,23 @@ const Auth = () => {
                       placeholder="اسم المستخدم"
                       value={formData.username}
                       onChange={handleInputChange}
-                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      className={`pr-12 h-14 rounded-xl focus:border-primary bg-background transition-all ${
+                        errors.username 
+                          ? "border-red-500 focus:border-red-500" 
+                          : "border-border/50"
+                      }`}
                       required={!isLogin}
                     />
                   </div>
+                  {errors.username && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-sm font-medium"
+                    >
+                      {errors.username}
+                    </motion.p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -409,7 +463,9 @@ const Auth = () => {
                     البريد الإلكتروني
                   </Label>
                   <div className="relative">
-                    <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Mail className={`absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 ${
+                      errors.email ? "text-red-500" : "text-muted-foreground"
+                    }`} />
                     <Input
                       id="email"
                       name="email"
@@ -417,10 +473,23 @@ const Auth = () => {
                       placeholder="example@email.com"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="pr-12 h-14 rounded-xl border-border/50 focus:border-primary bg-background"
+                      className={`pr-12 h-14 rounded-xl focus:border-primary bg-background transition-all ${
+                        errors.email 
+                          ? "border-red-500 focus:border-red-500" 
+                          : "border-border/50"
+                      }`}
                       required
                     />
                   </div>
+                  {errors.email && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-sm font-medium"
+                    >
+                      {errors.email}
+                    </motion.p>
+                  )}
                 </div>
 
                 {/* Account Type Selection */}
