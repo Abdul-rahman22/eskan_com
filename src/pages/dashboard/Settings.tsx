@@ -17,9 +17,11 @@ interface UserType {
   full_name: string;
   email?: string;
   phone?: string;
+  username?: string;
   city?: string;
   address?: string;
   bio?: string;
+  account_type?: "owner" | "agent" | "agency";
 }
 
 /* ================= LocalStorage Helpers ================= */
@@ -188,9 +190,65 @@ const Settings = () => {
           {/* Profile */}
           <TabsContent value="profile">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* User Info Card */}
+              {user && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                    <CardHeader>
+                      <CardTitle className="text-primary">بيانات حسابك</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">الاسم الكامل</p>
+                          <p className="text-lg font-semibold text-foreground">
+                            {user.full_name || "—"}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">نوع الحساب</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">
+                              {user.account_type === "owner" && "🏠"}
+                              {user.account_type === "agent" && "👤"}
+                              {user.account_type === "agency" && "🏢"}
+                            </span>
+                            <p className="text-lg font-semibold text-foreground">
+                              {user.account_type === "owner" && "مالك عقار"}
+                              {user.account_type === "agent" && "وسيط"}
+                              {user.account_type === "agency" && "مكتب عقارات"}
+                            </p>
+                          </div>
+                        </div>
+                        {user.city && (
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">المدينة</p>
+                            <p className="text-lg font-semibold text-foreground">
+                              {user.city}
+                            </p>
+                          </div>
+                        )}
+                        {user.address && (
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">العنوان</p>
+                            <p className="text-lg font-semibold text-foreground">
+                              {user.address}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Edit Form */}
               <Card>
                 <CardHeader>
-                  <CardTitle>المعلومات الشخصية</CardTitle>
+                  <CardTitle>تحديث المعلومات</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Input

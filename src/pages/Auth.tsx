@@ -29,6 +29,7 @@ interface AuthUser {
   username: string;
   full_name?: string;
   phone?: string;
+  account_type?: "owner" | "agent" | "agency";
 }
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -165,6 +166,7 @@ const Auth = () => {
               username: formData.username,
               full_name: formData.fullName,
               phone: formData.phone,
+              account_type: formData.accountType,
             };
             localStorage.setItem("user", JSON.stringify(userData));
 
