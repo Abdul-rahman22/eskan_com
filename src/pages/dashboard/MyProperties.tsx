@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Filter, Edit, Trash2, CheckCircle2, Clock, XCircle, AlertCircle, Building2 } from "lucide-react";
+import { Search, Filter, Trash2, CheckCircle2, Clock, XCircle, AlertCircle, Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -294,13 +294,6 @@ const MyProperties = () => {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-muted-foreground hover:text-foreground"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
                             <Button
                               variant="ghost"
                               size="sm"
