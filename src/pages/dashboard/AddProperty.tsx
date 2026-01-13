@@ -189,17 +189,6 @@ const AddProperty = () => {
               </CardHeader>
               <CardContent className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">العنوان (إنجليزي)</label>
-                  <Input
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    placeholder="Beautiful Apartment"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
                   <label className="text-sm font-medium">العنوان (عربي)</label>
                   <Input
                     id="title_ar"
@@ -243,26 +232,6 @@ const AddProperty = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {usageTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">نوع الإدراج</label>
-                  <Select
-                    value={formData.listing_type}
-                    onValueChange={(value) =>
-                      handleSelectChange("listing_type", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {listingTypes.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label}
                         </SelectItem>
