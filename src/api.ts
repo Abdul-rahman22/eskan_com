@@ -21,20 +21,175 @@ API.interceptors.request.use((config) => {
 
 export default API;
 
+// ============ Properties ============
 export async function fetchProperties() {
-  const res = await fetch(`${API_BASE}/properties/`);
-  if (!res.ok) throw new Error("Failed to fetch properties");
-  return res.json();
+  try {
+    const { data } = await API.get("/properties/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching properties:", error);
+    throw error;
+  }
 }
 
 export async function fetchProperty(id: string) {
-  const res = await fetch(`${API_BASE}/properties/${id}/`);
-  if (!res.ok) throw new Error("Failed to fetch property");
-  return res.json();
+  try {
+    const { data } = await API.get(`/properties/${id}/`);
+    return data;
+  } catch (error) {
+    console.error("Error fetching property:", error);
+    throw error;
+  }
 }
 
+export async function fetchPropertiesByStatus(status: string) {
+  try {
+    const { data } = await API.get(`/properties/by-status/${status}/`);
+    return data;
+  } catch (error) {
+    console.error("Error fetching properties by status:", error);
+    throw error;
+  }
+}
+
+export async function fetchUserProperties() {
+  try {
+    const { data } = await API.get("/properties/my-properties/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching user properties:", error);
+    throw error;
+  }
+}
+
+export async function createProperty(propertyData: any) {
+  try {
+    const { data } = await API.post("/properties/", propertyData);
+    return data;
+  } catch (error) {
+    console.error("Error creating property:", error);
+    throw error;
+  }
+}
+
+export async function updateProperty(id: string, propertyData: any) {
+  try {
+    const { data } = await API.put(`/properties/${id}/`, propertyData);
+    return data;
+  } catch (error) {
+    console.error("Error updating property:", error);
+    throw error;
+  }
+}
+
+export async function deleteProperty(id: string) {
+  try {
+    await API.delete(`/properties/${id}/`);
+  } catch (error) {
+    console.error("Error deleting property:", error);
+    throw error;
+  }
+}
+
+export async function submitPropertyForApproval(id: string) {
+  try {
+    const { data } = await API.post(`/properties/${id}/submit-for-approval/`);
+    return data;
+  } catch (error) {
+    console.error("Error submitting property:", error);
+    throw error;
+  }
+}
+
+export async function resubmitRejectedProperty(id: string) {
+  try {
+    const { data } = await API.post(`/properties/${id}/resubmit/`);
+    return data;
+  } catch (error) {
+    console.error("Error resubmitting property:", error);
+    throw error;
+  }
+}
+
+// ============ Areas ============
 export async function fetchAreas() {
-  const res = await fetch(`${API_BASE}/areas/`);
-  if (!res.ok) throw new Error("Failed to fetch areas");
-  return res.json();
+  try {
+    const { data } = await API.get("/areas/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching areas:", error);
+    throw error;
+  }
+}
+
+// ============ Approval Endpoints (Admin) ============
+export async function fetchPendingProperties() {
+  try {
+    const { data } = await API.get("/properties/pending/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching pending properties:", error);
+    throw error;
+  }
+}
+
+export async function fetchApprovedProperties() {
+  try {
+    const { data } = await API.get("/properties/approved/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching approved properties:", error);
+    throw error;
+  }
+}
+
+export async function fetchRejectedProperties() {
+  try {
+    const { data } = await API.get("/properties/rejected/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching rejected properties:", error);
+    throw error;
+  }
+}
+
+export async function approveProperty(id: string, notes?: string) {
+  try {
+    const { data } = await API.post(`/properties/${id}/approve/`, { notes });
+    return data;
+  } catch (error) {
+    console.error("Error approving property:", error);
+    throw error;
+  }
+}
+
+export async function rejectProperty(id: string, notes: string) {
+  try {
+    const { data } = await API.post(`/properties/${id}/reject/`, { notes });
+    return data;
+  } catch (error) {
+    console.error("Error rejecting property:", error);
+    throw error;
+  }
+}
+
+export async function fetchApprovalStatistics() {
+  try {
+    const { data } = await API.get("/properties/statistics/");
+    return data;
+  } catch (error) {
+    console.error("Error fetching statistics:", error);
+    throw error;
+  }
+}
+
+// ============ Search & Filter ============
+export async function searchProperties(filters: any) {
+  try {
+    const { data } = await API.get("/properties/search/", { params: filters });
+    return data;
+  } catch (error) {
+    console.error("Error searching properties:", error);
+    throw error;
+  }
 }

@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('listings.urls')),
+        path('api/v1/users/', include('users.urls')),
 ]
 
-# Always serve media files (both DEBUG and production)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,6 +6,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { useSearchParams } from "react-router-dom";
 import { API_URL } from "@/config";
+import { fetchProperties } from "@/api";
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -88,10 +89,10 @@ const Properties: React.FC = () => {
 
   // ----------- Fetch Properties -----------
   useEffect(() => {
-    const fetchProperties = async () => {
+    const loadProperties = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`${API_URL}/properties/`);
+        const data = await fetchProperties();
         setProperties(data);
 
         const initialFiltered = initialArea
@@ -110,7 +111,7 @@ const Properties: React.FC = () => {
       }
     };
 
-    fetchProperties();
+    loadProperties();
   }, [initialArea]);
 
   // ----------- Handle Search (area required like old code) -----------

@@ -22,22 +22,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Link } from "react-router-dom";
+import { fetchUserProperties, deleteProperty, resubmitRejectedProperty } from "@/api";
 
 type Property = {
   id: string;
-  title: string;
-  location: string;
+  name: string;
+  address: string;
   price: number;
-  bedrooms?: number;
+  rooms?: number;
   bathrooms?: number;
-  area?: number;
-  status: "pending" | "approved" | "rejected";
+  size?: number;
+  status: string;
+  approval_notes?: string;
 };
 
 const MyProperties = () => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
@@ -46,9 +49,10 @@ const MyProperties = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    fetchProperties();
+    loadProperties();
   }, []);
 
   useEffect(() => {
@@ -57,8 +61,8 @@ const MyProperties = () => {
     if (searchQuery) {
       filtered = filtered.filter(
         (p) =>
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.location.toLowerCase().includes(searchQuery.toLowerCase())
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.address.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -69,65 +73,95 @@ const MyProperties = () => {
     setFilteredProperties(filtered);
   }, [properties, searchQuery, statusFilter]);
 
-  const fetchProperties = async () => {
-    const mock: Property[] = [
-      {
-        id: "1",
-        title: "شقة مميزة في التجمع الخامس",
-        location: "القاهرة الجديدة",
-        price: 2500000,
-        bedrooms: 3,
-        bathrooms: 2,
-        area: 160,
-        status: "approved",
-      },
-    ];
-    setTimeout(() => {
-      setProperties(mock);
+  const loadProperties = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchUserProperties();
+      setProperties(Array.isArray(data) ? data : []);
+    } catch (err: any) {
+      console.error("Error loading properties:", err);
+      const errorMsg = err.response?.data?.detail || "خطأ في تحميل البيانات";
+      toast({
+        title: "خطأ",
+        description: errorMsg,
+        variant: "destructive",
+      });
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   const handleDelete = async () => {
     if (!propertyToDelete) return;
 
-    setProperties((prev) => prev.filter((p) => p.id !== propertyToDelete.id));
-    toast.success("تم حذف العقار بنجاح");
-    setDeleteDialogOpen(false);
-    setPropertyToDelete(null);
+    try {
+      setDeleting(true);
+      await deleteProperty(propertyToDelete.id);
+      setProperties((prev) => prev.filter((p) => p.id !== propertyToDelete.id));
+      toast({
+        title: "تم الحذف",
+        description: "تم حذف العقار بنجاح",
+      });
+    } catch (err: any) {
+      console.error("Error deleting property:", err);
+      toast({
+        title: "خطأ",
+        description: err.response?.data?.detail || "خطأ في حذف العقار",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+      setPropertyToDelete(null);
+    }
+  };
+
+  const handleResubmit = async (propertyId: string) => {
+    try {
+      await resubmitRejectedProperty(propertyId);
+      await loadProperties();
+      toast({
+        title: "تم إعادة التقديم",
+        description: "تم إعادة تقديم العقار للمراجعة بنجاح",
+      });
+    } catch (err: any) {
+      console.error("Error resubmitting property:", err);
+      toast({
+        title: "خطأ",
+        description: err.response?.data?.detail || "خطأ في إعادة التقديم",
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusInfo = (status: string) => {
-    switch (status) {
-      case "approved":
-        return {
-          label: "موافق عليه",
-          color: "bg-green-500/10 text-green-600 border-green-500/20",
-          icon: CheckCircle2,
-          message: "تم الموافقة على العقار وهو معروض الآن",
-        };
-      case "pending":
-        return {
-          label: "قيد المراجعة",
-          color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
-          icon: Clock,
-          message: "العقار قيد المراجعة من الإدارة",
-        };
-      case "rejected":
-        return {
-          label: "مرفوض",
-          color: "bg-red-500/10 text-red-600 border-red-500/20",
-          icon: XCircle,
-          message: "تم رفض العقار",
-        };
-      default:
-        return {
-          label: status,
-          color: "bg-muted text-muted-foreground",
-          icon: AlertCircle,
-          message: "",
-        };
-    }
+    const statusMap: { [key: string]: any } = {
+      approved: {
+        label: "موافق عليه",
+        color: "bg-green-500/10 text-green-600 border-green-500/20",
+        icon: CheckCircle2,
+        message: "تم الموافقة على العقار وهو معروض الآن",
+      },
+      pending: {
+        label: "قيد المراجعة",
+        color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+        icon: Clock,
+        message: "العقار قيد المراجعة من الإدارة",
+      },
+      rejected: {
+        label: "مرفوض",
+        color: "bg-red-500/10 text-red-600 border-red-500/20",
+        icon: XCircle,
+        message: "تم رفض العقار",
+      },
+      draft: {
+        label: "مسودة",
+        color: "bg-gray-500/10 text-gray-600 border-gray-500/20",
+        icon: AlertCircle,
+        message: "العقار لم يتم تقديمه بعد",
+      },
+    };
+    return statusMap[status] || statusMap.draft;
   };
 
   const stats = [
@@ -270,30 +304,44 @@ const MyProperties = () => {
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-lg text-foreground truncate mb-1">
-                              {property.title}
+                              {property.name}
                             </h3>
                             <p className="text-sm text-muted-foreground mb-3">
-                              {property.location} • {property.price.toLocaleString()} ج.م
+                              {property.address} • {property.price.toLocaleString()} ج.م
                             </p>
                             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
-                              {property.bedrooms && (
-                                <span>غرف: {property.bedrooms}</span>
+                              {property.rooms && (
+                                <span>غرف: {property.rooms}</span>
                               )}
                               {property.bathrooms && (
                                 <span>حمامات: {property.bathrooms}</span>
                               )}
-                              {property.area && (
-                                <span>المساحة: {property.area} م²</span>
+                              {property.size && (
+                                <span>المساحة: {property.size} م²</span>
                               )}
                             </div>
                             <div
-                              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium ${statusInfo.color}`}
+                              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium ${getStatusInfo(property.status).color}`}
                             >
                               <StatusIcon className="h-4 w-4" />
-                              {statusInfo.label}
+                              {getStatusInfo(property.status).label}
                             </div>
+                            {property.approval_notes && (
+                              <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted rounded">
+                                ملاحظات الإدارة: {property.approval_notes}
+                              </p>
+                            )}
                           </div>
                           <div className="flex gap-2">
+                            {property.status === "rejected" && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleResubmit(property.id)}
+                                className="gap-1"
+                              >
+                                إعادة تقديم
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
@@ -322,16 +370,17 @@ const MyProperties = () => {
             <AlertDialogHeader>
               <AlertDialogTitle>هل أنت متأكد من الحذف؟</AlertDialogTitle>
               <AlertDialogDescription>
-                سيتم حذف العقار "{propertyToDelete?.title}" نهائياً ولا يمكن التراجع عن هذا الإجراء.
+                سيتم حذف العقار "{propertyToDelete?.name}" نهائياً ولا يمكن التراجع عن هذا الإجراء.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
               <AlertDialogCancel>إلغاء</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
+                disabled={deleting}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
-                حذف العقار
+                {deleting ? "جاري الحذف..." : "حذف العقار"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

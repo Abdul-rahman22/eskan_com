@@ -9,45 +9,54 @@ import {
   Eye,
   ArrowUpRight,
   Plus,
+  AlertCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/DashboardLayout";
+import { fetchUserProperties } from "@/api";
+import { useToast } from "@/hooks/use-toast";
 
 type Property = {
   id: string;
-  title: string;
-  location: string;
+  name: string;
+  address: string;
   price: number;
-  status: "pending" | "approved" | "rejected";
-  images?: string[];
-  views_count?: number;
-  admin_notes?: string | null;
+  status: string;
+  images?: { image_url: string }[];
+  views?: number;
+  approval_notes?: string | null;
 };
 
 const Dashboard = () => {
+  const { toast } = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mock data بدل Supabase
-    const mock: Property[] = [
-      {
-        id: "1",
-        title: "شقة مميزة في التجمع الخامس",
-        location: "القاهرة الجديدة",
-        price: 2500000,
-        status: "approved",
-        images: [],
-        views_count: 123,
-        admin_notes: null,
-      },
-    ];
-    setTimeout(() => {
-      setProperties(mock);
-      setLoading(false);
-    }, 500);
+    loadProperties();
   }, []);
+
+  const loadProperties = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchUserProperties();
+      setProperties(Array.isArray(data) ? data : [data]);
+    } catch (err: any) {
+      console.error("Error loading properties:", err);
+      const errorMsg = err.response?.data?.detail || "خطأ في تحميل البيانات";
+      setError(errorMsg);
+      toast({
+        title: "خطأ",
+        description: errorMsg,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const stats = [
     {
@@ -78,38 +87,35 @@ const Dashboard = () => {
   ];
 
   const totalViews = properties.reduce(
-    (acc, p) => acc + (p.views_count || 0),
+    (acc, p) => acc + (p.views || 0),
     0
   );
   const recentProperties = properties.slice(0, 5);
 
   const getStatusInfo = (status: string) => {
-    switch (status) {
-      case "approved":
-        return {
-          label: "موافق عليه",
-          color: "bg-green-500/10 text-green-600 border-green-500/20",
-          icon: CheckCircle2,
-        };
-      case "pending":
-        return {
-          label: "قيد المراجعة",
-          color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
-          icon: Clock,
-        };
-      case "rejected":
-        return {
-          label: "مرفوض",
-          color: "bg-red-500/10 text-red-600 border-red-500/20",
-          icon: XCircle,
-        };
-      default:
-        return {
-          label: status,
-          color: "bg-muted text-muted-foreground",
-          icon: Clock,
-        };
-    }
+    const statusMap: { [key: string]: any } = {
+      approved: {
+        label: "موافق عليه",
+        color: "bg-green-500/10 text-green-600 border-green-500/20",
+        icon: CheckCircle2,
+      },
+      pending: {
+        label: "قيد المراجعة",
+        color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+        icon: Clock,
+      },
+      rejected: {
+        label: "مرفوض",
+        color: "bg-red-500/10 text-red-600 border-red-500/20",
+        icon: XCircle,
+      },
+      draft: {
+        label: "مسودة",
+        color: "bg-gray-500/10 text-gray-600 border-gray-500/20",
+        icon: AlertCircle,
+      },
+    };
+    return statusMap[status] || statusMap.draft;
   };
 
   return (
@@ -250,6 +256,14 @@ const Dashboard = () => {
                 <div className="p-8 text-center">
                   <div className="w-8 h-8 border-3 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
                 </div>
+              ) : error ? (
+                <div className="p-8 text-center">
+                  <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-3" />
+                  <p className="text-red-600 font-medium">{error}</p>
+                  <Button onClick={loadProperties} className="mt-4">
+                    إعادة محاولة
+                  </Button>
+                </div>
               ) : recentProperties.length === 0 ? (
                 <div className="text-center py-12 px-4">
                   <div className="w-16 h-16 bg-muted rounded-2xl mx-auto mb-4 flex items-center justify-center">
@@ -284,21 +298,21 @@ const Dashboard = () => {
                         <div className="flex items-center gap-4">
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-foreground truncate">
-                              {property.title}
+                              {property.name}
                             </h3>
                             <p className="text-sm text-muted-foreground truncate">
-                              {property.location} • {property.price.toLocaleString()} ج.م
+                              {property.address} • {property.price.toLocaleString()} ج.م
                             </p>
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-right">
                               <p className="text-sm text-muted-foreground">
-                                {property.views_count || 0} مشاهدة
+                                {property.views || 0} مشاهدة
                               </p>
                               <div
-                                className={`text-xs font-semibold px-2 py-1 rounded-lg border ${statusInfo.color}`}
+                                className={`text-xs font-semibold px-2 py-1 rounded-lg border ${getStatusInfo(property.status).color}`}
                               >
-                                {statusInfo.label}
+                                {getStatusInfo(property.status).label}
                               </div>
                             </div>
                           </div>

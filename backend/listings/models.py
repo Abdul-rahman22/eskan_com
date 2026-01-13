@@ -1,6 +1,11 @@
 import uuid
 from django.db import models
 
+
+def generate_uuid():
+    return uuid.uuid4()
+
+
 class Area(models.Model):
     name = models.CharField(max_length=100, unique=True)
     name_en = models.CharField(max_length=100, blank=True)
@@ -8,8 +13,24 @@ class Area(models.Model):
     def __str__(self):
         return self.name
 
+
 class Property(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    USAGE_TYPES = [
+        ('students', 'طلاب'),
+        ('families', 'عائلات'),
+        ('studio', 'استوديو'),
+        ('vacation', 'مصيفين'),
+        ('daily', 'حجز يومي'),
+    ]
+
+    STATUS_CHOICES = [
+        ('draft', 'مسودة'),
+        ('pending', 'قيد المراجعة'),
+        ('approved', 'موافق عليه'),
+        ('rejected', 'مرفوض'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=generate_uuid, editable=False)
     name = models.CharField(max_length=200)
     name_en = models.CharField(max_length=200, blank=True)
     area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, related_name='properties')
@@ -21,16 +42,26 @@ class Property(models.Model):
     floor = models.IntegerField(null=True, blank=True)
     furnished = models.BooleanField(default=False)
     type = models.CharField(max_length=50, blank=True)
+    usage_type = models.CharField(max_length=20, choices=USAGE_TYPES, blank=True)
     type_en = models.CharField(max_length=50, blank=True)
     description = models.TextField(blank=True)
     description_en = models.TextField(blank=True)
     contact = models.CharField(max_length=50, blank=True)
     featured = models.BooleanField(default=False)
+    
+    # نظام الموافقات الجديد
+    owner = models.ForeignKey('users.UserProfile', on_delete=models.CASCADE, related_name='properties', null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey('users.UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_properties')
+    approval_notes = models.TextField(blank=True, help_text='ملاحظات الموافقة أو الرفض')
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
+
 
 class PropertyImage(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images')
@@ -38,7 +69,7 @@ class PropertyImage(models.Model):
     order = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Image for {{self.property_id}} (order={{self.order}})"
+        return f"Image for {self.property_id} (order={self.order})"
 
 
 class PropertyVideo(models.Model):
