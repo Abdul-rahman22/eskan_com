@@ -19,6 +19,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import AddProperty from "./pages/dashboard/AddProperty";
 import MyProperties from "./pages/dashboard/MyProperties";
 import Settings from "./pages/dashboard/Settings";
+import AdminApprovalPanel from "./pages/dashboard/AdminApprovalPanel";
+import MyRejectedProperties from "./pages/dashboard/MyRejectedProperties";
 
 /* ===== Protection ===== */
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -59,6 +61,14 @@ const App = () => (
           <Route
             path="/dashboard/settings"
             element={<ProtectedRoute element={<Settings />} />}
+          />
+          <Route
+            path="/dashboard/admin-approval"
+            element={<ProtectedRoute element={<AdminApprovalPanel />} />}
+          />
+          <Route
+            path="/dashboard/my-rejected"
+            element={<ProtectedRoute element={<MyRejectedProperties />} />}
           />
 
           {/* 404 */}
