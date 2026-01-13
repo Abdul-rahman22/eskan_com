@@ -165,4 +165,39 @@ class AreaAdmin(admin.ModelAdmin):
     property_count.short_description = "عدد العقارات"
 
 
+@admin.register(PropertyImage)
+class PropertyImageAdmin(admin.ModelAdmin):
+    list_display = ('property', 'order', 'image_preview')
+    list_filter = ('property', 'order')
+    search_fields = ('property__name',)
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        """معاينة الصورة"""
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="100" height="100" style="border-radius: 5px;" />',
+                obj.image.url
+            )
+        return "لا توجد صورة"
+    image_preview.short_description = "معاينة"
+
+
+@admin.register(PropertyVideo)
+class PropertyVideoAdmin(admin.ModelAdmin):
+    list_display = ('property', 'order', 'video_info')
+    list_filter = ('property', 'order')
+    search_fields = ('property__name',)
+
+    def video_info(self, obj):
+        """معلومات الفيديو"""
+        if obj.video:
+            return format_html(
+                '<a href="{}" target="_blank">🎥 مشاهدة الفيديو</a>',
+                obj.video.url
+            )
+        return "لا يوجد فيديو"
+    video_info.short_description = "الفيديو"
+
+
 
