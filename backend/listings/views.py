@@ -26,59 +26,73 @@ class PropertyViewSet(viewsets.ModelViewSet):
         - Landlord: يرى عقاراته فقط + العقارات المُوافق عليها
         - زائر: يرى العقارات المُوافق عليها فقط
         """
-        if self.request.user.is_staff or self.request.user.is_superuser:
-            # الإدمن يرى كل شيء
-            queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').all()
-        elif self.request.user.is_authenticated:
-            # المستخدم المسجل يرى عقاراته + العقارات المُوافق عليها
-            user_profile = self.request.user.profile if hasattr(self.request.user, 'profile') else None
-            queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(
-                models.Q(owner=user_profile) | models.Q(status='approved')
-            )
-        else:
-            # الزائر يرى فقط العقارات المُوافق عليها
-            queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(status='approved')
+        try:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                # الإدمن يرى كل شيء
+                queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').all()
+            elif self.request.user.is_authenticated:
+                # المستخدم المسجل يرى عقاراته + العقارات المُوافق عليها
+                user_profile = None
+                try:
+                    user_profile = self.request.user.profile
+                except:
+                    pass
+                
+                if user_profile:
+                    queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(
+                        models.Q(owner=user_profile) | models.Q(status='approved')
+                    )
+                else:
+                    # إذا لم يكن هناك profile، عرض العقارات المُوافق عليها فقط
+                    queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(status='approved')
+            else:
+                # الزائر يرى فقط العقارات المُوافق عليها
+                queryset = Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(status='approved')
 
-        params = self.request.query_params
+            params = self.request.query_params
 
-        # فلتر نوع العقار
-        prop_type = params.get('propertyType')
-        if prop_type:
-            queryset = queryset.filter(type__icontains=prop_type)
+            # فلتر نوع العقار
+            prop_type = params.get('propertyType')
+            if prop_type:
+                queryset = queryset.filter(type__icontains=prop_type)
 
-        # باقي الفلاتر
-        usage_type_mapping = {
-            'عائلات': 'families', 'طلاب': 'students', 'استوديو': 'studio',
-            'مصيفين': 'vacation', 'حجز يومي': 'daily',
-        }
-        property_type = params.get('usage_type') or params.get('property_type')
-        if property_type and property_type in usage_type_mapping:
-            usage_type = usage_type_mapping[property_type]
-        elif property_type:
-            usage_type = property_type
-        else:
-            usage_type = None
+            # باقي الفلاتر
+            usage_type_mapping = {
+                'عائلات': 'families', 'طلاب': 'students', 'استوديو': 'studio',
+                'مصيفين': 'vacation', 'حجز يومي': 'daily',
+            }
+            property_type = params.get('usage_type') or params.get('property_type')
+            if property_type and property_type in usage_type_mapping:
+                usage_type = usage_type_mapping[property_type]
+            elif property_type:
+                usage_type = property_type
+            else:
+                usage_type = None
 
-        rooms = params.get('rooms')
-        furnished = params.get('furnished')
-        price_min = params.get('price_min')
-        price_max = params.get('price_max')
-        area_name = params.get('area')
+            rooms = params.get('rooms')
+            furnished = params.get('furnished')
+            price_min = params.get('price_min')
+            price_max = params.get('price_max')
+            area_name = params.get('area')
 
-        if usage_type:
-            queryset = queryset.filter(usage_type=usage_type)
-        if rooms:
-            queryset = queryset.filter(rooms=rooms)
-        if furnished in ['true', 'false']:
-            queryset = queryset.filter(furnished=(furnished == 'true'))
-        if price_min:
-            queryset = queryset.filter(price__gte=price_min)
-        if price_max:
-            queryset = queryset.filter(price__lte=price_max)
-        if area_name:
-            queryset = queryset.filter(area__name=area_name)
+            if usage_type:
+                queryset = queryset.filter(usage_type=usage_type)
+            if rooms:
+                queryset = queryset.filter(rooms=rooms)
+            if furnished in ['true', 'false']:
+                queryset = queryset.filter(furnished=(furnished == 'true'))
+            if price_min:
+                queryset = queryset.filter(price__gte=price_min)
+            if price_max:
+                queryset = queryset.filter(price__lte=price_max)
+            if area_name:
+                queryset = queryset.filter(area__name=area_name)
 
-        return queryset
+            return queryset
+        except Exception as e:
+            print(f"Error in get_queryset: {e}")
+            # في حالة الخطأ، عرض فقط العقارات المُوافق عليها
+            return Property.objects.select_related('area', 'owner', 'approved_by').prefetch_related('images', 'videos').filter(status='approved')
 
     def create(self, request, *args, **kwargs):
         """إنشاء عقار جديد من قبل الـ landlord"""

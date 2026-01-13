@@ -34,11 +34,29 @@ class AreaSerializer(serializers.ModelSerializer):
 class PropertySerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     videos = PropertyVideoSerializer(many=True, read_only=True)
-    area = AreaSerializer(read_only=True)
+    area = serializers.SerializerMethodField()
     usage_type_ar = serializers.CharField(source='get_usage_type_display', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
-    owner_name = serializers.CharField(source='owner.user.get_full_name', read_only=True)
-    approved_by_name = serializers.CharField(source='approved_by.user.get_full_name', read_only=True)
+    owner_name = serializers.SerializerMethodField()
+    approved_by_name = serializers.SerializerMethodField()
+    
+    def get_area(self, obj):
+        """آمن - التعامل مع NULL area"""
+        if obj.area:
+            return AreaSerializer(obj.area).data
+        return None
+    
+    def get_owner_name(self, obj):
+        """آمن - التعامل مع NULL values"""
+        if obj.owner and obj.owner.user:
+            return obj.owner.user.get_full_name() or obj.owner.user.username
+        return 'غير محدد'
+    
+    def get_approved_by_name(self, obj):
+        """آمن - التعامل مع NULL values"""
+        if obj.approved_by and obj.approved_by.user:
+            return obj.approved_by.user.get_full_name() or obj.approved_by.user.username
+        return None
     
     class Meta:
         model = Property
