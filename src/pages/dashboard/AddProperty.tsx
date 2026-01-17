@@ -75,7 +75,6 @@ const AddProperty = () => {
     floor: "",
     furnished: false,
     usage_type: "residential",
-    // property_type: "apartment",  // تم الحذف
     listing_type: "sale",
     description: "",
     contact: "",
@@ -127,7 +126,8 @@ const AddProperty = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.title || !formData.location || !formData.price) {
+    // ✅ تعديل الشرط هنا
+    if (!formData.title_ar || !formData.location || !formData.price) {
       toast.error("يرجى ملء جميع الحقول المطلوبة");
       setLoading(false);
       return;
@@ -186,8 +186,6 @@ const AddProperty = () => {
                     required
                   />
                 </div>
-
-                {/* تم حذف حقل نوع العقار بالكامل */}
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">نوع الاستخدام</label>
