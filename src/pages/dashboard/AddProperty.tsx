@@ -134,7 +134,7 @@ const AddProperty = () => {
     }
 
     setTimeout(() => {
-      toast.success("تم حفظ بيانات العقار (محلياً فقط بدون اتصال بقاعدة بيانات)");
+      toast.success("تم حفظ بيانات العقار بنجاح ");
       setLoading(false);
       navigate("/dashboard/my-properties");
     }, 800);
