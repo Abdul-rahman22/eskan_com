@@ -44,7 +44,7 @@ export async function fetchProperty(id: string) {
 
 export async function fetchPropertiesByStatus(status: string) {
   try {
-    const { data } = await API.get(`/properties/by-status/${status}/`);
+    const { data } = await API.get("/properties/", { params: { status } });
     return data;
   } catch (error) {
     console.error("Error fetching properties by status:", error);
@@ -135,7 +135,7 @@ export async function fetchPendingProperties() {
 
 export async function fetchApprovedProperties() {
   try {
-    const { data } = await API.get("/properties/approved/");
+    const { data } = await API.get("/properties/", { params: { status: 'approved' } });
     return data;
   } catch (error) {
     console.error("Error fetching approved properties:", error);
@@ -155,7 +155,7 @@ export async function fetchRejectedProperties() {
 
 export async function approveProperty(id: string, notes?: string) {
   try {
-    const { data } = await API.post(`/properties/${id}/approve/`, { notes });
+    const { data } = await API.post(`/properties/${id}/approve/`, { approval_notes: notes || '' });
     return data;
   } catch (error) {
     console.error("Error approving property:", error);
@@ -165,7 +165,10 @@ export async function approveProperty(id: string, notes?: string) {
 
 export async function rejectProperty(id: string, notes: string) {
   try {
-    const { data } = await API.post(`/properties/${id}/reject/`, { notes });
+    if (!notes || notes.trim().length === 0) {
+      throw new Error('يجب إدخال سبب الرفض');
+    }
+    const { data } = await API.post(`/properties/${id}/reject/`, { approval_notes: notes });
     return data;
   } catch (error) {
     console.error("Error rejecting property:", error);
@@ -186,7 +189,12 @@ export async function fetchApprovalStatistics() {
 // ============ Search & Filter ============
 export async function searchProperties(filters: any) {
   try {
-    const { data } = await API.get("/properties/search/", { params: filters });
+    // تحويل الفلاتر إلى صيغة صحيحة
+    const params = {
+      ...filters,
+      search: filters.search || '',
+    };
+    const { data } = await API.get("/properties/", { params });
     return data;
   } catch (error) {
     console.error("Error searching properties:", error);
