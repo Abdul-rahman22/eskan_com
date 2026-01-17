@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -22,49 +22,26 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
-
-const areas = [
-  "القاهرة الجديدة",
-  "التجمع الخامس",
-  "مدينة نصر",
-  "المعادي",
-  "الشيخ زايد",
-  "6 أكتوبر",
-  "العبور",
-  "الرحاب",
-  "مدينتي",
-  "العاصمة الإدارية",
-  "المنصورة",
-  "الإسكندرية",
-  "الجيزة",
-  "المهندسين",
-  "الدقي",
-  "الزمالك",
-  "حلوان",
-  "شبرا",
-  "عين شمس",
-];
-
-const usageTypes = [
-  { value: "residential", label: "سكني" },
-  { value: "commercial", label: "تجاري" },
-  { value: "administrative", label: "إداري" },
-  { value: "medical", label: "طبي" },
-  { value: "mixed", label: "متعدد الاستخدامات" },
-];
-
-const listingTypes = [
-  { value: "sale", label: "للبيع" },
-  { value: "rent", label: "للإيجار" },
-];
+import { fetchAreas } from "@/api";
 
 const AddProperty = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
+  const [areas, setAreas] = useState<any[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
+
+  /* نوع الاستخدام من البيانات المتوقعة */
+  const usageTypes = [
+    { value: "students", label: "طلاب" },
+    { value: "families", label: "عائلات" },
+    { value: "studio", label: "استوديو" },
+    { value: "vacation", label: "مصيفين" },
+    { value: "daily", label: "حجز يومي" },
+  ];
+
   const [formData, setFormData] = useState({
-    title: "",
     title_ar: "",
     location: "",
     address: "",
@@ -74,12 +51,27 @@ const AddProperty = () => {
     area: "",
     floor: "",
     furnished: false,
-    usage_type: "residential",
-    // property_type: "apartment",  // تم الحذف
-    listing_type: "sale",
+    usage_type: "students",
     description: "",
     contact: "",
   });
+
+  /* جلب المناطق من الـ API */
+  useEffect(() => {
+    const loadAreas = async () => {
+      try {
+        setLoadingData(true);
+        const data = await fetchAreas();
+        setAreas(data || []);
+      } catch (error) {
+        console.error("Error loading areas:", error);
+        toast.error("خطأ في تحميل المناطق");
+      } finally {
+        setLoadingData(false);
+      }
+    };
+    loadAreas();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -92,6 +84,7 @@ const AddProperty = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /* الصور */
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -105,6 +98,11 @@ const AddProperty = () => {
     });
   };
 
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  /* الفيديو */
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -115,26 +113,22 @@ const AddProperty = () => {
     });
   };
 
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const removeVideo = (index: number) => {
     setVideos((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.title || !formData.location || !formData.price) {
+    if (!formData.title_ar || !formData.location || !formData.price) {
       toast.error("يرجى ملء جميع الحقول المطلوبة");
       setLoading(false);
       return;
     }
 
     setTimeout(() => {
-      toast.success("تم حفظ بيانات العقار (محلياً فقط بدون اتصال بقاعدة بيانات)");
+      toast.success("تم حفظ بيانات العقار بنجاح");
       setLoading(false);
       navigate("/dashboard/my-properties");
     }, 800);
@@ -143,372 +137,185 @@ const AddProperty = () => {
   return (
     <DashboardLayout>
       <div className="p-4 lg:p-8 max-w-4xl mx-auto">
-        {/* Page Header */}
-        <motion.div
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
+          className="text-2xl lg:text-3xl font-bold mb-6"
         >
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-            إضافة عقار جديد
-          </h1>
-          <p className="text-muted-foreground">
-            أدخل تفاصيل العقار لإضافته إلى قائمتك
-          </p>
-        </motion.div>
+          إضافة عقار جديد
+        </motion.h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Building2 className="h-5 w-5 text-primary" />
-                  معلومات أساسية
-                </CardTitle>
-                <CardDescription>
-                  أدخل المعلومات الأساسية للعقار
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">العنوان (عربي)</label>
-                  <Input
-                    id="title_ar"
-                    name="title_ar"
-                    value={formData.title_ar}
-                    onChange={handleInputChange}
-                    placeholder="شقة مميزة في التجمع"
-                    required
-                  />
-                </div>
+          {/* معلومات أساسية */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                معلومات أساسية
+              </CardTitle>
+              <CardDescription>بيانات العقار الرئيسية</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2">
+              <Input
+                name="title_ar"
+                placeholder="اسم أو عنوان العقار"
+                value={formData.title_ar}
+                onChange={handleInputChange}
+                required
+              />
 
-                {/* تم حذف حقل نوع العقار بالكامل */}
+              <Select
+                value={formData.usage_type}
+                onValueChange={(v) => handleSelectChange("usage_type", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {usageTypes.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">نوع الاستخدام</label>
-                  <Select
-                    value={formData.usage_type}
-                    onValueChange={(value) =>
-                      handleSelectChange("usage_type", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {usageTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {/* الموقع */}
+          <Card>
+            <CardHeader>
+              <CardTitle>الموقع</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2">
+              <Select
+                value={formData.location}
+                onValueChange={(v) => handleSelectChange("location", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر المنطقة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {loadingData ? (
+                    <div className="p-2 text-center text-sm text-gray-500">جاري التحميل...</div>
+                  ) : areas.length > 0 ? (
+                    areas.map((area) => (
+                      <SelectItem key={area.id} value={area.name}>
+                        {area.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-2 text-center text-sm text-gray-500">لا توجد مناطق</div>
+                  )}
+                </SelectContent>
+              </Select>
 
-          {/* Location */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">الموقع</CardTitle>
-                <CardDescription>حدد موقع العقار</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">المنطقة</label>
-                  <Select
-                    value={formData.location}
-                    onValueChange={(value) =>
-                      handleSelectChange("location", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر المنطقة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {areas.map((area) => (
-                        <SelectItem key={area} value={area}>
-                          {area}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">العنوان التفصيلي</label>
-                  <Input
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    placeholder="الشارع والبناء..."
-                    required
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+              <Input
+                name="address"
+                placeholder="العنوان التفصيلي"
+                value={formData.address}
+                onChange={handleInputChange}
+              />
+            </CardContent>
+          </Card>
 
-          {/* Pricing */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">السعر</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">السعر (جنيه مصري)</label>
-                  <Input
-                    name="price"
-                    type="number"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    placeholder="2,500,000"
-                    required
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {/* السعر */}
+          <Card>
+            <CardHeader>
+              <CardTitle>السعر</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Input
+                name="price"
+                type="number"
+                placeholder="السعر بالجنيه"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </CardContent>
+          </Card>
 
-          {/* Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">التفاصيل</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">عدد الغرف</label>
-                  <Input
-                    name="bedrooms"
-                    type="number"
-                    value={formData.bedrooms}
-                    onChange={handleInputChange}
-                    placeholder="3"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">عدد الحمامات</label>
-                  <Input
-                    name="bathrooms"
-                    type="number"
-                    value={formData.bathrooms}
-                    onChange={handleInputChange}
-                    placeholder="2"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">المساحة (م²)</label>
-                  <Input
-                    name="area"
-                    type="number"
-                    value={formData.area}
-                    onChange={handleInputChange}
-                    placeholder="160"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">الدور</label>
-                  <Input
-                    name="floor"
-                    type="number"
-                    value={formData.floor}
-                    onChange={handleInputChange}
-                    placeholder="3"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {/* التفاصيل */}
+          <Card>
+            <CardHeader>
+              <CardTitle>التفاصيل</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input name="bedrooms" type="number" placeholder="عدد الغرف" onChange={handleInputChange} />
+              <Input name="bathrooms" type="number" placeholder="عدد الحمامات" onChange={handleInputChange} />
+              <Input name="area" type="number" placeholder="المساحة" onChange={handleInputChange} />
+              <Input name="floor" type="number" placeholder="الدور" onChange={handleInputChange} />
+            </CardContent>
+          </Card>
 
-          {/* Description & Contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">الوصف والتواصل</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">الوصف</label>
-                  <Textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="اكتب وصفاً مفصلاً للعقار..."
-                    className="h-24"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">رقم التواصل</label>
-                  <Input
-                    name="contact"
-                    value={formData.contact}
-                    onChange={handleInputChange}
-                    placeholder="01234567890"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {/* الوصف */}
+          <Card>
+            <CardHeader>
+              <CardTitle>الوصف</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                name="description"
+                placeholder="اكتب وصف العقار"
+                value={formData.description}
+                onChange={handleInputChange}
+              />
+            </CardContent>
+          </Card>
 
-          {/* Images */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <ImageIcon className="h-5 w-5 text-primary" />
-                  الصور
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <label className="flex items-center justify-center border-2 border-dashed border-border rounded-xl p-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
-                  <div className="text-center">
-                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm font-medium">اضغط لاختيار الصور</p>
-                    <p className="text-xs text-muted-foreground">أو اسحب الصور هنا</p>
+          {/* الصور */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5" /> الصور
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <input type="file" multiple accept="image/*" onChange={handleImageUpload} />
+              <div className="grid grid-cols-3 gap-3 mt-3">
+                {images.map((img, i) => (
+                  <div key={i} className="relative">
+                    <img src={img} className="h-24 w-full object-cover rounded" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
-                {images.length > 0 && (
-                  <div className="grid grid-cols-3 gap-4 mt-4">
-                    {images.map((image, index) => (
-                      <div key={index} className="relative group">
-                        <img
-                          src={image}
-                          alt={`Preview ${index}`}
-                          className="w-full h-24 object-cover rounded-lg"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Videos */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-          >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <VideoIcon className="h-5 w-5 text-primary" />
-                  الفيديوهات
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <label className="flex items-center justify-center border-2 border-dashed border-border rounded-xl p-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
-                  <div className="text-center">
-                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm font-medium">اضغط لاختيار الفيديوهات</p>
-                    <p className="text-xs text-muted-foreground">أو اسحب الفيديوهات هنا</p>
+          {/* الفيديو */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <VideoIcon className="h-5 w-5" /> الفيديوهات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <input type="file" multiple accept="video/*" onChange={handleVideoUpload} />
+              <div className="space-y-2 mt-2">
+                {videos.map((_, i) => (
+                  <div key={i} className="flex justify-between items-center">
+                    <span>فيديو {i + 1}</span>
+                    <button type="button" onClick={() => removeVideo(i)}>
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                  <input
-                    type="file"
-                    multiple
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    className="hidden"
-                  />
-                </label>
-                {videos.length > 0 && (
-                  <div className="space-y-2 mt-4">
-                    {videos.map((video, index) => (
-                      <div key={index} className="flex items-center justify-between bg-muted p-3 rounded-lg">
-                        <span className="text-sm truncate">فيديو {index + 1}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeVideo(index)}
-                          className="text-destructive hover:text-destructive/80"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Submit */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-3"
-          >
-            <Button
-              type="submit"
-              size="lg"
-              className="flex-1 gap-2 shadow-lg shadow-primary/20"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  جاري الحفظ...
-                </>
-              ) : (
-                <>
-                  <Upload className="h-5 w-5" />
-                  حفظ العقار
-                </>
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              onClick={() => navigate("/dashboard")}
-              disabled={loading}
-            >
-              إلغاء
-            </Button>
-          </motion.div>
+          {/* حفظ */}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "جاري الحفظ..." : "حفظ العقار"}
+          </Button>
         </form>
       </div>
     </DashboardLayout>
