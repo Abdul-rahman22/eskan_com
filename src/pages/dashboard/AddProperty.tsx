@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 
+/* المناطق */
 const areas = [
   "القاهرة الجديدة",
   "التجمع الخامس",
@@ -45,6 +46,7 @@ const areas = [
   "عين شمس",
 ];
 
+/* نوع الاستخدام */
 const usageTypes = [
   { value: "residential", label: "سكني" },
   { value: "commercial", label: "تجاري" },
@@ -85,6 +87,7 @@ const AddProperty = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /* الصور */
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -98,6 +101,11 @@ const AddProperty = () => {
     });
   };
 
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  /* الفيديو */
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -106,10 +114,6 @@ const AddProperty = () => {
       const url = URL.createObjectURL(file);
       setVideos((prev) => [...prev, url]);
     });
-  };
-
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const removeVideo = (index: number) => {
@@ -136,52 +140,52 @@ const AddProperty = () => {
   return (
     <DashboardLayout>
       <div className="p-4 lg:p-8 max-w-4xl mx-auto">
-        <h1 className="text-2xl lg:text-3xl font-bold mb-6">إضافة عقار جديد</h1>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl lg:text-3xl font-bold mb-6"
+        >
+          إضافة عقار جديد
+        </motion.h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
+          {/* معلومات أساسية */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="h-5 w-5" />
                 معلومات أساسية
               </CardTitle>
-              <CardDescription>البيانات الأساسية للعقار</CardDescription>
+              <CardDescription>بيانات العقار الرئيسية</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-sm font-medium">اسم / عنوان العقار</label>
-                <Input
-                  name="title_ar"
-                  value={formData.title_ar}
-                  onChange={handleInputChange}
-                  placeholder="شقة مميزة في التجمع"
-                  required
-                />
-              </div>
+              <Input
+                name="title_ar"
+                placeholder="اسم أو عنوان العقار"
+                value={formData.title_ar}
+                onChange={handleInputChange}
+                required
+              />
 
-              <div>
-                <label className="text-sm font-medium">نوع الاستخدام</label>
-                <Select
-                  value={formData.usage_type}
-                  onValueChange={(v) => handleSelectChange("usage_type", v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {usageTypes.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={formData.usage_type}
+                onValueChange={(v) => handleSelectChange("usage_type", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {usageTypes.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </CardContent>
           </Card>
 
-          {/* Location */}
+          {/* الموقع */}
           <Card>
             <CardHeader>
               <CardTitle>الموقع</CardTitle>
@@ -205,14 +209,14 @@ const AddProperty = () => {
 
               <Input
                 name="address"
+                placeholder="العنوان التفصيلي"
                 value={formData.address}
                 onChange={handleInputChange}
-                placeholder="العنوان التفصيلي"
               />
             </CardContent>
           </Card>
 
-          {/* Price */}
+          {/* السعر */}
           <Card>
             <CardHeader>
               <CardTitle>السعر</CardTitle>
@@ -221,15 +225,15 @@ const AddProperty = () => {
               <Input
                 name="price"
                 type="number"
+                placeholder="السعر بالجنيه"
                 value={formData.price}
                 onChange={handleInputChange}
-                placeholder="السعر بالجنيه"
                 required
               />
             </CardContent>
           </Card>
 
-          {/* Details */}
+          {/* التفاصيل */}
           <Card>
             <CardHeader>
               <CardTitle>التفاصيل</CardTitle>
@@ -242,7 +246,7 @@ const AddProperty = () => {
             </CardContent>
           </Card>
 
-          {/* Description */}
+          {/* الوصف */}
           <Card>
             <CardHeader>
               <CardTitle>الوصف</CardTitle>
@@ -250,14 +254,62 @@ const AddProperty = () => {
             <CardContent>
               <Textarea
                 name="description"
+                placeholder="اكتب وصف العقار"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="وصف العقار"
               />
             </CardContent>
           </Card>
 
-          {/* Submit */}
+          {/* الصور */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5" /> الصور
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <input type="file" multiple accept="image/*" onChange={handleImageUpload} />
+              <div className="grid grid-cols-3 gap-3 mt-3">
+                {images.map((img, i) => (
+                  <div key={i} className="relative">
+                    <img src={img} className="h-24 w-full object-cover rounded" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* الفيديو */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <VideoIcon className="h-5 w-5" /> الفيديوهات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <input type="file" multiple accept="video/*" onChange={handleVideoUpload} />
+              <div className="space-y-2 mt-2">
+                {videos.map((_, i) => (
+                  <div key={i} className="flex justify-between items-center">
+                    <span>فيديو {i + 1}</span>
+                    <button type="button" onClick={() => removeVideo(i)}>
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* حفظ */}
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? "جاري الحفظ..." : "حفظ العقار"}
           </Button>
