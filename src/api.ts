@@ -54,7 +54,7 @@ export async function fetchPropertiesByStatus(status: string) {
 
 export async function fetchUserProperties() {
   try {
-    const { data } = await API.get("/properties/my-properties/");
+    const { data } = await API.get("/properties/my_properties/");
     return data;
   } catch (error) {
     console.error("Error fetching user properties:", error);
