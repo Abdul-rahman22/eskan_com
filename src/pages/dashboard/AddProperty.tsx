@@ -162,29 +162,46 @@ const AddProperty = () => {
               <CardDescription>بيانات العقار الرئيسية</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
-              <Input
-                name="title_ar"
-                placeholder="اسم أو عنوان العقار"
-                value={formData.title_ar}
-                onChange={handleInputChange}
-                required
-              />
+              <div className="space-y-2">
+                <label
+                  htmlFor="title_ar"
+                  className="text-sm font-medium text-foreground"
+                >
+                  عنوان العقار (عربي)
+                </label>
+                <Input
+                  id="title_ar"
+                  name="title_ar"
+                  placeholder="اسم أو عنوان العقار"
+                  value={formData.title_ar}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
 
-              <Select
-                value={formData.usage_type}
-                onValueChange={(v) => handleSelectChange("usage_type", v)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {usageTypes.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-2">
+                <label
+                  htmlFor="usage_type"
+                  className="text-sm font-medium text-foreground"
+                >
+                  نوع الاستخدام
+                </label>
+                <Select
+                  value={formData.usage_type}
+                  onValueChange={(v) => handleSelectChange("usage_type", v)}
+                >
+                  <SelectTrigger id="usage_type">
+                    <SelectValue placeholder="اختر نوع الاستخدام" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {usageTypes.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        {t.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </CardContent>
           </Card>
 
@@ -194,38 +211,55 @@ const AddProperty = () => {
               <CardTitle>الموقع</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
-              <Select
-                value={formData.location}
-                onValueChange={(v) => handleSelectChange("location", v)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر المنطقة" />
-                </SelectTrigger>
-                <SelectContent>
-                  {loadingData ? (
-                    <div className="p-2 text-center text-sm text-gray-500">
-                      جاري التحميل...
-                    </div>
-                  ) : areas.length > 0 ? (
-                    areas.map((area) => (
-                      <SelectItem key={area.id} value={area.name}>
-                        {area.name}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <div className="p-2 text-center text-sm text-gray-500">
-                      لا توجد مناطق
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <div className="space-y-2">
+                <label
+                  htmlFor="location"
+                  className="text-sm font-medium text-foreground"
+                >
+                  المنطقة
+                </label>
+                <Select
+                  value={formData.location}
+                  onValueChange={(v) => handleSelectChange("location", v)}
+                >
+                  <SelectTrigger id="location">
+                    <SelectValue placeholder="اختر المنطقة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {loadingData ? (
+                      <div className="p-2 text-center text-sm text-gray-500">
+                        جاري التحميل...
+                      </div>
+                    ) : areas.length > 0 ? (
+                      areas.map((area) => (
+                        <SelectItem key={area.id} value={area.name}>
+                          {area.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="p-2 text-center text-sm text-gray-500">
+                        لا توجد مناطق
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Input
-                name="address"
-                placeholder="العنوان التفصيلي"
-                value={formData.address}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <label
+                  htmlFor="address"
+                  className="text-sm font-medium text-foreground"
+                >
+                  العنوان التفصيلي
+                </label>
+                <Input
+                  id="address"
+                  name="address"
+                  placeholder="العنوان التفصيلي"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -235,14 +269,23 @@ const AddProperty = () => {
               <CardTitle>السعر</CardTitle>
             </CardHeader>
             <CardContent>
-              <Input
-                name="price"
-                type="number"
-                placeholder="السعر بالجنيه"
-                value={formData.price}
-                onChange={handleInputChange}
-                required
-              />
+              <div className="space-y-2">
+                <label
+                  htmlFor="price"
+                  className="text-sm font-medium text-foreground"
+                >
+                  السعر (بالجنيه المصري)
+                </label>
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  placeholder="السعر بالجنيه"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -252,34 +295,73 @@ const AddProperty = () => {
               <CardTitle>التفاصيل</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Input
-                name="bedrooms"
-                type="number"
-                placeholder="عدد الغرف"
-                value={formData.bedrooms}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="bathrooms"
-                type="number"
-                placeholder="عدد الحمامات"
-                value={formData.bathrooms}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="area"
-                type="number"
-                placeholder="المساحة"
-                value={formData.area}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="floor"
-                type="number"
-                placeholder="الدور"
-                value={formData.floor}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <label
+                  htmlFor="bedrooms"
+                  className="text-sm font-medium text-foreground"
+                >
+                  عدد الغرف
+                </label>
+                <Input
+                  id="bedrooms"
+                  name="bedrooms"
+                  type="number"
+                  placeholder="عدد الغرف"
+                  value={formData.bedrooms}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="bathrooms"
+                  className="text-sm font-medium text-foreground"
+                >
+                  عدد الحمامات
+                </label>
+                <Input
+                  id="bathrooms"
+                  name="bathrooms"
+                  type="number"
+                  placeholder="عدد الحمامات"
+                  value={formData.bathrooms}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="area"
+                  className="text-sm font-medium text-foreground"
+                >
+                  المساحة (م²)
+                </label>
+                <Input
+                  id="area"
+                  name="area"
+                  type="number"
+                  placeholder="المساحة"
+                  value={formData.area}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="floor"
+                  className="text-sm font-medium text-foreground"
+                >
+                  الدور
+                </label>
+                <Input
+                  id="floor"
+                  name="floor"
+                  type="number"
+                  placeholder="الدور"
+                  value={formData.floor}
+                  onChange={handleInputChange}
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -289,18 +371,37 @@ const AddProperty = () => {
               <CardTitle>الوصف والتواصل</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Textarea
-                name="description"
-                placeholder="اكتب وصف العقار"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="contact"
-                placeholder="رقم التواصل"
-                value={formData.contact}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <label
+                  htmlFor="description"
+                  className="text-sm font-medium text-foreground"
+                >
+                  الوصف
+                </label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  placeholder="اكتب وصف العقار"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact"
+                  className="text-sm font-medium text-foreground"
+                >
+                  رقم التواصل
+                </label>
+                <Input
+                  id="contact"
+                  name="contact"
+                  placeholder="رقم التواصل"
+                  value={formData.contact}
+                  onChange={handleInputChange}
+                />
+              </div>
             </CardContent>
           </Card>
 
