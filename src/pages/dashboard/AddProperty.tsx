@@ -9,7 +9,13 @@ import {
   Image as ImageIcon,
   Video as VideoIcon,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -197,7 +203,9 @@ const AddProperty = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {loadingData ? (
-                    <div className="p-2 text-center text-sm text-gray-500">جاري التحميل...</div>
+                    <div className="p-2 text-center text-sm text-gray-500">
+                      جاري التحميل...
+                    </div>
                   ) : areas.length > 0 ? (
                     areas.map((area) => (
                       <SelectItem key={area.id} value={area.name}>
@@ -205,7 +213,9 @@ const AddProperty = () => {
                       </SelectItem>
                     ))
                   ) : (
-                    <div className="p-2 text-center text-sm text-gray-500">لا توجد مناطق</div>
+                    <div className="p-2 text-center text-sm text-gray-500">
+                      لا توجد مناطق
+                    </div>
                   )}
                 </SelectContent>
               </Select>
@@ -242,79 +252,169 @@ const AddProperty = () => {
               <CardTitle>التفاصيل</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Input name="bedrooms" type="number" placeholder="عدد الغرف" onChange={handleInputChange} />
-              <Input name="bathrooms" type="number" placeholder="عدد الحمامات" onChange={handleInputChange} />
-              <Input name="area" type="number" placeholder="المساحة" onChange={handleInputChange} />
-              <Input name="floor" type="number" placeholder="الدور" onChange={handleInputChange} />
+              <Input
+                name="bedrooms"
+                type="number"
+                placeholder="عدد الغرف"
+                value={formData.bedrooms}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="bathrooms"
+                type="number"
+                placeholder="عدد الحمامات"
+                value={formData.bathrooms}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="area"
+                type="number"
+                placeholder="المساحة"
+                value={formData.area}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="floor"
+                type="number"
+                placeholder="الدور"
+                value={formData.floor}
+                onChange={handleInputChange}
+              />
             </CardContent>
           </Card>
 
-          {/* الوصف */}
+          {/* الوصف والتواصل */}
           <Card>
             <CardHeader>
-              <CardTitle>الوصف</CardTitle>
+              <CardTitle>الوصف والتواصل</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <Textarea
                 name="description"
                 placeholder="اكتب وصف العقار"
                 value={formData.description}
                 onChange={handleInputChange}
               />
+              <Input
+                name="contact"
+                placeholder="رقم التواصل"
+                value={formData.contact}
+                onChange={handleInputChange}
+              />
             </CardContent>
           </Card>
 
           {/* الصور */}
-          <Card>
+          <Card className="border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5" /> الصور
+                <ImageIcon className="h-5 w-5 text-primary" />
+                الصور
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <input type="file" multiple accept="image/*" onChange={handleImageUpload} />
-              <div className="grid grid-cols-3 gap-3 mt-3">
-                {images.map((img, i) => (
-                  <div key={i} className="relative">
-                    <img src={img} className="h-24 w-full object-cover rounded" />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <label className="flex items-center justify-center border-2 border-dashed border-border rounded-xl p-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                <div className="text-center">
+                  <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium">اضغط لاختيار الصور</p>
+                  <p className="text-xs text-muted-foreground">
+                    أو اسحب الصور هنا
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </label>
+
+              {images.length > 0 && (
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Preview ${index}`}
+                        className="w-full h-24 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-destructive text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* الفيديو */}
-          <Card>
+          {/* الفيديوهات */}
+          <Card className="border-border/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <VideoIcon className="h-5 w-5" /> الفيديوهات
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <VideoIcon className="h-5 w-5 text-primary" />
+                الفيديوهات
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <input type="file" multiple accept="video/*" onChange={handleVideoUpload} />
-              <div className="space-y-2 mt-2">
-                {videos.map((_, i) => (
-                  <div key={i} className="flex justify-between items-center">
-                    <span>فيديو {i + 1}</span>
-                    <button type="button" onClick={() => removeVideo(i)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <label className="flex items-center justify-center border-2 border-dashed border-border rounded-xl p-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                <div className="text-center">
+                  <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium">
+                    اضغط لاختيار الفيديوهات
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    أو اسحب الفيديوهات هنا
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="hidden"
+                />
+              </label>
+
+              {videos.length > 0 && (
+                <div className="space-y-2 mt-4">
+                  {videos.map((video, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between bg-muted p-3 rounded-lg"
+                    >
+                      <span className="text-sm truncate">
+                        فيديو {index + 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeVideo(index)}
+                        className="text-destructive hover:text-destructive/80"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
           {/* حفظ */}
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "جاري الحفظ..." : "حفظ العقار"}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                جاري الحفظ...
+              </span>
+            ) : (
+              "حفظ العقار"
+            )}
           </Button>
         </form>
       </div>
